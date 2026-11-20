@@ -27,10 +27,10 @@ The post types live in a plugin so that content survives a future theme change.
 ## Local setup (LocalWP)
 
 1. In LocalWP, create a site (e.g. **seps**, PHP 8.2, preferred setup).
-2. Link the theme and plugin into it:
+2. Copy the theme and plugin into it:
 
    ```bash
-   bin/link-local.sh seps
+   bin/sync-local.sh seps
    ```
 
 3. In LocalWP, click **Open site shell** and run:
@@ -43,6 +43,21 @@ The post types live in a plugin so that content survives a future theme change.
    ```
 
 `wp seps seed` fills a fresh site with the Figma content: the page tree from the sitemap, all six menus, Site Settings, the home page sections, four news posts, testimonials and FAQs, plus the images (with alt text). You can run it again safely: seeded items are updated, not duplicated.
+
+**Day to day:** edit files in this repo, then re-run `bin/sync-local.sh seps` to update the Local site. (Use `npm run build` first if you changed SCSS or JS.)
+
+> Don't symlink the theme or plugin into Local. LocalWP's *Push to WP Engine* doesn't follow symlinks, so the theme never reaches the server and the site loads blank.
+
+## Deploying to WP Engine (from LocalWP)
+
+1. `npm run build` in `wp-content/themes/seps` if styles or scripts changed, then `bin/sync-local.sh seps`.
+2. In LocalWP: **Push** → *an existing site* → **SEPS** → **Staging**.
+   - **Code changes only:** Files → *Select files* → tick `themes/seps` and `plugins/seps-core`. Leave **Database unticked** so content edited on staging isn't overwritten.
+   - **First deploy, or a deliberate content reset:** All files + Database.
+   - ⚠️ **Always untick every red "Will be deleted" row** before pushing. Those are WP Engine's own files that don't exist in Local (`wp-content/advanced-cache.php`, favicons). Deleting `advanced-cache.php` disables WP Engine's cache integration.
+3. In the WP Engine portal: **Cache → Clear all caches**.
+
+The sync script excludes development files (`node_modules`, SCSS/JS sources, build configs), so only what the site needs goes to the server.
 
 ## Where content is managed
 
