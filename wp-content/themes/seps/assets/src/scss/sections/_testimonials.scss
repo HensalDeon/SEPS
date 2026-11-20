@@ -1,0 +1,89 @@
+@use "../abstracts/mixins" as *;
+
+// On xl+ the circular photo sits in a lilac dome anchored to the right edge
+// and bleeds ~22% of its width into the (lilac) FAQ section below, exactly as
+// in the design. The section therefore stacks above its next sibling.
+
+.testimonials {
+	--focus-color: var(--color-accent);
+	--media-w: clamp(20rem, 28.85vw, 34.625rem); // → 554
+
+	position: relative;
+	z-index: 1;
+	padding-block: var(--section-space);
+	background: var(--color-navy);
+	color: var(--color-white);
+
+	.btn--accent {
+		color: var(--color-brand);
+	}
+
+	&__inner {
+		display: grid;
+		gap: 3rem;
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		min-width: 0;
+
+		@include mq(xl) {
+			max-width: min(71.1875rem, 100% - var(--media-w) + var(--gutter) - 5rem); // → 1139
+		}
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.5rem;
+	}
+
+	&__media {
+		position: relative;
+		justify-self: center;
+		width: min(100%, 22rem);
+		aspect-ratio: 554 / 490;
+
+		@include mq(xl) {
+			position: absolute;
+			right: 0;
+			bottom: calc(var(--media-w) * -0.222); // 123 / 554
+			width: var(--media-w);
+		}
+	}
+
+	// Lilac dome: radii from the design (300/300/100/100 on 554×490).
+	&__frame {
+		position: absolute;
+		inset: 0;
+		border-radius: 50% 50% 16.7% 16.7% / 56.5% 56.5% 18.8% 18.8%;
+		background: var(--color-lilac);
+	}
+
+	&__image {
+		position: absolute;
+		top: 9.59%;
+		left: 10.65%;
+		width: 80.3%;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	&__decor {
+		position: absolute;
+		top: 102%;
+		left: 63.9%;
+		width: 9.03%;
+		min-width: 2rem;
+	}
+}
+
+.testimonials--has-media {
+	@include mq-down(xl) {
+		padding-bottom: calc(var(--section-space) + 2rem);
+	}
+}

@@ -1,0 +1,25 @@
+// SEPS theme stylesheet entry point.
+//
+// Order: tokens → base → layout → components → sections.
+// Naming: BEM (block__element--modifier); one block per partial.
+
+@use "abstracts/tokens";
+@use "base/fonts";
+@use "base/reset";
+@use "base/a11y";
+@use "layout/container";
+@use "layout/header";
+@use "layout/footer";
+@use "components/button";
+@use "components/common";
+@use "components/carousel";
+@use "sections/hero";
+@use "sections/about";
+@use "sections/programs";
+@use "sections/student-life";
+@use "sections/principal";
+@use "sections/facilities";
+@use "sections/highlights";
+@use "sections/testimonials";
+@use "sections/faq";
+@use "sections/news";

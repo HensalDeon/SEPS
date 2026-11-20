@@ -1,0 +1,223 @@
+@use "../abstracts/mixins" as *;
+
+.site-footer {
+	--focus-color: var(--color-accent);
+
+	position: relative;
+	isolation: isolate;
+	overflow-x: clip;
+	background: var(--color-navy);
+	color: var(--color-white);
+
+	// Darker dome on the right, continuing the top band.
+	&::before {
+		@include mq(xl) {
+			content: "";
+			position: absolute;
+			z-index: -1;
+			inset-block: 0;
+			left: 82.55%;
+			width: 43.23%;
+			border-radius: 0 0 9999px 9999px;
+			background: var(--color-navy-deep);
+		}
+	}
+
+	&__decor {
+		position: absolute;
+		z-index: 2;
+		top: 0;
+		right: var(--gutter);
+		width: clamp(2.25rem, 2.6vw, 3.125rem);
+		transform: translate(50%, -50%);
+	}
+
+	a:not(.btn):hover {
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	// -------------------------------------------------------------------------
+	// Top band: identity + subscribe
+	// -------------------------------------------------------------------------
+
+	&__top {
+		padding-block: clamp(3rem, 2.4rem + 2.6vw, 6.25rem) clamp(2.5rem, 2.2rem + 1.4vw, 3.75rem);
+		background: var(--color-navy-deep);
+	}
+
+	&__top-inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 2rem 3rem;
+	}
+
+	&__heading {
+		margin-bottom: 2rem;
+		font-size: var(--fs-h3);
+		font-weight: var(--fw-semibold);
+		line-height: var(--lh-heading);
+	}
+
+	&__contact {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem 3rem;
+	}
+
+	// -------------------------------------------------------------------------
+	// Menu columns + photo
+	// -------------------------------------------------------------------------
+
+	&__main {
+		padding-block: clamp(3rem, 2.4rem + 2.6vw, 6rem) clamp(3rem, 2.4rem + 2.6vw, 6.25rem);
+	}
+
+	&__main-inner {
+		display: grid;
+		gap: 3rem;
+
+		// The photo is decorative; below xxl it would squeeze the menus.
+		@include mq(xxl) {
+			grid-template-columns: minmax(0, 1fr) auto;
+			align-items: start;
+		}
+	}
+
+	&__media {
+		display: none;
+
+		@include mq(xxl) {
+			display: block;
+			width: clamp(16rem, 20.3vw, 24.375rem); // → 390
+			margin-block: -2.5rem -6rem; // Overlap like the design without pushing the legal row.
+		}
+	}
+
+	&__image {
+		aspect-ratio: 1;
+		border-radius: 50%;
+
+		@include cover-image;
+	}
+
+	// -------------------------------------------------------------------------
+	// Bottom row
+	// -------------------------------------------------------------------------
+
+	&__bottom {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 1.25rem;
+		margin-top: clamp(2.5rem, 2rem + 2vw, 3.75rem);
+	}
+
+	&__legal {
+		@include bare-list;
+
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem 1.25rem;
+
+		li {
+			display: flex;
+			align-items: center;
+			gap: 1.25rem;
+
+			&::before {
+				@include dot;
+			}
+		}
+	}
+}
+
+.contact-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.625rem;
+
+	&__icon {
+		flex-shrink: 0;
+	}
+}
+
+.newsletter {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+	width: 100%;
+	padding: 1.25rem;
+	border: 1px solid var(--color-white);
+	border-radius: 1.5rem;
+	color: var(--color-muted-on-dark);
+	text-align: center;
+
+	@include mq(md) {
+		flex-direction: row;
+		width: auto;
+		max-width: 57.375rem;
+		padding: 0.5rem 0.5rem 0.5rem 1rem;
+		border-radius: 41px;
+		text-align: left;
+	}
+
+	&__button {
+		flex-shrink: 0;
+	}
+}
+
+.footer-nav {
+	display: grid;
+	gap: 2.5rem clamp(2rem, 5.26vw, 6.3125rem); // → 101
+
+	@include mq(sm) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	@include mq(lg) {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr); // ≈ 221 / 492 / 221 at 1920
+	}
+
+	&__column--footer-quick {
+		@include mq(sm) {
+			grid-row: span 2;
+		}
+
+		@include mq(lg) {
+			grid-row: auto;
+		}
+	}
+
+	&__title {
+		margin-bottom: 1.5rem;
+		color: var(--color-accent);
+		font-size: var(--fs-md);
+		font-weight: var(--fw-semibold);
+	}
+
+	&__menu {
+		@include bare-list;
+
+		li {
+			break-inside: avoid;
+		}
+
+		a {
+			display: block;
+			margin-bottom: 1rem;
+			padding-bottom: 1rem;
+			border-bottom: 1px solid var(--color-brand);
+		}
+	}
+
+	&__column--footer-quick &__menu {
+		@include mq(lg) {
+			columns: 2;
+			column-gap: 3.125rem;
+		}
+	}
+}

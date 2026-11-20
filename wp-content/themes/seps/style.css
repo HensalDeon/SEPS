@@ -1,0 +1,15 @@
+/*
+Theme Name:        SEPS
+Theme URI:         https://www.seps-auh.com/
+Description:       Custom theme for Sunrise English Private School, Abu Dhabi. Content is managed through Secure Custom Fields and WordPress menus. Compiled styles live in assets/dist; sources in assets/src.
+Author:            Eighty Six Media
+Version:           1.0.0
+Requires at least: 6.5
+Tested up to:      6.8
+Requires PHP:      8.1
+License:           GPL-2.0-or-later
+License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:       seps
+*/
+
+/* Intentionally empty: styles are compiled to assets/dist/css/main.css. */

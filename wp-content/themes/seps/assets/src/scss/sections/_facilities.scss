@@ -1,0 +1,94 @@
+@use "../abstracts/mixins" as *;
+
+.facilities {
+	position: relative;
+	padding-block: var(--section-space);
+
+	&__decor {
+		position: absolute;
+		top: clamp(1rem, 1.77vw, 2.125rem);
+		left: clamp(0.75rem, 3.85vw, 4.625rem);
+		width: clamp(3.5rem, 5.2vw, 6.25rem);
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.5rem;
+		max-width: 39.1875rem; // 627
+		margin: 0 auto 2rem;
+		text-align: center;
+	}
+
+	&__intro {
+		font-weight: var(--fw-light);
+	}
+
+	&__grid {
+		display: grid;
+		gap: clamp(2.5rem, 4.27vw, 5.125rem) clamp(1.5rem, 4.27vw, 5.125rem); // → 82
+
+		@include mq(sm) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		@include mq(xl) {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+}
+
+.facility {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.75rem;
+	text-align: center;
+
+	&__media {
+		width: 100%;
+		aspect-ratio: 527 / 335;
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: var(--color-lilac);
+	}
+
+	&__image {
+		transition: transform 600ms var(--ease-out);
+
+		@include cover-image;
+	}
+
+	&:hover &__image {
+		transform: scale(1.04);
+	}
+
+	&__caption {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	&__title {
+		font-size: var(--fs-base);
+	}
+
+	&__tags {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.25rem 1rem;
+
+		li {
+			display: inline-flex;
+			align-items: center;
+			gap: 1rem;
+		}
+
+		li + li::before {
+			@include dot(var(--color-text));
+		}
+	}
+}

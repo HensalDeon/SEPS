@@ -1,0 +1,47 @@
+@use "../abstracts/mixins" as *;
+
+// Section headings (h2 at 48px in the design).
+.section-title {
+	color: var(--color-brand);
+	font-size: var(--fs-h2);
+	font-weight: var(--fw-semibold);
+	line-height: var(--lh-heading);
+
+	&--accent {
+		color: var(--color-accent);
+	}
+
+	&--light {
+		color: var(--color-white);
+	}
+}
+
+// Editor-entered line breaks only make sense at the widths they were written
+// for; on small screens let headings wrap naturally.
+.section-title,
+.hero__title {
+	br {
+		@include mq-down(md) {
+			display: none;
+		}
+	}
+}
+
+// Decorative SVG shapes.
+.decor {
+	height: auto;
+	pointer-events: none;
+	user-select: none;
+}
+
+// "• Grade I–V" style label.
+.dot-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	white-space: nowrap;
+
+	&::before {
+		@include dot(var(--color-brand));
+	}
+}

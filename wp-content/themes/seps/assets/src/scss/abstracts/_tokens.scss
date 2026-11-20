@@ -1,0 +1,52 @@
+// Design tokens, exposed as custom properties so they are inspectable in the
+// browser and reusable by future block/editor styles.
+//
+// Fluid values interpolate linearly between a 375px and a 1920px viewport
+// (the Figma frame width), clamped at both ends.
+
+:root {
+	// Colour — from the Figma variables (brand, 2text) and section fills.
+	--color-brand: #283092;
+	--color-navy: #181d58;
+	--color-navy-shade: #161a4f; // navy + 10% black (hero arc).
+	--color-navy-deep: #131746; // navy + 20% black (footer band).
+	--color-accent: #ffc001;
+	--color-accent-hover: #ffcd33;
+	--color-lilac: #d4d6e9;
+	--color-text: #5e5e5e;
+	--color-white: #fff;
+	--color-muted-on-dark: #d9d9d9;
+	--focus-color: var(--color-brand);
+
+	// Typography.
+	--font-sans: "Outfit", ui-sans-serif, system-ui, -apple-system, "Segoe UI", roboto, sans-serif;
+	--fw-light: 300;
+	--fw-regular: 400;
+	--fw-medium: 500;
+	--fw-semibold: 600;
+	--fs-display: clamp(2.25rem, 1.825rem + 1.812vw, 4rem); // 36 → 64
+	--fs-h2: clamp(1.875rem, 1.602rem + 1.165vw, 3rem); // 30 → 48
+	--fs-h3: clamp(1.375rem, 1.223rem + 0.647vw, 2rem); // 22 → 32
+	--fs-lg: 1.25rem; // 20
+	--fs-md: 1.125rem; // 18
+	--fs-base: 1rem; // 16
+	--fs-sm: 0.875rem; // 14
+	--lh-tight: 1.1;
+	--lh-heading: 1.2;
+	--lh-body: 1.35;
+
+	// Layout.
+	--container-max: 101.25rem; // 1620px
+	--container-wide: 109.0625rem; // 1745px
+	--gutter: clamp(1.25rem, -0.722rem + 8.414vw, 9.375rem); // 20 → 150
+	--gutter-tight: clamp(1.25rem, 4.5vw, 5.5rem);
+	--section-space: clamp(3.5rem, 2.83rem + 2.848vw, 6.25rem); // 56 → 100
+
+	// Shape.
+	--radius: 10px;
+	--radius-pill: 40px;
+
+	// Motion.
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	--duration: 200ms;
+}

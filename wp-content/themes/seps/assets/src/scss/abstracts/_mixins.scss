@@ -1,0 +1,70 @@
+@use "sass:map";
+
+// Mobile-first breakpoints. The design is drawn at 1920px; layouts collapse
+// progressively below these widths.
+$breakpoints: (
+	sm: 576px,
+	md: 768px,
+	lg: 1024px,
+	xl: 1280px,
+	nav: 1440px, // Inline header navigation (keep in sync with navigation.js).
+	xxl: 1536px,
+);
+
+@mixin mq($name) {
+	@if not map.has-key($breakpoints, $name) {
+		@error "Unknown breakpoint `#{$name}`.";
+	}
+
+	@media (min-width: map.get($breakpoints, $name)) {
+		@content;
+	}
+}
+
+@mixin mq-down($name) {
+	@if not map.has-key($breakpoints, $name) {
+		@error "Unknown breakpoint `#{$name}`.";
+	}
+
+	@media (max-width: (map.get($breakpoints, $name) - 0.02px)) {
+		@content;
+	}
+}
+
+@mixin reduced-motion {
+	@media (prefers-reduced-motion: reduce) {
+		@content;
+	}
+}
+
+// Reset list styling on menus output by wp_nav_menu() (no role="list").
+@mixin bare-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+// 5px separator dot used throughout the design.
+@mixin dot($color: currentColor) {
+	content: "";
+	flex-shrink: 0;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: $color;
+}
+
+// Image filling its (aspect-ratio) box.
+@mixin cover-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+// Rounded photo at a fixed aspect ratio (design uses 10px corners).
+@mixin rounded-photo($width, $height) {
+	aspect-ratio: #{$width} / #{$height};
+	border-radius: var(--radius);
+
+	@include cover-image;
+}

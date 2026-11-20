@@ -1,0 +1,105 @@
+@use "../abstracts/mixins" as *;
+
+.news {
+	position: relative;
+	padding-block: var(--section-space);
+
+	&__decor {
+		position: absolute;
+		top: clamp(0.75rem, 1.1vw, 1.3125rem);
+		right: var(--gutter);
+		width: clamp(3.5rem, 5.2vw, 6.25rem);
+	}
+
+	&__title {
+		max-width: calc(100% - 5rem); // Keep clear of the decor.
+		margin-bottom: 2rem;
+	}
+
+	&__grid {
+		display: grid;
+		gap: 3rem 1.5rem;
+
+		@include mq(xl) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 2rem;
+	}
+}
+
+.news-card {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+
+	&__media {
+		display: block;
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: var(--color-lilac);
+	}
+
+	&__image {
+		aspect-ratio: 785 / 405;
+		transition: transform 600ms var(--ease-out);
+
+		@include cover-image;
+	}
+
+	&:hover &__image {
+		transform: scale(1.04);
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.25rem;
+	}
+
+	&__title {
+		font-size: var(--fs-lg);
+
+		a:hover {
+			text-decoration: underline;
+			text-underline-offset: 0.15em;
+		}
+	}
+
+	// Side-by-side list items.
+	&--compact {
+		@include mq(sm) {
+			flex-direction: row;
+			align-items: center;
+			gap: clamp(1.25rem, 2.6vw, 3.125rem); // → 50
+		}
+
+		.news-card__media {
+			@include mq(sm) {
+				flex: 0 0 min(40%, 19.25rem); // 308
+			}
+		}
+
+		.news-card__image {
+			aspect-ratio: 308 / 180;
+		}
+
+		.news-card__title {
+			font-size: var(--fs-md);
+		}
+
+		.news-card__excerpt {
+			display: -webkit-box;
+			overflow: hidden;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			line-clamp: 2;
+		}
+	}
+}

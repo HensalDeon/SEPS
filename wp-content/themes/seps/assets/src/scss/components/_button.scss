@@ -1,0 +1,69 @@
+// Pill buttons. Height matches the design's 43px (16px text + 13.5px padding)
+// using line-height: 1 so it is consistent across browsers.
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	min-height: 2.6875rem; // 43px
+	padding: 0.8125rem 1.5rem;
+	border-radius: var(--radius-pill);
+	font-size: var(--fs-base);
+	font-weight: var(--fw-semibold);
+	line-height: 1;
+	text-align: center;
+	transition:
+		background-color var(--duration) var(--ease-out),
+		color var(--duration) var(--ease-out),
+		transform var(--duration) var(--ease-out);
+
+	&:active {
+		transform: translateY(1px);
+	}
+
+	&--primary {
+		background: var(--color-brand);
+		color: var(--color-white);
+
+		&:hover {
+			background: var(--color-navy);
+		}
+	}
+
+	&--accent {
+		background: var(--color-accent);
+		color: var(--color-navy);
+
+		&:hover {
+			background: var(--color-accent-hover);
+		}
+	}
+
+	&--soft {
+		background: var(--color-lilac);
+		color: var(--color-brand);
+
+		&:hover {
+			background: var(--color-brand);
+			color: var(--color-white);
+		}
+	}
+
+	&--light {
+		padding-inline: 3rem;
+		background: var(--color-white);
+		color: var(--color-brand);
+
+		&:hover {
+			background: var(--color-accent);
+			color: var(--color-navy);
+		}
+	}
+}
+
+// The header CTA is slightly more compact (40px).
+.masthead__cta {
+	min-height: 2.5rem;
+	padding: 0.75rem 1.625rem;
+}

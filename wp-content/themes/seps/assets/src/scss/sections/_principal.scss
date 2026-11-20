@@ -1,0 +1,67 @@
+@use "../abstracts/mixins" as *;
+
+.principal {
+	--focus-color: var(--color-accent);
+
+	position: relative;
+	padding-block: var(--section-space);
+	border-top-left-radius: clamp(6rem, 15.6vw, 18.75rem); // → 300
+	background: var(--color-navy);
+	color: var(--color-white);
+
+	&__decor {
+		position: absolute;
+		top: clamp(1.25rem, 2.6vw, 3.125rem);
+		right: calc(var(--gutter) + clamp(0rem, 1.8vw, 2.125rem));
+		width: clamp(2.25rem, 2.6vw, 3.125rem);
+	}
+
+	&__inner {
+		display: grid;
+		gap: 2.5rem;
+		align-items: center;
+
+		@include mq(lg) {
+			grid-template-columns: minmax(0, 598fr) minmax(0, 942fr);
+			gap: clamp(2.5rem, 4.17vw, 5rem); // → 80
+		}
+	}
+
+	&__image {
+		@include rounded-photo(598, 404);
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	&__quote {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	&__message {
+		font-weight: var(--fw-light);
+
+		p + p {
+			margin-top: 1.25em;
+		}
+	}
+
+	&__signature {
+		display: flex;
+		flex-direction: column;
+		color: var(--color-accent);
+	}
+
+	&__name {
+		font-weight: var(--fw-semibold);
+	}
+
+	&__role {
+		font-weight: var(--fw-light);
+	}
+}

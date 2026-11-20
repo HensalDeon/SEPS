@@ -1,0 +1,95 @@
+@use "../abstracts/mixins" as *;
+
+.faq {
+	padding-block: var(--section-space);
+	background: var(--color-lilac);
+
+	&__inner {
+		display: grid;
+		gap: 2.5rem;
+		align-items: center;
+
+		@include mq(lg) {
+			grid-template-columns: minmax(0, 665fr) minmax(0, 855fr);
+			gap: clamp(2.5rem, 4.17vw, 5rem); // → 80
+		}
+	}
+
+	&__image {
+		@include rounded-photo(665, 610);
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 2.5rem;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 2.25rem;
+	}
+}
+
+.faq-item {
+	&__question {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 2.25rem;
+		color: var(--color-brand);
+		font-weight: var(--fw-semibold);
+		list-style: none;
+		cursor: pointer;
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+
+		&:hover span {
+			text-decoration: underline;
+			text-underline-offset: 0.2em;
+		}
+	}
+
+	&__icon {
+		flex-shrink: 0;
+		margin-top: 0.0625rem;
+		transform: rotate(90deg);
+		transition: transform var(--duration) var(--ease-out);
+	}
+
+	&[open] &__icon {
+		transform: rotate(-90deg);
+	}
+
+	&__answer {
+		padding-top: 1.25rem;
+		padding-right: 3.5rem;
+
+		> * + * {
+			margin-top: 0.75em;
+		}
+
+		a {
+			color: var(--color-brand);
+			text-decoration: underline;
+		}
+	}
+}
+
+// Smooth open/close where supported (Chromium 131+); otherwise instant.
+@supports selector(::details-content) {
+	.faq-item::details-content {
+		block-size: 0;
+		overflow: hidden;
+		transition:
+			block-size 300ms var(--ease-out),
+			content-visibility 300ms allow-discrete;
+	}
+
+	.faq-item[open]::details-content {
+		block-size: auto;
+	}
+}

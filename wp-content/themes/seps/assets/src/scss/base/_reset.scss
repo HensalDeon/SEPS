@@ -1,0 +1,111 @@
+@use "../abstracts/mixins" as *;
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+}
+
+html {
+	text-size-adjust: 100%;
+	interpolate-size: allow-keywords; // Enables height: auto transitions (FAQ).
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+body {
+	min-height: 100vh;
+	overflow-x: clip; // Decorative shapes intentionally bleed past the viewport.
+	background: var(--color-white);
+	color: var(--color-text);
+	font-family: var(--font-sans);
+	font-size: var(--fs-base);
+	font-weight: var(--fw-regular);
+	line-height: var(--lh-body);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+svg,
+video {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+// Zero specificity so component classes can set their own spacing.
+:where(ul[role="list"], ol[role="list"]) {
+	@include bare-list;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: var(--color-brand);
+	font-weight: var(--fw-semibold);
+	line-height: var(--lh-heading);
+	text-wrap: balance;
+	overflow-wrap: break-word;
+}
+
+p {
+	text-wrap: pretty;
+	overflow-wrap: break-word;
+}
+
+address {
+	font-style: normal;
+}
+
+[hidden] {
+	display: none !important;
+}
+
+:focus-visible {
+	outline: 3px solid var(--focus-color);
+	outline-offset: 3px;
+}
+
+@include reduced-motion {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

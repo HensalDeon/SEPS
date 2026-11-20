@@ -1,0 +1,98 @@
+@use "../abstracts/mixins" as *;
+
+// Desktop: navy panel (52.5%) + photo (47.5%), 950px tall at 1920.
+// The darker arc is 830px wide, starting at 545px — expressed relative to the
+// panel (54.07% / 82.34%) so it also works when the layout stacks.
+
+.hero {
+	--focus-color: var(--color-accent);
+
+	position: relative;
+	display: grid;
+	overflow: hidden;
+	background: var(--color-navy);
+
+	@include mq(lg) {
+		grid-template-columns: 52.5fr 47.5fr;
+		min-height: clamp(36rem, 49.48vw, 59.375rem); // → 950
+	}
+
+	&__panel {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		padding: calc(var(--section-space) * 1.25) var(--gutter);
+
+		@include mq(lg) {
+			padding-inline-end: clamp(2rem, 4.5vw, 5.5rem);
+		}
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset-block: 0;
+			left: 54.07%;
+			width: 82.34%;
+			border-radius: 0 0 9999px 9999px;
+			background: var(--color-navy-shade);
+		}
+	}
+
+	&__content {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: clamp(1.5rem, 1.2rem + 1.2vw, 2.5rem);
+		max-width: 48.1875rem; // 771
+	}
+
+	&__title {
+		color: var(--color-accent);
+		font-size: var(--fs-display);
+		line-height: var(--lh-heading);
+	}
+
+	&__text {
+		color: var(--color-white);
+		font-weight: var(--fw-light);
+	}
+
+	&__media {
+		position: relative;
+		z-index: 2;
+		aspect-ratio: 4 / 3;
+
+		@include mq(md) {
+			aspect-ratio: 16 / 9;
+		}
+
+		@include mq(lg) {
+			aspect-ratio: auto;
+		}
+	}
+
+	&__image {
+		position: absolute;
+		inset: 0;
+
+		@include cover-image;
+	}
+
+	// Flower sits on the seam between panel and photo.
+	&__decor {
+		position: absolute;
+		top: 0;
+		right: var(--gutter);
+		width: clamp(2.25rem, 2.6vw, 3.125rem);
+		transform: translateY(-50%);
+
+		@include mq(lg) {
+			top: 15.58%; // 148 / 950
+			right: auto;
+			left: 0;
+			transform: translateX(-50%);
+		}
+	}
+}

@@ -1,0 +1,144 @@
+@use "../abstracts/mixins" as *;
+
+.about {
+	position: relative;
+	display: grid;
+	gap: var(--section-space);
+	padding-bottom: var(--section-space);
+
+	@include mq(xl) {
+		grid-template-columns: minmax(0, 1fr) clamp(22rem, 30.68vw, 36.8125rem); // aside 589
+		gap: 0;
+		padding-bottom: 0;
+	}
+
+	&__decor {
+		position: absolute;
+		top: clamp(1rem, 3.44vw, 4.125rem);
+		left: clamp(0.75rem, 4.64vw, 5.5625rem);
+		width: clamp(2rem, 2.6vw, 3.125rem);
+	}
+
+	// -------------------------------------------------------------------------
+	// Main column
+	// -------------------------------------------------------------------------
+
+	&__main {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(2.5rem, 2.2rem + 1vw, 3rem);
+		padding: var(--section-space) var(--gutter) 0;
+
+		@include mq(xl) {
+			padding-block-end: var(--section-space);
+			padding-inline-end: clamp(2rem, 5.6vw, 6.75rem);
+		}
+	}
+
+	&__lead {
+		display: grid;
+		gap: 2rem;
+		align-items: center;
+
+		@include mq(md) {
+			grid-template-columns: minmax(0, 31rem) minmax(0, 32.125rem); // 496 / 514
+			gap: clamp(1.5rem, 1.93vw, 2.3125rem);
+		}
+	}
+
+	&__media {
+		max-width: 20rem;
+
+		@include mq(md) {
+			max-width: none;
+		}
+	}
+
+	&__image {
+		aspect-ratio: 1;
+		border-radius: 50%;
+
+		@include cover-image;
+	}
+
+	&__features {
+		display: grid;
+		gap: 2.5rem;
+		max-width: 67.125rem; // 1074
+
+		@include mq(md) {
+			grid-template-columns: 461fr 527fr;
+			column-gap: clamp(2rem, 4.48vw, 5.375rem);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Lilac side panel (pill with a semicircular bottom)
+	// -------------------------------------------------------------------------
+
+	&__aside {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2rem;
+		width: min(100% - 2 * var(--gutter), 36.8125rem);
+		margin-inline: auto;
+		padding: clamp(3rem, 5.2vw, 6.25rem) clamp(1.5rem, 4.95vw, 5.9375rem) clamp(4rem, 5vw, 5.8rem);
+		border-radius: 0 0 9999px 9999px;
+		background: var(--color-lilac);
+
+		@include mq(xl) {
+			align-self: start;
+			width: auto;
+			margin: 0;
+		}
+	}
+
+	&__aside-content {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.5rem;
+		width: 100%;
+		max-width: 24.375rem; // 390
+	}
+
+	&__intro {
+		color: var(--color-brand);
+	}
+
+	&__aside-media {
+		position: relative;
+		width: min(100%, 25rem); // 400
+	}
+
+	&__aside-image {
+		aspect-ratio: 1;
+		border-radius: 50%;
+
+		@include cover-image;
+	}
+
+	&__aside-decor {
+		position: absolute;
+		top: 66.75%;
+		left: -3%;
+		width: 25%;
+	}
+}
+
+.feature {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1.5rem;
+
+	&__icon {
+		width: clamp(2.5rem, 2.6vw, 3.125rem);
+		height: auto;
+	}
+
+	&__title {
+		font-size: var(--fs-h3);
+	}
+}

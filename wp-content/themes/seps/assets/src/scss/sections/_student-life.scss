@@ -1,0 +1,72 @@
+@use "../abstracts/mixins" as *;
+
+.student-life {
+	padding-block: var(--section-space);
+	border-bottom-right-radius: clamp(6rem, 20.8vw, 25rem); // → 400
+	background: var(--color-lilac);
+
+	&__inner {
+		display: grid;
+		grid-template-areas:
+			"content"
+			"media"
+			"stat";
+		gap: 2.5rem;
+
+		@include mq(md) {
+			grid-template-areas:
+				"content media"
+				"stat media";
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+			column-gap: 3rem;
+		}
+
+		@include mq(xl) {
+			grid-template-areas: "content media stat";
+			grid-template-columns: minmax(0, 34.3125rem) minmax(0, 37.375rem) minmax(0, 14.75rem); // 549 / 598 / 236
+			justify-content: space-between;
+		}
+	}
+
+	&__content {
+		position: relative;
+		grid-area: content;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: center;
+		gap: 1.5rem;
+	}
+
+	&__decor {
+		width: clamp(4rem, 5.2vw, 6.25rem);
+
+		@include mq(xl) {
+			position: absolute;
+			top: calc(var(--section-space) * -0.5);
+			left: 0;
+		}
+	}
+
+	&__media {
+		grid-area: media;
+	}
+
+	&__image {
+		@include rounded-photo(598, 520);
+	}
+
+	&__stat {
+		grid-area: stat;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	&__stat-value {
+		color: var(--color-brand);
+		font-size: var(--fs-h2);
+		font-weight: var(--fw-semibold);
+		line-height: 1;
+	}
+}
