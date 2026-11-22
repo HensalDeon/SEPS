@@ -102,6 +102,18 @@ composer install   # also installs WordPress stubs, which removes IDE "unknown f
 composer lint
 ```
 
+## Layout rule for new pages: `--edge`
+
+Every section must line up with the header at every screen width, including wider than the 1920px design.
+
+- **Contained content:** use `.container` (max 1620px).
+- **Full-bleed sections** (background or photo to the screen edge): keep the background full-bleed, but pad or position the content with **`var(--edge)`**, the distance from the screen edge to the container edge. Never use `--gutter` or fixed values measured from the screen edge.
+  - Text in a full-bleed half: `padding-inline-start: var(--edge);`
+  - Decorative shapes: `left/right: var(--edge)` or `calc(var(--edge) ± …)`
+  - Compositions that only work at design width: `max-width: 120rem; margin-inline: auto;`
+- `--edge` only works inside `<main>`. In the header or footer, use `max(var(--gutter), (100% - var(--container-max)) / 2)`.
+- **Check new pages at 390, 768, 1280, 1440, 1920 and 2560px.** At 2560, every section should start on the same line as the header logo.
+
 ## Responsive behaviour
 
 The Figma file has desktop frames only. Responsive layouts follow the design's structure:
