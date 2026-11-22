@@ -1,5 +1,10 @@
 @use "../abstracts/mixins" as *;
 
+// Query container for the --edge token (see abstracts/_tokens.scss).
+.site-main {
+	container-type: inline-size;
+}
+
 .container {
 	width: min(100% - 2 * var(--gutter), var(--container-max));
 	margin-inline: auto;

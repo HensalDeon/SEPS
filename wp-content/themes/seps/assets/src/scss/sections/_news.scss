@@ -7,7 +7,7 @@
 	&__decor {
 		position: absolute;
 		top: clamp(0.75rem, 1.1vw, 1.3125rem);
-		right: var(--gutter);
+		right: var(--edge);
 		width: clamp(3.5rem, 5.2vw, 6.25rem);
 	}
 

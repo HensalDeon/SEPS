@@ -23,6 +23,7 @@
 		display: flex;
 		align-items: center;
 		padding: calc(var(--section-space) * 1.25) var(--gutter);
+		padding-inline-start: var(--edge); // Align with the container on wide screens.
 
 		@include mq(lg) {
 			padding-inline-end: clamp(2rem, 4.5vw, 5.5rem);
@@ -33,7 +34,7 @@
 			position: absolute;
 			inset-block: 0;
 			left: 54.07%;
-			width: 82.34%;
+			width: min(82.34%, 51.875rem); // ≤ 830px, as in the design.
 			border-radius: 0 0 9999px 9999px;
 			background: var(--color-navy-shade);
 		}
@@ -84,7 +85,7 @@
 	&__decor {
 		position: absolute;
 		top: 0;
-		right: var(--gutter);
+		right: var(--edge);
 		width: clamp(2.25rem, 2.6vw, 3.125rem);
 		transform: translateY(-50%);
 

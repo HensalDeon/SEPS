@@ -49,7 +49,7 @@
 
 		@include mq(xl) {
 			position: absolute;
-			right: 0;
+			right: calc(var(--edge) - var(--gutter)); // Screen edge at 1920; follows the container when wider.
 			bottom: calc(var(--media-w) * -0.222); // 123 / 554
 			width: var(--media-w);
 		}

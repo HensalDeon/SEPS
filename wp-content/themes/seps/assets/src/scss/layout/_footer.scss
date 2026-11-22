@@ -16,8 +16,8 @@
 			position: absolute;
 			z-index: -1;
 			inset-block: 0;
-			left: 82.55%;
-			width: 43.23%;
+			left: calc(100% - max(var(--gutter), (100% - var(--container-max)) / 2) - 11.5625rem); // 185px inside the container edge
+			width: min(43.23%, 51.875rem); // ≤ 830px
 			border-radius: 0 0 9999px 9999px;
 			background: var(--color-navy-deep);
 		}
@@ -27,7 +27,7 @@
 		position: absolute;
 		z-index: 2;
 		top: 0;
-		right: var(--gutter);
+		right: max(var(--gutter), (100% - var(--container-max)) / 2);
 		width: clamp(2.25rem, 2.6vw, 3.125rem);
 		transform: translate(50%, -50%);
 	}

@@ -40,6 +40,12 @@
 	--container-wide: 109.0625rem; // 1745px
 	--gutter: clamp(1.25rem, -0.722rem + 8.414vw, 9.375rem); // 20 → 150
 	--gutter-tight: clamp(1.25rem, 4.5vw, 5.5rem);
+
+	// Distance from the viewport edge to the .container edge. Full-bleed
+	// sections pad/position content with this so it lines up with every
+	// other section on wide screens. `cqi` resolves against .site-main
+	// (an inline-size container), so it excludes the scrollbar.
+	--edge: max(var(--gutter), (100cqi - var(--container-max)) / 2);
 	--section-space: clamp(3.5rem, 2.83rem + 2.848vw, 6.25rem); // 56 → 100
 
 	// Shape.

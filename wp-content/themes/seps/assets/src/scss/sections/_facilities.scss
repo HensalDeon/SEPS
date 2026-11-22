@@ -7,7 +7,7 @@
 	&__decor {
 		position: absolute;
 		top: clamp(1rem, 1.77vw, 2.125rem);
-		left: clamp(0.75rem, 3.85vw, 4.625rem);
+		left: max(0.75rem, var(--edge) - 4.75rem); // 74px at 1920
 		width: clamp(3.5rem, 5.2vw, 6.25rem);
 	}
 

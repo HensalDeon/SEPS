@@ -3,6 +3,8 @@
 .about {
 	position: relative;
 	display: grid;
+	max-width: 120rem; // Cap at the 1920px design width; centred on wider screens.
+	margin-inline: auto;
 	gap: var(--section-space);
 	padding-bottom: var(--section-space);
 

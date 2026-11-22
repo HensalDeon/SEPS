@@ -12,7 +12,7 @@
 	&__decor {
 		position: absolute;
 		top: clamp(1.25rem, 2.6vw, 3.125rem);
-		right: calc(var(--gutter) + clamp(0rem, 1.8vw, 2.125rem));
+		right: calc(var(--edge) + clamp(0rem, 1.8vw, 2.125rem));
 		width: clamp(2.25rem, 2.6vw, 3.125rem);
 	}
 
