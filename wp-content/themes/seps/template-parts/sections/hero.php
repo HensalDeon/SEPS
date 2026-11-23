@@ -15,6 +15,7 @@
  *     @type int    $image   Attachment ID.
  *     @type string $variant 'home' (default) or 'page'.
  *     @type string $decor   Page variant only: 'none' (default), 'sun' or 'flower'.
+ *     @type string $image_focus Part of the photo kept in view: 'top', 'upper' (default) or 'center'.
  * }
  */
 
@@ -32,6 +33,7 @@ $seps_decor   = array(
 	'flower' => 'flower-yellow',
 	'sun'    => 'sun-yellow',
 )[ $seps_decor ] ?? '';
+$seps_focus   = in_array( $args['image_focus'] ?? '', array( 'top', 'center' ), true ) ? $args['image_focus'] : '';
 $seps_id      = wp_unique_id( 'seps-hero-' );
 $seps_text    = trim( (string) ( $args['text'] ?? '' ) );
 $seps_image   = seps_image(
@@ -46,7 +48,7 @@ $seps_image   = seps_image(
 	)
 );
 ?>
-<section class="hero<?php echo $seps_is_page ? ' hero--page' : ''; ?>" aria-labelledby="<?php echo esc_attr( $seps_id ); ?>">
+<section class="hero<?php echo $seps_is_page ? ' hero--page' : ''; ?><?php echo $seps_focus ? ' hero--focus-' . esc_attr( $seps_focus ) : ''; ?>" aria-labelledby="<?php echo esc_attr( $seps_id ); ?>">
 	<div class="hero__panel">
 		<div class="hero__content">
 			<h1 id="<?php echo esc_attr( $seps_id ); ?>" class="hero__title"><?php echo seps_multiline( $seps_title ); ?></h1>

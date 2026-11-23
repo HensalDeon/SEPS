@@ -89,6 +89,14 @@
 		@include cover-image;
 	}
 
+	&--focus-top &__image {
+		object-position: center top;
+	}
+
+	&--focus-center &__image {
+		object-position: center;
+	}
+
 	// Inner pages (Page Hero section): 700px at 1920, arc starts at 649px.
 	&--page {
 		@include mq(lg) {
@@ -124,5 +132,13 @@
 
 	@include mq(lg) {
 		top: 60.71%;
+	}
+}
+
+// Flower on inner pages: centred on the seam, halfway down (325 / 700).
+.hero--page .hero__decor--flower-yellow {
+	@include mq(lg) {
+		top: 50%;
+		transform: translate(-50%, -50%);
 	}
 }

@@ -10,7 +10,8 @@
  *     @type string $content    Text (HTML).
  *     @type array  $buttons    Repeater: link, style ('accent'|'primary').
  *     @type int    $image      Attachment ID.
- *     @type string $image_size 'narrow' (fills the text height) | 'wide' (landscape).
+ *     @type string $image_size     'narrow' (fills the text height) | 'wide' (landscape) | 'large' (half width).
+ *     @type string $image_position 'right' (default) | 'left'.
  *     @type string $decor      'none' | 'flower' | 'halves'.
  * }
  */
@@ -25,7 +26,7 @@ if ( '' === $seps_heading && '' === $seps_content ) {
 }
 
 $seps_background = in_array( $args['background'] ?? '', array( 'white', 'lilac', 'navy' ), true ) ? $args['background'] : 'white';
-$seps_wide       = 'wide' === ( $args['image_size'] ?? 'narrow' );
+$seps_size       = in_array( $args['image_size'] ?? '', array( 'narrow', 'wide', 'large' ), true ) ? $args['image_size'] : 'narrow';
 $seps_decor      = array(
 	'flower' => 'flower-brand',
 	'halves' => 'halves-lilac',
@@ -36,13 +37,21 @@ $seps_image      = seps_image(
 	'large',
 	array(
 		'class' => 'text-image__image',
-		'sizes' => $seps_wide ? '(min-width: 1024px) 593px, 100vw' : '(min-width: 1024px) 384px, 100vw',
+		'sizes' => array(
+			'narrow' => '(min-width: 1024px) 384px, 100vw',
+			'wide'   => '(min-width: 1024px) 593px, 100vw',
+			'large'  => '(min-width: 1024px) 50vw, 100vw',
+		)[ $seps_size ],
 	)
 );
 
 $seps_classes = array( 'text-image', 'text-image--' . $seps_background );
 if ( $seps_image ) {
-	$seps_classes[] = $seps_wide ? 'text-image--wide' : 'text-image--narrow';
+	$seps_classes[] = 'text-image--' . $seps_size;
+
+	if ( 'left' === ( $args['image_position'] ?? 'right' ) ) {
+		$seps_classes[] = 'text-image--image-left';
+	}
 }
 ?>
 <section class="<?php echo esc_attr( implode( ' ', $seps_classes ) ); ?>"<?php echo $seps_heading ? ' aria-labelledby="' . esc_attr( $seps_id ) . '"' : ''; ?>>

@@ -37,7 +37,7 @@
 		gap: 2.5rem;
 
 		@include mq(lg) {
-			grid-template-columns: minmax(0, 1fr) minmax(0, var(--text-image-media, 24rem));
+			grid-template-columns: minmax(0, var(--text-image-text, 1fr)) minmax(0, var(--text-image-media, 24rem));
 			gap: clamp(2.5rem, 4.17vw, 5rem); // → 80
 		}
 	}
@@ -46,6 +46,25 @@
 		--text-image-media: 37.0625rem; // 593
 
 		align-items: center;
+	}
+
+	// Large: photo and text share the row (798 : 741), e.g. "Discover Our Campus".
+	&--large &__inner {
+		--text-image-text: 741fr;
+		--text-image-media: 798fr;
+
+		align-items: center;
+	}
+
+	// Photo on the left (first on small screens too).
+	&--image-left &__media {
+		order: -1;
+	}
+
+	&--image-left &__inner {
+		@include mq(lg) {
+			grid-template-columns: minmax(0, var(--text-image-media, 24rem)) minmax(0, var(--text-image-text, 1fr));
+		}
 	}
 
 	&__content {
@@ -90,6 +109,10 @@
 
 	&--wide &__image {
 		@include rounded-photo(593, 291);
+	}
+
+	&--large &__image {
+		@include rounded-photo(798, 496);
 	}
 
 	&__decor {

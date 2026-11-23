@@ -1,0 +1,285 @@
+@use "../abstracts/mixins" as *;
+
+// Cards (carousel or grid) — e.g. Student Council, Education & Activities,
+// Achievements and Media Gallery on Student Life.
+
+.card-list {
+	--photo-card-height: clamp(14rem, 17.45vw, 20.9375rem); // → 335
+
+	position: relative;
+	padding-block: var(--section-space);
+
+	&--white {
+		background: var(--color-white);
+	}
+
+	&--lilac {
+		background: var(--color-lilac);
+	}
+
+	&--navy {
+		--focus-color: var(--color-accent);
+
+		background: var(--color-navy);
+		color: var(--color-white);
+
+		.section-title {
+			color: var(--color-white);
+		}
+
+		// e.g. "View Teachers' Achievements": yellow with brand text.
+		.btn--accent {
+			color: var(--color-brand);
+		}
+	}
+
+	&--photo-medium {
+		--photo-card-height: clamp(12.5rem, 13vw, 15.625rem); // → 250
+	}
+
+	&--photo-small {
+		--photo-card-height: clamp(9rem, 8.85vw, 10.625rem); // → 170
+	}
+
+	&__inner {
+		position: relative;
+		z-index: 1;
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2rem;
+	}
+
+	&__intro {
+		font-weight: var(--fw-light);
+	}
+
+	// "With appreciation, / Faculty & Staff, …" in brand, first line bold.
+	&__signature {
+		margin-top: -0.5rem; // 24 after the intro.
+		color: var(--color-brand);
+
+		strong {
+			font-weight: var(--fw-semibold);
+		}
+	}
+
+	&__body {
+		margin-top: 2rem;
+	}
+
+	// e.g. Student Council: 80px between the letter and the panel.
+	&--spacious &__body {
+		margin-top: clamp(2.5rem, 4.17vw, 5rem);
+	}
+
+	&__panel {
+		--focus-color: var(--color-accent);
+
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		padding: 1.5rem;
+		border-radius: var(--radius);
+		background: var(--color-navy);
+	}
+
+	&--spacious &__panel {
+		padding: clamp(1.5rem, 2.5vw, 3rem) clamp(1rem, 1.67vw, 2rem); // → 48 / 32
+	}
+
+	&__panel-title {
+		color: var(--color-white);
+		font-size: clamp(1.25rem, 1.15rem + 0.3vw, 1.5rem); // → 24
+	}
+
+	&__grid {
+		@include bare-list;
+
+		display: grid;
+		gap: 1.5rem;
+
+		@include mq(md) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		@include mq(lg) {
+			grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+		}
+
+		&--4 {
+			--columns: 4;
+		}
+	}
+
+	&__item {
+		display: flex;
+
+		// Two per row on tablets: a last odd card takes the full row.
+		@include mq(md) {
+			&:last-child:nth-child(odd) {
+				grid-column: 1 / -1;
+			}
+		}
+
+		@include mq(lg) {
+			&:last-child:nth-child(odd) {
+				grid-column: auto;
+			}
+		}
+	}
+
+	// Side photo: a circle on a lilac shape that runs to the screen edge.
+	&__side {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		margin-top: 2.5rem;
+		padding-inline: var(--gutter);
+	}
+
+	&__blob {
+		display: none;
+	}
+
+	&__photo {
+		@include cover-image;
+
+		width: min(100%, 20rem);
+		height: auto;
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+
+	@include mq(xl) {
+		// Tall enough for the shape (674 / 935.5 of its width).
+		&--has-side {
+			min-height: calc(min(48.73vw, 58.4706rem) * 0.7205);
+		}
+
+		&--has-side &__inner > * {
+			max-width: 63.1%; // 1022 / 1620
+		}
+
+		&__side {
+			position: absolute;
+			top: 0;
+			right: calc(var(--edge) - var(--gutter));
+			display: block;
+			width: min(48.73%, 58.4706rem); // 935.5 / 1920, capped at design size
+			margin: 0;
+			padding: 0;
+		}
+
+		&__blob {
+			display: block;
+			width: 100%;
+		}
+
+		// Wider than the design: continue the shape's flat top band
+		// (352 / 674 of its height) to the screen edge.
+		&__side::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: calc(100% - 1px); // Overlap by 1px: no hairline seam.
+			width: calc(var(--edge) - var(--gutter) + 1px);
+			height: 52.23%;
+			background: var(--color-lilac);
+		}
+
+		// 463px circle at (371, 117) on the 935.5 × 674 shape.
+		&__photo {
+			position: absolute;
+			top: 17.36%;
+			left: 39.66%;
+			width: 49.49%;
+		}
+	}
+
+	// Sun, top right (100px at 1459 / 84 in the design).
+	&__decor {
+		position: absolute;
+		top: clamp(1rem, 4.375vw, 5.25rem);
+		right: calc(var(--edge) + clamp(0rem, 11vw, 13.1875rem));
+		width: clamp(3.5rem, 5.2vw, 6.25rem);
+	}
+}
+
+// White card: photo, title, optional text and button.
+.photo-card {
+	position: relative;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 1.5rem;
+	padding-bottom: 1.5rem;
+	overflow: hidden;
+	border-radius: var(--radius);
+	background: var(--color-white);
+	color: var(--color-text);
+
+	&__image {
+		@include cover-image;
+
+		height: var(--photo-card-height, 15.625rem);
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+		padding-inline: 1.5rem;
+	}
+
+	&__title {
+		color: var(--color-brand);
+		font-size: var(--fs-base);
+		font-weight: var(--fw-semibold);
+		line-height: var(--lh-body);
+
+		// Title-only cards (e.g. reports) use the medium weight, as designed.
+		&:only-child {
+			font-weight: var(--fw-medium);
+		}
+	}
+
+	&__button {
+		margin-top: 0.5rem;
+	}
+
+	// Whole card clickable: stretch the title link over the card.
+	&__link {
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+		}
+
+		&:focus-visible {
+			outline: none;
+		}
+	}
+
+	&--linked {
+		transition: transform var(--duration) var(--ease-out);
+
+		&:hover {
+			transform: translateY(-0.25rem);
+		}
+
+		&:hover .photo-card__link {
+			text-decoration: underline;
+			text-underline-offset: 0.2em;
+		}
+
+		&:focus-within {
+			outline: 2px solid var(--focus-color);
+			outline-offset: 3px;
+		}
+	}
+}

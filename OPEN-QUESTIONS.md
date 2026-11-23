@@ -41,3 +41,13 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 19 | **Fee collection hours:** The Figma shows "Sunday to Thursday 8 AM – 2 PM, Friday & Saturday 8 AM – 12 PM". UAE schools run Monday to Friday. Are these hours correct? | As in the Figma | _Pending_ |
 | 20 | **Admissions FAQs:** Can we get answers to questions 2–5? The Figma only shows the first. | Answers written from other site content (please verify) | _Pending_ |
 | 21 | **View Registration:** Should this link to the Register Now page, or to a registration timeline document? | Register Now page | _Pending_ |
+
+## Student Life page
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 22 | **Student Council:** The Figma shows 4 members but 3 carousel dots, which implies more. Can we get the full Cabinet & Council of Ministers list (name, role, photo)? | The 4 members shown | _Pending_ |
+| 23 | **Activity reports:** Where should the GCC Exhibition, National Day, Flag Day and Emirates Red Crescent cards link (PDFs or News posts)? And where should *Read More* go? | Cards not linked; *Read More* → News & Events | _Pending_ |
+| 24 | **Achievements:** Where should *View Teachers' Achievements 2025–26* and each year's *View* button go? | `#` | _Pending_ |
+| 25 | **Media Gallery:** The year labels don't match the descriptions (e.g. card "2023–24" says "moments from the 2022–23 academic year"). Which is right? Where should *View* go? | As in the Figma; `#` | _Pending_ |
+| 26 | **Photos:** Can we get higher-resolution versions of the hero photo (Figma original 320×480px) and the campus photo (735×372px)? | Figma images | _Pending_ |

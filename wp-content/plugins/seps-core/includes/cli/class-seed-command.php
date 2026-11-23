@@ -60,6 +60,7 @@ final class Seed_Command {
 		'about'        => 'About page',
 		'academics'    => 'Academics page',
 		'admissions'   => 'Admissions page',
+		'student-life' => 'Student Life page',
 	);
 
 	/**
@@ -73,7 +74,7 @@ final class Seed_Command {
 	 * [--only=<steps>]
 	 * : Comma-separated steps to run (default: all). Available: identity,
 	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
-	 * about, academics, admissions.
+	 * about, academics, admissions, student-life.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -126,6 +127,7 @@ final class Seed_Command {
 			'about'        => fn() => $this->seed_about(),
 			'academics'    => fn() => $this->seed_academics(),
 			'admissions'   => fn() => $this->seed_admissions(),
+			'student-life' => fn() => $this->seed_student_life(),
 		);
 
 		foreach ( self::STEPS as $key => $label ) {
@@ -1206,6 +1208,156 @@ final class Seed_Command {
 		);
 
 		update_field( 'field_seps_page_sections', $sections, $this->pages['admissions'] );
+	}
+
+	/**
+	 * Student Life page: hero, student council, activities, achievements,
+	 * media gallery and campus tour.
+	 */
+	private function seed_student_life(): void {
+		$link = static fn( string $title, string $url = '#' ): array => array(
+			'url'    => $url,
+			'title'  => $title,
+			'target' => '',
+		);
+		$card = fn( string $image, string $alt, string $title, string $text = '', ?array $url = null ): array => array(
+			'image' => $this->image( $image, $alt ),
+			'title' => $title,
+			'text'  => $text,
+			'link'  => $url,
+		);
+
+		$years = array(
+			array( 'student-life-year-1.jpg', 'Curved library bookshelves', '2023–24' ),
+			array( 'student-life-year-2.jpg', 'Students working in a classroom', '2024–25' ),
+			array( 'student-life-year-3.jpg', 'Graduates throwing their caps in the air', '2025–26' ),
+		);
+
+		$achievements = array(
+			'Celebrating the achievements and milestones of our students from the 2023–24 academic year.',
+			'Discover the academic, creative, sporting and extracurricular achievements from 2024–25.',
+			'Explore the latest achievements, milestones and accomplishments from the 2025–26 academic year.',
+		);
+
+		// As in the design (the year labels and descriptions do not match; see OPEN-QUESTIONS.md).
+		$gallery = array(
+			'Memorable moments from the 2022–23 academic year.',
+			'A glimpse into school life and memorable moments from 2023–24.',
+			'Explore moments from classrooms, activities, events and celebrations from 2024–25.',
+		);
+
+		// Achievements and gallery: one card per school year, each with a "View" button.
+		$year_cards = static fn( array $texts ): array => array_map(
+			static fn( array $year, string $text ): array => $card( $year[0], $year[1], $year[2], $text, $link( 'View' ) ),
+			$years,
+			$texts
+		);
+
+		$sections = array(
+			array(
+				'acf_fc_layout' => 'page_hero',
+				'title'         => 'More Than a School Day',
+				'text'          => 'From learning and leadership to sports, activities and friendships, SEPS gives students the space to discover their strengths and make the most of their school years.',
+				'note'          => '',
+				'button'        => $link( 'Learn More', '#student-council' ),
+				'image'         => $this->image( 'student-life-hero.jpg', 'Young graduate in cap and gown making a heart with her hands' ),
+				'image_focus'   => 'top',
+				'decor'         => 'flower',
+			),
+			array(
+				'acf_fc_layout' => 'card_list',
+				'background'    => 'lilac',
+				'heading'       => 'Student Council 2025–2026',
+				'intro'         => '<p>We warmly congratulate the elected members of the School Cabinet and Council of Ministers for the 2025–2026 academic year.</p><p>Your election reflects the leadership qualities you have demonstrated and the trust your peers have placed in you. As you take on these responsibilities, lead with integrity, serve by example and uphold the values and standards of our school community.</p><p>We look forward to the positive changes, ideas and initiatives you will bring to SEPS during your tenure.</p>',
+				'signature'     => "With appreciation,\nFaculty & Staff, Sunrise English Private School",
+				'button'        => null,
+				'display'       => 'carousel',
+				'columns'       => '4',
+				'image_height'  => 'medium',
+				'panel'         => 1,
+				'panel_title'   => 'Elected Cabinet & Council of Ministers',
+				'cards'         => array(
+					$card( 'student-life-council-1.jpg', 'Utsukta Gurung', 'Utsukta Gurung', 'Home Minister' ),
+					$card( 'student-life-council-2.jpg', 'Annmiya Aby', 'Annmiya Aby', 'Health Minister' ),
+					$card( 'student-life-council-3.jpg', 'Samit TV', 'Samit TV', 'Culture Minister' ),
+					$card( 'student-life-council-4.jpg', 'Shreyas Sanil', 'Shreyas Sanil', 'Sports Minister' ),
+				),
+				'image'         => 0,
+				'decor'         => 'none',
+				'anchor'        => 'student-council',
+			),
+			array(
+				'acf_fc_layout' => 'card_list',
+				'background'    => 'white',
+				'heading'       => 'Education, National Identity & Activities',
+				'intro'         => '<p>Learning at SEPS extends beyond the classroom through cultural celebrations, national occasions, creative activities and community initiatives that help students explore their talents and build a strong sense of identity.</p>',
+				'signature'     => '',
+				'button'        => $link( 'Read More', get_permalink( $this->pages['news-events'] ) ),
+				'display'       => 'carousel',
+				'columns'       => '4',
+				'image_height'  => 'small',
+				'panel'         => 1,
+				'panel_title'   => '',
+				'cards'         => array(
+					$card( 'student-life-activity-1.jpg', 'Students pointing at a world map with flags', 'GCC Exhibition Report 2024' ),
+					$card( 'student-life-activity-2.jpg', 'Students visiting an art exhibition', 'National Day Report 2023' ),
+					$card( 'student-life-activity-3.jpg', 'Flag flying against the sky', 'Flag Day Assembly 2023' ),
+					$card( 'student-life-activity-4.jpg', 'Children working together on a flags project', 'Emirates Red Crescent' ),
+				),
+				'image'         => $this->image( 'student-life-activities.jpg', 'Young student drawing with a pencil' ),
+				'decor'         => 'none',
+			),
+			array(
+				'acf_fc_layout' => 'card_list',
+				'background'    => 'navy',
+				'heading'       => "Celebrating Our Achievements\nThrough the Years",
+				'intro'         => '<p>Every achievement tells a story of effort, talent and determination. Explore the milestones and accomplishments that have shaped the Sunrise English Private School community through the years.</p>',
+				'signature'     => '',
+				'button'        => $link( 'View Teachers’ Achievements 2025–26' ),
+				'display'       => 'carousel',
+				'columns'       => '3',
+				'image_height'  => 'large',
+				'panel'         => 0,
+				'panel_title'   => '',
+				'cards'         => $year_cards( $achievements ),
+				'image'         => 0,
+				'decor'         => 'sun',
+			),
+			array(
+				'acf_fc_layout' => 'card_list',
+				'background'    => 'lilac',
+				'heading'       => 'Media Gallery',
+				'intro'         => '<p>Every school year brings moments worth remembering. Explore our gallery of classrooms, celebrations, activities and everyday experiences that make life at SEPS memorable.</p>',
+				'signature'     => '',
+				'button'        => null,
+				'display'       => 'grid',
+				'columns'       => '3',
+				'image_height'  => 'large',
+				'panel'         => 0,
+				'panel_title'   => '',
+				'cards'         => $year_cards( $gallery ),
+				'image'         => 0,
+				'decor'         => 'none',
+			),
+			array(
+				'acf_fc_layout'  => 'text_image',
+				'background'     => 'white',
+				'heading'        => 'Discover Our Campus',
+				'content'        => '<p>Step inside a learning environment built for more than the classroom, with science labs, robotics, art and music rooms, a library and spaces for learning, activities and student life.</p><p>Come see the SEPS learning environment for yourself and discover the spaces where students learn, create and grow.</p>',
+				'buttons'        => array(
+					array(
+						'link'  => $this->link( 'contact', 'Contact Us' ),
+						'style' => 'primary',
+					),
+				),
+				'image'          => $this->image( 'student-life-campus.jpg', 'The Sunrise English Private School building' ),
+				'image_size'     => 'large',
+				'image_position' => 'left',
+				'decor'          => 'none',
+			),
+		);
+
+		update_field( 'field_seps_page_sections', $sections, $this->pages['student-life'] );
 	}
 
 	/*

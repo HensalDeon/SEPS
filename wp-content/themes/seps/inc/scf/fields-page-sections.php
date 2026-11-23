@@ -40,6 +40,7 @@ function page_section_templates(): array {
 		'text_image'      => 'text-image',
 		'checklist'       => 'checklist',
 		'faq'             => 'faq',
+		'card_list'       => 'card-list',
 		'text'            => 'text',
 	);
 }
@@ -134,6 +135,21 @@ function page_section_layouts(): array {
 				field( 'ps_hero', 'note', 'text', __( 'Small note above the button', 'seps' ), array( 'placeholder' => 'Admissions 2026–2027' ) ),
 				link_field( 'ps_hero', 'button', __( 'Button', 'seps' ) ),
 				image_field( 'ps_hero', 'image', __( 'Image', 'seps' ), array( 'required' => 1 ) ),
+				field(
+					'ps_hero',
+					'image_focus',
+					'button_group',
+					__( 'Keep in view', 'seps' ),
+					array(
+						'instructions'  => __( 'Which part of the photo stays visible when it is cropped.', 'seps' ),
+						'choices'       => array(
+							'top'    => __( 'Top', 'seps' ),
+							'upper'  => __( 'Upper third', 'seps' ),
+							'center' => __( 'Centre', 'seps' ),
+						),
+						'default_value' => 'upper',
+					)
+				),
 				field(
 					'ps_hero',
 					'decor',
@@ -670,8 +686,22 @@ function page_section_layouts(): array {
 						'choices'       => array(
 							'narrow' => __( 'Narrow (fills height)', 'seps' ),
 							'wide'   => __( 'Wide (landscape)', 'seps' ),
+							'large'  => __( 'Large (half width)', 'seps' ),
 						),
 						'default_value' => 'narrow',
+					)
+				),
+				field(
+					'ps_ti',
+					'image_position',
+					'button_group',
+					__( 'Photo position', 'seps' ),
+					array(
+						'choices'       => array(
+							'right' => __( 'Right', 'seps' ),
+							'left'  => __( 'Left', 'seps' ),
+						),
+						'default_value' => 'right',
 					)
 				),
 				field(
@@ -733,6 +763,146 @@ function page_section_layouts(): array {
 						'return_format' => 'id',
 						'max'           => 8,
 						'instructions'  => __( 'Pick and order questions (manage them under FAQs).', 'seps' ),
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_card_list'  => $layout(
+			'card_list',
+			__( 'Cards (carousel or grid)', 'seps' ),
+			array(
+				$background( 'ps_cardlist', array(
+						'white' => __( 'White', 'seps' ),
+						'lilac' => __( 'Lilac', 'seps' ),
+						'navy'  => __( 'Navy', 'seps' ),
+					), 'lilac' ),
+				field(
+					'ps_cardlist',
+					'heading',
+					'textarea',
+					__( 'Heading', 'seps' ),
+					array(
+						'rows'      => 2,
+						'new_lines' => '',
+					)
+				),
+				$rich( 'ps_cardlist', 'intro', __( 'Intro', 'seps' ) ),
+				field(
+					'ps_cardlist',
+					'signature',
+					'textarea',
+					__( 'Sign-off (optional)', 'seps' ),
+					array(
+						'instructions' => __( 'The first line is shown in bold, e.g. "With appreciation," then "Faculty & Staff".', 'seps' ),
+						'rows'         => 2,
+						'new_lines'    => '',
+					)
+				),
+				link_field( 'ps_cardlist', 'button', __( 'Button', 'seps' ) ),
+				field(
+					'ps_cardlist',
+					'display',
+					'button_group',
+					__( 'Show cards as', 'seps' ),
+					array(
+						'choices'       => array(
+							'carousel' => __( 'Carousel', 'seps' ),
+							'grid'     => __( 'Grid', 'seps' ),
+						),
+						'default_value' => 'carousel',
+					)
+				),
+				field(
+					'ps_cardlist',
+					'columns',
+					'button_group',
+					__( 'Cards per row (wide screens)', 'seps' ),
+					array(
+						'choices'       => array(
+							'3' => '3',
+							'4' => '4',
+						),
+						'default_value' => '3',
+					)
+				),
+				field(
+					'ps_cardlist',
+					'image_height',
+					'button_group',
+					__( 'Card photo height', 'seps' ),
+					array(
+						'choices'       => array(
+							'small'  => __( 'Small', 'seps' ),
+							'medium' => __( 'Medium', 'seps' ),
+							'large'  => __( 'Large', 'seps' ),
+						),
+						'default_value' => 'large',
+					)
+				),
+				field(
+					'ps_cardlist',
+					'panel',
+					'true_false',
+					__( 'Show cards on a navy panel', 'seps' ),
+					array( 'ui' => 1 )
+				),
+				field(
+					'ps_cardlist',
+					'panel_title',
+					'text',
+					__( 'Panel title (optional)', 'seps' ),
+					array(
+						'conditional_logic' => array(
+							array(
+								array(
+									'field'    => 'field_seps_ps_cardlist_panel',
+									'operator' => '==',
+									'value'    => '1',
+								),
+							),
+						),
+					)
+				),
+				field(
+					'ps_cardlist',
+					'cards',
+					'repeater',
+					__( 'Cards', 'seps' ),
+					array(
+						'layout'       => 'block',
+						'button_label' => __( 'Add card', 'seps' ),
+						'collapsed'    => 'field_seps_ps_cardlist_cards_title',
+						'sub_fields'   => array(
+							image_field( 'ps_cardlist_cards', 'image', __( 'Photo', 'seps' ), array( 'wrapper' => array( 'width' => '30' ) ) ),
+							field( 'ps_cardlist_cards', 'title', 'text', __( 'Title', 'seps' ), array( 'required' => 1 ) ),
+							field( 'ps_cardlist_cards', 'text', 'textarea', __( 'Text', 'seps' ), $text ),
+							link_field(
+								'ps_cardlist_cards',
+								'link',
+								__( 'Link', 'seps' ),
+								array( 'instructions' => __( 'With link text: shown as a button. Without: the whole card is clickable.', 'seps' ) )
+							),
+						),
+					)
+				),
+				image_field(
+					'ps_cardlist',
+					'image',
+					__( 'Side photo (optional)', 'seps' ),
+					array( 'instructions' => __( 'Shown in a circle on a lilac shape to the right of the cards.', 'seps' ) )
+				),
+				field(
+					'ps_cardlist',
+					'decor',
+					'button_group',
+					__( 'Decoration', 'seps' ),
+					array(
+						'choices'       => array(
+							'none' => __( 'None', 'seps' ),
+							'sun'  => __( 'Sun', 'seps' ),
+						),
+						'default_value' => 'none',
 					)
 				),
 			)

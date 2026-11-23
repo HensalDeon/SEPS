@@ -89,6 +89,7 @@ function seps_decor( string $name, string $class = '' ): string {
 		'hourglass-navy'  => 100,
 		'hourglass-brand' => 100,
 		'halves-lilac'    => array( 100, 148 ),
+		'blob-lilac'      => array( 936, 674 ),
 	);
 
 	if ( ! isset( $sizes[ $name ] ) ) {

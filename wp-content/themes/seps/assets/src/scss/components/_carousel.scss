@@ -60,6 +60,100 @@
 	}
 }
 
+// Card carousels (Cards section): prev/next arrows beside the track, and
+// as many cards per view as fit — up to 3 or 4 (carousel--max-*), based on
+// the width available to the track (container query).
+.carousel--cards {
+	.carousel__stage {
+		display: flex;
+		align-items: center;
+		gap: 2rem;
+		width: 100%;
+	}
+
+	.carousel__viewport {
+		flex: 1;
+		min-width: 0;
+		container: carousel / inline-size;
+	}
+
+	.carousel__track {
+		--per-view: 1;
+
+		grid-auto-columns: calc((100% - (var(--per-view) - 1) * 1.5rem) / var(--per-view));
+		gap: 1.5rem;
+	}
+
+	.carousel__arrow {
+		display: none;
+		flex-shrink: 0;
+		width: 1.875rem; // 30
+		height: 1.875rem;
+		border-radius: 50%;
+		transition: opacity var(--duration);
+
+		@include mq(md) {
+			display: inline-flex;
+		}
+
+		&:hover:not(:disabled) {
+			opacity: 0.75;
+		}
+
+		&:disabled {
+			opacity: 0.35;
+			cursor: default;
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	.carousel__arrow--prev img {
+		transform: scaleX(-1);
+	}
+}
+
+@container carousel (min-width: 26rem) {
+	.carousel--cards .carousel__track {
+		--per-view: 2;
+	}
+}
+
+// Small cards (up to 4 per view) step up sooner than large ones (up to 3).
+@container carousel (min-width: 38rem) {
+	.carousel--max-4 .carousel__track {
+		--per-view: 3;
+	}
+}
+
+@container carousel (min-width: 50rem) {
+	.carousel--max-4 .carousel__track {
+		--per-view: 4;
+	}
+}
+
+@container carousel (min-width: 56rem) {
+	.carousel--max-3 .carousel__track {
+		--per-view: 3;
+	}
+}
+
+// On white / lilac backgrounds: brand-coloured dots.
+.carousel--on-light .carousel__dot {
+	background: rgb(40 48 146 / 25%);
+
+	&:hover {
+		background: rgb(40 48 146 / 50%);
+	}
+
+	&[aria-current="true"] {
+		background: var(--color-brand);
+	}
+}
+
 .quote-card {
 	display: flex;
 	flex: 1;
