@@ -21,6 +21,8 @@ wider than the 1920px design.
 ## Other conventions
 
 - **Field groups:** SCF field groups are registered in code (`inc/scf/`), with stable keys `field_seps_{prefix}_{name}`. One Group field per section, passed to `template-parts/sections/*.php` as `$args`.
+- **Inner pages use the section builder** (`inc/scf/fields-page-sections.php`, flexible content `page_sections`, keys `field_seps_ps_{layout}_{name}`). For each new page design, reuse existing section types first; add new layouts only for genuinely new sections (see README "Building inner pages"). Use `wp_unique_id()` for heading IDs.
+- **Seeder:** each page gets its own `wp seps seed` step. Users run `--only=<steps>` on existing sites, because re-seeding overwrites edits.
 - **Content model:** post types and taxonomies go in the `seps-core` plugin, not the theme.
 - **Escaping:** template tags in `inc/template-tags.php` return fully escaped HTML.
 - **CSS:** BEM, design tokens as custom properties, mobile-first `mq()` mixin. The nav breakpoint is 1440px; keep `$breakpoints.nav` and `navigation.js` in sync.

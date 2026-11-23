@@ -81,6 +81,17 @@
 		@include cover-image;
 	}
 
+	// Inner pages (Page Hero section): 700px at 1920, arc starts at 649px.
+	&--page {
+		@include mq(lg) {
+			min-height: clamp(30rem, 36.46vw, 43.75rem); // → 700
+		}
+
+		.hero__panel::before {
+			left: 64.4%; // 649 / 1008
+		}
+	}
+
 	// Flower sits on the seam between panel and photo.
 	&__decor {
 		position: absolute;

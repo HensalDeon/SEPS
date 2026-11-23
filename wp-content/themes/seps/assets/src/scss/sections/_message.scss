@@ -1,0 +1,115 @@
+@use "../abstracts/mixins" as *;
+
+// Message with photo and pull quote — e.g. Chairman's message (About).
+// Lilac with a 415px rounded bottom-right corner (the design's dome shape).
+// Desktop columns: text 811 / photo 488 / quote 265.
+
+.message {
+	position: relative;
+	padding-block: var(--section-space);
+	border-bottom-right-radius: clamp(6rem, 21.6vw, 25.9375rem); // → 415
+	background: var(--color-lilac);
+
+	// Room for the flower above the heading once the layout stacks.
+	@include mq-down(lg) {
+		padding-top: calc(var(--section-space) + 2.5rem);
+	}
+
+	&__decor {
+		position: absolute;
+		top: clamp(1.25rem, 5.7vw, 6.875rem); // → 110
+		right: calc(var(--edge) + clamp(0rem, 1.8vw, 2.1875rem));
+		width: clamp(2.25rem, 2.6vw, 3.125rem);
+	}
+
+	&__inner {
+		display: grid;
+		gap: 2.5rem;
+		align-items: center;
+
+		@include mq(lg) {
+			grid-template-columns: minmax(0, 811fr) minmax(0, 488fr);
+			column-gap: 3rem;
+		}
+
+		@include mq(xl) {
+			grid-template-columns: minmax(0, 811fr) minmax(0, 488fr) minmax(0, 265fr);
+		}
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	&__body {
+		font-weight: var(--fw-light);
+
+		p + p {
+			margin-top: 1.25em;
+		}
+	}
+
+	&__signature {
+		display: flex;
+		flex-direction: column;
+		color: var(--color-brand);
+
+		strong {
+			font-weight: var(--fw-semibold);
+		}
+	}
+
+	&__media {
+		max-width: 30.5rem; // 488
+	}
+
+	&__image {
+		@include rounded-photo(488, 608);
+	}
+
+	&__quote {
+		color: var(--color-text);
+		font-size: clamp(1.25rem, 1.15rem + 0.3vw, 1.5rem); // → 24
+		font-weight: var(--fw-light);
+		line-height: 1.667; // 40px
+
+		@include mq(lg) {
+			grid-column: 1 / -1;
+			max-width: 30rem;
+		}
+
+		@include mq(xl) {
+			grid-column: auto;
+		}
+	}
+}
+
+// Decorative quotation glyph: two overlapping 33×44 marks. The SVG is a
+// closing mark; the opening one is mirrored, as in the design.
+.quote-mark {
+	display: inline-flex;
+	vertical-align: top;
+	height: 1.5em;
+	margin-inline-end: 0.125em;
+
+	img {
+		width: auto;
+		height: 100%;
+		transform: scaleX(-1);
+
+		+ img {
+			margin-inline-start: -0.833em; // -20px at 24px
+		}
+	}
+
+	&--close {
+		vertical-align: bottom;
+		margin-inline: 0.125em 0;
+
+		img {
+			transform: none;
+		}
+	}
+}

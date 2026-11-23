@@ -37,14 +37,52 @@ final class Seed_Command {
 	private array $pages = array();
 
 	/**
+	 * Team term IDs keyed by slug.
+	 *
+	 * @var array<string,int>
+	 */
+	private array $teams = array();
+
+	/**
+	 * Steps in run order: key => label.
+	 */
+	private const STEPS = array(
+		'identity'     => 'Site identity',
+		'pages'        => 'Pages',
+		'reading'      => 'Reading & permalink settings',
+		'menus'        => 'Menus',
+		'settings'     => 'Site Settings',
+		'testimonials' => 'Testimonials',
+		'faqs'         => 'FAQs',
+		'posts'        => 'News posts',
+		'home'         => 'Home page sections',
+		'staff'        => 'Staff',
+		'about'        => 'About page + sub-pages',
+	);
+
+	/**
 	 * Seed demo content for local development and design review.
+	 *
+	 * Seeded items are updated in place, so re-running a step overwrites any
+	 * edits made to those items. Use --only to run just the steps you need.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--only=<steps>]
+	 * : Comma-separated steps to run (default: all). Available: identity,
+	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
+	 * about.
 	 *
 	 * ## EXAMPLES
 	 *
+	 *     # Fresh site: everything.
 	 *     wp seps seed
 	 *
+	 *     # Existing site: add the About page content only.
+	 *     wp seps seed --only=staff,about
+	 *
 	 * @param array<int,string>    $args       Positional arguments (unused).
-	 * @param array<string,string> $assoc_args Associative arguments (unused).
+	 * @param array<string,string> $assoc_args Associative arguments.
 	 */
 	public function __invoke( array $args, array $assoc_args ): void {
 		if ( ! function_exists( 'update_field' ) ) {
@@ -60,15 +98,37 @@ final class Seed_Command {
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 
-		$this->step( 'Site identity', fn() => $this->seed_identity() );
-		$this->step( 'Pages', fn() => $this->seed_pages() );
-		$this->step( 'Reading & permalink settings', fn() => $this->seed_reading_settings() );
-		$this->step( 'Menus', fn() => $this->seed_menus() );
-		$this->step( 'Site Settings', fn() => $this->seed_site_settings() );
-		$this->step( 'Testimonials', fn() => $this->seed_testimonials() );
-		$this->step( 'FAQs', fn() => $this->seed_faqs() );
-		$this->step( 'News posts', fn() => $this->seed_posts() );
-		$this->step( 'Home page sections', fn() => $this->seed_front_page() );
+		$only = isset( $assoc_args['only'] ) ? array_filter( array_map( 'trim', explode( ',', $assoc_args['only'] ) ) ) : array_keys( self::STEPS );
+
+		$unknown = array_diff( $only, array_keys( self::STEPS ) );
+		if ( $unknown ) {
+			WP_CLI::error( sprintf( 'Unknown step(s): %s. Available: %s', implode( ', ', $unknown ), implode( ', ', array_keys( self::STEPS ) ) ) );
+		}
+
+		// Later steps need the seeded page IDs even when pages aren't re-seeded.
+		if ( ! in_array( 'pages', $only, true ) ) {
+			$this->index_pages();
+		}
+
+		$handlers = array(
+			'identity'     => fn() => $this->seed_identity(),
+			'pages'        => fn() => $this->seed_pages(),
+			'reading'      => fn() => $this->seed_reading_settings(),
+			'menus'        => fn() => $this->seed_menus(),
+			'settings'     => fn() => $this->seed_site_settings(),
+			'testimonials' => fn() => $this->seed_testimonials(),
+			'faqs'         => fn() => $this->seed_faqs(),
+			'posts'        => fn() => $this->seed_posts(),
+			'home'         => fn() => $this->seed_front_page(),
+			'staff'        => fn() => $this->seed_staff(),
+			'about'        => fn() => $this->seed_about(),
+		);
+
+		foreach ( self::STEPS as $key => $label ) {
+			if ( in_array( $key, $only, true ) ) {
+				$this->step( $label, $handlers[ $key ] );
+			}
+		}
 
 		WP_CLI::success( sprintf( 'Done. Visit %s', home_url( '/' ) ) );
 	}
@@ -584,6 +644,206 @@ final class Seed_Command {
 		}
 	}
 
+	/**
+	 * Staff members and their teams (Principals, Leadership Team).
+	 *
+	 * Only people with their own photo in the design get one; the design
+	 * reuses other staff photos as placeholders, which we don't replicate.
+	 */
+	private function seed_staff(): void {
+		foreach ( array( 'principals' => 'Principals', 'leadership-team' => 'Leadership Team' ) as $slug => $name ) {
+			$term = term_exists( $slug, 'seps_team' ) ?: wp_insert_term( $name, 'seps_team', array( 'slug' => $slug ) );
+
+			if ( is_wp_error( $term ) ) {
+				WP_CLI::error( $term );
+			}
+
+			$this->teams[ $slug ] = (int) $term['term_id'];
+		}
+
+		$people = array(
+			array( 'principals', 'Dr. Thakur S. Mulchandani', "Principal,\nSunrise English Private School", 'staff-principal.jpg' ),
+			array( 'principals', 'Mr. Thomas Francis', "Vice Principal,\nSunrise English Private School", 'staff-vice-principal.jpg' ),
+			array( 'leadership-team', 'Mrs. Cheryl Ann Felix', 'KG & Grade 1 Lead Teacher', 'staff-cheryl-ann-felix.jpg' ),
+			array( 'leadership-team', 'Mrs. Deepa Binu', 'Grade 2–3 Primary Section Lead Teacher', 'staff-deepa-binu.jpg' ),
+			array( 'leadership-team', 'Mrs. Sumitha Anilkumar', 'Grade 4–5 Primary Section Lead Teacher', 'staff-sumitha-anilkumar.jpg' ),
+			array( 'leadership-team', 'Mrs. Nausheen Ikhlaq', 'Grade 1, 2 & 3 Supervisor, Primary Section', '' ),
+			array( 'leadership-team', 'Mrs. Shajila Saithoon Beevi Majeed', 'Grade 4–5 Supervisor, Primary Section', '' ),
+			array( 'leadership-team', 'Mrs. Indu Suresh', 'Grade 6–12 Boys Section Lead Teacher', '' ),
+		);
+
+		foreach ( $people as $index => [ $team, $name, $position, $photo ] ) {
+			$id = $this->post(
+				'seps_person',
+				'person-' . sanitize_title( $name ),
+				array(
+					'post_title' => $name,
+					'menu_order' => $index + 1,
+				)
+			);
+
+			update_field( 'field_seps_person_position', $position, $id );
+			wp_set_object_terms( $id, $this->teams[ $team ], 'seps_team' );
+
+			if ( $photo ) {
+				set_post_thumbnail( $id, $this->image( $photo, $name ) );
+			} else {
+				delete_post_thumbnail( $id );
+			}
+		}
+	}
+
+	/**
+	 * About page and its sub-pages, built with the Page Sections builder.
+	 * Each sub-page reuses the matching About section.
+	 */
+	private function seed_about(): void {
+		foreach ( array( 'principals', 'leadership-team' ) as $slug ) {
+			if ( ! isset( $this->teams[ $slug ] ) ) {
+				$term = get_term_by( 'slug', $slug, 'seps_team' );
+				if ( ! $term ) {
+					WP_CLI::error( 'Staff teams are missing. Run: wp seps seed --only=staff,about' );
+				}
+				$this->teams[ $slug ] = (int) $term->term_id;
+			}
+		}
+
+		$hero = fn( string $title, string $text ): array => array(
+			'acf_fc_layout' => 'page_hero',
+			'title'         => $title,
+			'text'          => $text,
+			'button'        => $this->link( 'registrations', 'Apply Now' ),
+			'image'         => $this->image( 'about-hero.jpg', 'Young students drawing at their desks' ),
+		);
+
+		$mission = array(
+			array( 'Academic Excellence', 'We pursue academic excellence while meeting the diverse academic and non-academic needs of every student.' ),
+			array( 'Holistic Development', 'We nurture the whole child academically, socially and spiritually, helping students grow into responsible citizens.' ),
+			array( 'Community & Collaboration', 'We engage parents, staff and stakeholders in continuous improvement and in shaping the school\'s direction and future.' ),
+			array( 'UAE Culture & Values', 'We cultivate respect for the UAE\'s culture, religion and heritage while upholding the vision and values of Abu Dhabi 2030.' ),
+			array( 'Relevant & Lifelong Learning', 'We provide value-based education relevant to life, fostering critical thinking, creativity, individuality and a lifelong passion for learning.' ),
+			array( 'Excellence & Wellbeing', 'We uphold high standards, adapt to change and create a healthy, safe environment where every student can thrive.' ),
+		);
+
+		$vision = array(
+			'acf_fc_layout'  => 'media_text',
+			'image'          => $this->image( 'about-vision.jpg', 'Students walking together along a school corridor' ),
+			'image_position' => 'left',
+			'blocks'         => array(
+				array(
+					'heading' => 'Our Vision',
+					'text'    => 'To foster excellence in educating young people through collaboration, informed decision-making and continuous improvement, preparing responsible citizens to meet future global challenges.',
+					'cards'   => array(),
+				),
+				array(
+					'heading' => 'Our Mission',
+					'text'    => '',
+					'cards'   => array_map(
+						static fn( array $card ): array => array(
+							'title' => $card[0],
+							'text'  => $card[1],
+						),
+						$mission
+					),
+				),
+			),
+		);
+
+		$values = array(
+			'acf_fc_layout' => 'values',
+			'heading'       => 'Core Values & Code of Conduct',
+			'intro'         => 'Sunrise English Private School nurtures future citizens through a safe environment built on discipline, respect, perseverance and responsibility.',
+			'panel_title'   => 'What Students Are Expected to Follow',
+			'panel_items'   => array(
+				array(
+					'label' => 'Attendance & Punctuality',
+					'text'  => 'Maintain 90% attendance, arrive on time and follow the school\'s leave procedures.',
+				),
+				array(
+					'label' => 'Uniform & Personal Conduct',
+					'text'  => 'Wear the proper school uniform, maintain personal cleanliness and follow classroom and behavioural expectations.',
+				),
+				array(
+					'label' => 'School Rules & Safety',
+					'text'  => 'Respect school property, follow rules in common areas and do not bring prohibited or sharp objects to school.',
+				),
+				array(
+					'label' => 'Examinations',
+					'text'  => 'Attend all school examinations and follow examination rules, including regulations against unfair means.',
+				),
+			),
+			'panel_button'  => $this->link( 'rules-regulations', 'Learn More' ),
+			'accordion'     => array(
+				array(
+					'title'    => 'Discipline',
+					'subtitle' => 'Respecting rules and maintaining order',
+					'points'   => "Follow school rules and regulations\nMaintain personal hygiene and cleanliness\nCare for school facilities and property\nAim towards 100% attendance\nMaintain discipline in common areas",
+				),
+				array(
+					'title'    => 'Respect',
+					'subtitle' => 'Honouring beliefs, culture and dignity',
+					'points'   => "Respect the beliefs and cultures of others\nTreat classmates, staff and visitors with courtesy\nUse polite and considerate language",
+				),
+				array(
+					'title'    => 'Perseverance',
+					'subtitle' => 'Working hard and striving for improvement',
+					'points'   => "Complete work carefully and on time\nLearn from mistakes and keep trying\nSet goals and work towards them",
+				),
+				array(
+					'title'    => 'Responsibility',
+					'subtitle' => 'Making responsible and informed choices',
+					'points'   => "Take ownership of your actions\nMake safe and informed decisions\nLook after your belongings and the environment",
+				),
+			),
+		);
+
+		$message = array(
+			'acf_fc_layout' => 'message',
+			'heading'       => 'A Message of Triumph',
+			'message'       => "It gives me immense pleasure to celebrate the achievement of the coveted Band-A rating. This recognition is a testament to the hard work, dedication and honest efforts of the entire Sunrise family.\n\nSunrise English Private School has built a strong legacy in education, providing our students with opportunities to move beyond rote learning, discover their hidden potential and develop their individual talents and skills.\n\nWe believe in nurturing every child with care while allowing them to develop their own identity. I encourage our parents to join hands with us in giving our children the tools, opportunities and support they need to grow in body, mind and soul.\n\nI remain committed to extending my continued and unwavering support to the Sunrise community as we move forward with the same indomitable spirit.",
+			'name'          => 'Mr. Saeed Omeir Yousef Ahmed Almheiri',
+			'role'          => 'Chairman, Sunrise English Private School',
+			'image'         => $this->image( 'about-chairman.jpg', 'Young graduate in cap and gown smiling at a desk' ),
+			'quote'         => 'Children are the finest flowers, given to us to nurture with tender care.',
+		);
+
+		$team = array(
+			'acf_fc_layout' => 'team',
+			'heading'       => 'Senior Leadership Team',
+			'intro'         => 'Meet the leaders and educators who guide Sunrise English Private School and support the academic, personal and holistic development of our students.',
+			'groups'        => array(
+				array(
+					'heading' => 'Principals',
+					'team'    => $this->teams['principals'],
+					'style'   => 'featured',
+				),
+				array(
+					'heading' => 'Leadership Team',
+					'team'    => $this->teams['leadership-team'],
+					'style'   => 'grid',
+				),
+			),
+		);
+
+		$pages = array(
+			'about'             => array(
+				$hero( 'Discover Our School', 'Learn more about Sunrise English Private School, our educational approach, core values and commitment to helping every student learn, grow and reach their potential.' ),
+				$vision,
+				$values,
+				$message,
+				$team,
+			),
+			'vision-mission'    => array( $hero( 'Vision & Mission', 'The purpose and principles that guide everything we do at Sunrise English Private School.' ), $vision ),
+			'core-values'       => array( $hero( 'Core Values', 'Discipline, respect, perseverance and responsibility: the values every Sunrise student lives by.' ), $values ),
+			'chairmans-message' => array( $hero( 'Chairman’s Message', 'A message from the Chairman of Sunrise English Private School.' ), $message ),
+			'leadership'        => array( $hero( 'Leadership', 'Meet the principals and leadership team guiding Sunrise English Private School.' ), $team ),
+		);
+
+		foreach ( $pages as $key => $sections ) {
+			update_field( 'field_seps_page_sections', $sections, $this->pages[ $key ] );
+		}
+	}
+
 	/*
 	 * -------------------------------------------------------------------------
 	 * Helpers
@@ -599,6 +859,30 @@ final class Seed_Command {
 	private function step( string $label, callable $callback ): void {
 		WP_CLI::log( "• {$label}…" );
 		$callback();
+	}
+
+	/**
+	 * Map seed keys to existing page IDs (when the pages step is skipped).
+	 */
+	private function index_pages(): void {
+		$ids = get_posts(
+			array(
+				'post_type'        => 'page',
+				'post_status'      => 'any',
+				'posts_per_page'   => -1,
+				'fields'           => 'ids',
+				'meta_key'         => self::SEED_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- CLI only.
+				'suppress_filters' => true,
+			)
+		);
+
+		foreach ( $ids as $id ) {
+			$this->pages[ (string) get_post_meta( $id, self::SEED_META, true ) ] = (int) $id;
+		}
+
+		if ( ! isset( $this->pages['home'] ) ) {
+			WP_CLI::error( 'Seeded pages not found. Run the full seed first: wp seps seed' );
+		}
 	}
 
 	/**

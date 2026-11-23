@@ -82,3 +82,12 @@
 		}
 	}
 }
+
+// Text section (section builder) — readable measure inside the container.
+.text-section {
+	padding-block: var(--section-space);
+
+	&__title {
+		margin-bottom: 2rem;
+	}
+}

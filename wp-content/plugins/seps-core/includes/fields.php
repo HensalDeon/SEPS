@@ -54,3 +54,41 @@ function register_testimonial_fields(): void {
 	);
 }
 add_action( 'acf/include_fields', __NAMESPACE__ . '\\register_testimonial_fields' );
+
+/**
+ * Staff fields. Name = post title, photo = featured image, team = taxonomy.
+ */
+function register_person_fields(): void {
+	acf_add_local_field_group(
+		array(
+			'key'                   => 'group_seps_person',
+			'title'                 => __( 'Staff member', 'seps-core' ),
+			'position'              => 'acf_after_title',
+			'style'                 => 'seamless',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'seps_person',
+					),
+				),
+			),
+			'fields'                => array(
+				array(
+					'key'          => 'field_seps_person_position',
+					'name'         => 'position',
+					'label'        => __( 'Position', 'seps-core' ),
+					'type'         => 'textarea',
+					'rows'         => 2,
+					'new_lines'    => '',
+					'placeholder'  => __( 'Grade 2–3 Primary Section Lead Teacher', 'seps-core' ),
+					'instructions' => __( 'Line breaks are kept. Set the photo as the Featured image; use Order (Page Attributes) to sort.', 'seps-core' ),
+				),
+			),
+		)
+	);
+}
+add_action( 'acf/include_fields', __NAMESPACE__ . '\\register_person_fields' );

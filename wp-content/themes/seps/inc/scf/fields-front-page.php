@@ -316,21 +316,3 @@ function register_front_page_fields(): void {
 }
 add_action( 'acf/include_fields', __NAMESPACE__ . '\\register_front_page_fields' );
 
-/**
- * Edit the front page on the classic screen.
- *
- * Its content comes entirely from the section fields, and the block editor
- * would show an empty canvas above them (SCF's hide_on_screen only applies to
- * the classic screen).
- *
- * @param bool     $use_block_editor Whether to use the block editor.
- * @param \WP_Post $post             Post being edited.
- */
-function front_page_classic_editor( bool $use_block_editor, \WP_Post $post ): bool {
-	if ( 'page' === get_option( 'show_on_front' ) && (int) get_option( 'page_on_front' ) === $post->ID ) {
-		return false;
-	}
-
-	return $use_block_editor;
-}
-add_filter( 'use_block_editor_for_post', __NAMESPACE__ . '\\front_page_classic_editor', 10, 2 );

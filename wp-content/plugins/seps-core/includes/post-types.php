@@ -95,6 +95,53 @@ function register(): void {
 			'rewrite'           => false,
 		)
 	);
+
+	register_post_type(
+		'seps_person',
+		array_merge(
+			$internal,
+			array(
+				'labels'        => array(
+					'name'                  => __( 'Staff', 'seps-core' ),
+					'singular_name'         => __( 'Staff member', 'seps-core' ),
+					'add_new_item'          => __( 'Add staff member', 'seps-core' ),
+					'edit_item'             => __( 'Edit staff member', 'seps-core' ),
+					'new_item'              => __( 'New staff member', 'seps-core' ),
+					'search_items'          => __( 'Search staff', 'seps-core' ),
+					'not_found'             => __( 'No staff found.', 'seps-core' ),
+					'not_found_in_trash'    => __( 'No staff found in Trash.', 'seps-core' ),
+					'featured_image'        => __( 'Photo', 'seps-core' ),
+					'set_featured_image'    => __( 'Set photo', 'seps-core' ),
+					'remove_featured_image' => __( 'Remove photo', 'seps-core' ),
+					'use_featured_image'    => __( 'Use as photo', 'seps-core' ),
+					'menu_name'             => __( 'Staff', 'seps-core' ),
+				),
+				'menu_icon'     => 'dashicons-groups',
+				'menu_position' => 23,
+				'supports'      => array( 'title', 'thumbnail', 'page-attributes', 'revisions' ),
+			)
+		)
+	);
+
+	register_taxonomy(
+		'seps_team',
+		'seps_person',
+		array(
+			'labels'            => array(
+				'name'          => __( 'Teams', 'seps-core' ),
+				'singular_name' => __( 'Team', 'seps-core' ),
+				'add_new_item'  => __( 'Add team', 'seps-core' ),
+				'edit_item'     => __( 'Edit team', 'seps-core' ),
+				'search_items'  => __( 'Search teams', 'seps-core' ),
+			),
+			'public'            => false,
+			'show_ui'           => true,
+			'show_in_rest'      => true,
+			'show_admin_column' => true,
+			'hierarchical'      => true,
+			'rewrite'           => false,
+		)
+	);
 }
 add_action( 'init', __NAMESPACE__ . '\\register' );
 
@@ -108,19 +155,21 @@ function title_placeholder( string $placeholder, \WP_Post $post ): string {
 	return match ( $post->post_type ) {
 		'seps_testimonial' => __( 'Parent / author name', 'seps-core' ),
 		'seps_faq'         => __( 'Question', 'seps-core' ),
+		'seps_person'      => __( 'Full name, e.g. Mrs. Deepa Binu', 'seps-core' ),
 		default            => $placeholder,
 	};
 }
 add_filter( 'enter_title_here', __NAMESPACE__ . '\\title_placeholder', 10, 2 );
 
 /**
- * Testimonials are just a title + two fields; the classic screen shows them
- * directly under the title instead of in the block editor's bottom panel.
+ * Testimonials and staff are a title plus a few fields; the classic screen
+ * shows those fields directly under the title instead of in the block
+ * editor's bottom panel.
  *
  * @param bool   $use_block_editor Whether to use the block editor.
  * @param string $post_type        Post type.
  */
-function classic_editor_for_testimonials( bool $use_block_editor, string $post_type ): bool {
-	return 'seps_testimonial' === $post_type ? false : $use_block_editor;
+function classic_editor_for_simple_types( bool $use_block_editor, string $post_type ): bool {
+	return in_array( $post_type, array( 'seps_testimonial', 'seps_person' ), true ) ? false : $use_block_editor;
 }
-add_filter( 'use_block_editor_for_post_type', __NAMESPACE__ . '\\classic_editor_for_testimonials', 10, 2 );
+add_filter( 'use_block_editor_for_post_type', __NAMESPACE__ . '\\classic_editor_for_simple_types', 10, 2 );

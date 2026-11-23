@@ -42,7 +42,9 @@ The post types live in a plugin so that content survives a future theme change.
    wp seps seed
    ```
 
-`wp seps seed` fills a fresh site with the Figma content: the page tree from the sitemap, all six menus, Site Settings, the home page sections, four news posts, testimonials and FAQs, plus the images (with alt text). You can run it again safely: seeded items are updated, not duplicated.
+`wp seps seed` fills a fresh site with the Figma content: the page tree from the sitemap, all six menus, Site Settings, the home page sections, four news posts, testimonials, FAQs, staff, and the About page with its sub-pages, plus the images (with alt text). Seeded items are updated in place, never duplicated.
+
+> **Re-running overwrites edits** to seeded items (Home sections, menus, Site Settings…). On an existing site, run only the steps you need, e.g. `wp seps seed --only=staff,about`. Run `wp help seps seed` for the list of steps.
 
 **Day to day:** edit files in this repo, then re-run `bin/sync-local.sh seps` to update the Local site. (Use `npm run build` first if you changed SCSS or JS.)
 
@@ -73,6 +75,8 @@ Everything on the home page is editable. Nothing is hard-coded in templates.
 | Footer columns | Appearance → Menus → *Footer: Column 1/2/3*. **The menu name is the column heading.** |
 | Privacy / Terms links | Appearance → Menus → *Footer: Legal links* |
 | Home page sections | Pages → Home. One tab per section, each with a *Show this section* toggle. |
+| Inner pages (About, its sub-pages, and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Text. |
+| Staff (Principals, Leadership Team) | **Staff** (sidebar). Photo = Featured image, *Position* field, *Team*, and *Order* to sort. Shown by the Team section. |
 | Testimonials | **Testimonials** (sidebar). The home page shows the latest 6 unless specific ones are picked. |
 | FAQs | **FAQs** (sidebar). Ordered by *Order*; can be hand-picked per page. |
 | News | Posts. The newest is featured; the next three are listed. |
@@ -101,6 +105,19 @@ The code follows the WordPress Coding Standards. To lint (Composer required):
 composer install   # also installs WordPress stubs, which removes IDE "unknown function" warnings
 composer lint
 ```
+
+## Building inner pages (section builder)
+
+Every page except Home and the News page is built from **Page Sections** (`inc/scf/fields-page-sections.php`). Each section type is a template in `template-parts/sections/` that receives its data as `$args`, the same contract the home page uses.
+
+To add a section type for a new design:
+
+1. Add its layout to `page_section_layouts()` and its template slug to `page_section_templates()`. Keys follow `field_seps_ps_{layout}_{name}` and must never change once content exists.
+2. Create `template-parts/sections/{slug}.php`. Use `wp_unique_id()` for heading IDs, since sections can repeat on a page.
+3. Create `assets/src/scss/sections/_{slug}.scss`, add it to `main.scss`, and follow the `--edge` rule below.
+4. Add demo content for the page to `wp seps seed` as a new step.
+
+Reuse existing section types whenever a design repeats one.
 
 ## Layout rule for new pages: `--edge`
 

@@ -102,11 +102,12 @@ function seps_decor( string $name, string $class = '' ): string {
 /**
  * Icon from assets/images/icons, rendered as a decorative <img>.
  *
- * @param string $name  Icon file name without extension.
- * @param int    $size  Rendered width/height in px.
- * @param string $class Extra class names.
+ * @param string     $name   Icon file name without extension.
+ * @param int        $size   Rendered width in px (and height, unless given).
+ * @param string     $class  Extra class names.
+ * @param float|null $height Rendered height in px for non-square icons.
  */
-function seps_icon( string $name, int $size = 24, string $class = '' ): string {
+function seps_icon( string $name, int $size = 24, string $class = '', ?float $height = null ): string {
 	$name = sanitize_key( $name );
 
 	if ( ! file_exists( SEPS_THEME_DIR . "/assets/images/icons/{$name}.svg" ) ) {
@@ -114,10 +115,11 @@ function seps_icon( string $name, int $size = 24, string $class = '' ): string {
 	}
 
 	return sprintf(
-		'<img class="%1$s" src="%2$s" width="%3$d" height="%3$d" alt="" aria-hidden="true" decoding="async">',
+		'<img class="%1$s" src="%2$s" width="%3$d" height="%4$s" alt="" aria-hidden="true" decoding="async">',
 		esc_attr( trim( 'icon icon--' . $name . ' ' . $class ) ),
 		esc_url( seps_asset_url( "images/icons/{$name}.svg" ) ),
-		$size
+		$size,
+		esc_attr( (string) ( $height ?? $size ) )
 	);
 }
 
@@ -227,6 +229,56 @@ function seps_button( mixed $link, string $variant = 'primary', string $class = 
  */
 function seps_tel_uri( string $phone ): string {
 	return 'tel:' . preg_replace( '/[^\d+]/', '', $phone );
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Page Sections (section builder)
+ * -----------------------------------------------------------------------------
+ */
+
+/**
+ * Render the current page's Page Sections.
+ *
+ * Each row is passed to its template as $args (plus 'variant' => 'page').
+ * If the page has no Page Hero, a visually hidden <h1> keeps the heading
+ * outline valid.
+ *
+ * @param int $post_id Page ID.
+ * @return int Number of sections rendered.
+ */
+function seps_render_page_sections( int $post_id ): int {
+	$rows = seps_field( 'page_sections', $post_id );
+
+	if ( empty( $rows ) || ! is_array( $rows ) ) {
+		return 0;
+	}
+
+	$templates = SEPS\Theme\SCF\page_section_templates();
+	$layouts   = wp_list_pluck( $rows, 'acf_fc_layout' );
+
+	if ( ! in_array( 'page_hero', $layouts, true ) ) {
+		printf( '<h1 class="screen-reader-text">%s</h1>', esc_html( get_the_title( $post_id ) ) );
+	}
+
+	$rendered = 0;
+
+	foreach ( $rows as $row ) {
+		$layout = (string) ( $row['acf_fc_layout'] ?? '' );
+
+		if ( ! isset( $templates[ $layout ] ) ) {
+			continue;
+		}
+
+		if ( 'page_hero' === $layout && '' === trim( (string) ( $row['title'] ?? '' ) ) ) {
+			$row['title'] = get_the_title( $post_id );
+		}
+
+		get_template_part( 'template-parts/sections/' . $templates[ $layout ], null, array_merge( $row, array( 'variant' => 'page' ) ) );
+		++$rendered;
+	}
+
+	return $rendered;
 }
 
 /*

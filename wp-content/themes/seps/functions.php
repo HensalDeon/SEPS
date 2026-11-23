@@ -21,6 +21,7 @@ $seps_modules = array(
 	'inc/scf/bootstrap.php',
 	'inc/scf/fields-site-settings.php',
 	'inc/scf/fields-front-page.php',
+	'inc/scf/fields-page-sections.php',
 );
 
 foreach ( $seps_modules as $seps_module ) {

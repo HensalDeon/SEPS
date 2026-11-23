@@ -1,0 +1,89 @@
+@use "../abstracts/mixins" as *;
+
+// Image + Text Blocks — e.g. "Our Vision / Our Mission" (About).
+// Desktop: tall image (491 × 810) beside stacked text blocks; cards 3-up.
+
+.media-text {
+	padding-block: var(--section-space);
+
+	&__inner {
+		display: grid;
+		gap: 2.5rem;
+		align-items: center;
+
+		@include mq(lg) {
+			grid-template-columns: minmax(0, 491fr) minmax(0, 1049fr);
+			gap: clamp(2.5rem, 4.17vw, 5rem); // → 80
+		}
+
+		&--text-only {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	&--image-right &__media {
+		@include mq(lg) {
+			order: 2;
+		}
+	}
+
+	&__image {
+		@include rounded-photo(491, 810);
+
+		// A full-height portrait is too tall on small screens.
+		@include mq-down(lg) {
+			max-height: 32rem;
+			aspect-ratio: 4 / 3;
+			object-position: center 30%;
+		}
+	}
+
+	&__blocks {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(2.5rem, 4.17vw, 5rem); // → 80
+	}
+
+	&__block {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	&__text {
+		font-weight: var(--fw-light);
+	}
+
+	&__cards {
+		display: grid;
+		gap: 1.5rem;
+
+		@include mq(sm) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		@include mq(xl) {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+}
+
+.info-card {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	padding: 1.5rem;
+	border-radius: var(--radius);
+	background: var(--color-brand);
+	color: var(--color-white);
+
+	&__title {
+		color: inherit;
+		font-size: var(--fs-md);
+		font-weight: var(--fw-medium);
+	}
+
+	&__text {
+		font-weight: var(--fw-light);
+	}
+}
