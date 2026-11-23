@@ -92,6 +92,7 @@ function seps_decor( string $name, string $class = '' ): string {
 		'blob-lilac'      => array( 936, 674 ),
 		'halves-white'    => array( 100, 148 ),
 		'drop-navy'       => array( 603, 641 ),
+		'halves-pair-brand' => 100,
 	);
 
 	if ( ! isset( $sizes[ $name ] ) ) {
@@ -159,6 +160,8 @@ function seps_content_icon_choices(): array {
 		'boy'          => __( 'Boy', 'seps' ),
 		'girl'         => __( 'Girl', 'seps' ),
 		'alert'        => __( 'Alert', 'seps' ),
+		'call'         => __( 'Phone', 'seps' ),
+		'heart'        => __( 'Heart', 'seps' ),
 	);
 }
 

@@ -62,6 +62,7 @@ final class Seed_Command {
 		'admissions'   => 'Admissions page',
 		'student-life' => 'Student Life page',
 		'news-events'  => 'News & Events page',
+		'contact'      => 'Contact page',
 	);
 
 	/**
@@ -76,7 +77,7 @@ final class Seed_Command {
 	 * : Comma-separated steps to run (default: all). Available: identity,
 	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
 	 * about, academics, admissions, student-life,
-	 * news-events (run after posts).
+	 * news-events (run after posts), contact.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -131,6 +132,7 @@ final class Seed_Command {
 			'admissions'   => fn() => $this->seed_admissions(),
 			'student-life' => fn() => $this->seed_student_life(),
 			'news-events'  => fn() => $this->seed_news_events(),
+			'contact'      => fn() => $this->seed_contact(),
 		);
 
 		foreach ( self::STEPS as $key => $label ) {
@@ -1479,6 +1481,98 @@ final class Seed_Command {
 		);
 
 		update_field( 'field_seps_page_sections', $sections, $this->pages['news-events'] );
+	}
+
+	/**
+	 * Contact page: hero, enquiry form, contact details and map.
+	 */
+	private function seed_contact(): void {
+		$lines = static fn( array $items ): string => '<p>' . implode( '<br>', $items ) . '</p>';
+		$query = rawurlencode( 'Sunrise English Private School, Mussafah, Abu Dhabi' );
+
+		$sections = array(
+			array(
+				'acf_fc_layout' => 'page_hero',
+				'title'         => 'We’re Here to Connect, Support & Stay in Touch',
+				'text'          => 'Have a question about admissions, academics, school life or anything else at SEPS? Get in touch with our team and we’ll be happy to help.',
+				'note'          => '',
+				'button'        => array(
+					'url'    => '#enquiry-form',
+					'title'  => 'Send an Enquiry',
+					'target' => '',
+				),
+				'button_2'      => null,
+				'image'         => $this->image( 'contact-hero.jpg', 'Child writing in a workbook at a wooden desk' ),
+				'image_focus'   => 'center',
+				'layout'        => 'wide',
+				'decor'         => 'flower',
+			),
+			array(
+				'acf_fc_layout' => 'contact_form',
+				'heading'       => 'We’d Love to Hear From You',
+				'intro'         => 'Have a question or need more information about SEPS? Send us your enquiry, and our team will get back to you as soon as possible.',
+				'subjects'      => implode( "\n", array( 'Admissions', 'Academics', 'Fees & Payments', 'Transport', 'Student Life & Activities', 'General Enquiry' ) ),
+				'contact_times' => implode( "\n", array( 'Morning', 'Afternoon', 'Evening' ) ),
+				'phone_code'    => '+971',
+				'submit_label'  => 'Send Enquiry',
+				'image'         => $this->image( 'contact-enquiry.jpg', 'Grandfather and grandson reading together' ),
+			),
+			array(
+				'acf_fc_layout' => 'info_cards',
+				'background'    => 'white',
+				'corner'        => 0,
+				'compact'       => 1,
+				'heading'       => 'Reach Us Directly',
+				'intro'         => '<p>Find the essential contact details for Sunrise English Private School, including our phone, email, address and office and school hours.</p>',
+				'button'        => null,
+				'icon_style'    => 'inline',
+				'cards'         => array(
+					array(
+						'icon'  => 'call',
+						'title' => 'Phone & Email',
+						'width' => 'half',
+						'text'  => '<p><a href="tel:+97125529989">+971 2 552 9989</a><br><a href="mailto:school@seps-auh.com">school@seps-auh.com</a></p>',
+						'rows'  => array(),
+					),
+					array(
+						'icon'  => 'clock',
+						'title' => 'Office Hours - Accounts only',
+						'width' => 'half',
+						'text'  => $lines( array( 'Monday–Thursday: 7:00 AM–3:00 PM', 'Friday: 8:00 AM–1:00 PM', 'Saturday: 8:00 AM–11:00 AM' ) ),
+						'rows'  => array(),
+					),
+					array(
+						'icon'  => 'heart',
+						'title' => 'Postal Address',
+						'width' => 'half',
+						'text'  => $lines( array( 'Shabiya, ME-09,', 'Near Safeer Mall, Mussafah', 'P.O. Box 71356, Abu Dhabi,', 'United Arab Emirates' ) ),
+						'rows'  => array(),
+					),
+					array(
+						'icon'  => 'payment',
+						'title' => 'School Hours',
+						'width' => 'half',
+						'text'  => $lines( array( 'KG: Monday–Friday, 7:30 AM–11:30 AM', 'Grades 1–12: Monday–Thursday, 7:30 AM–2:00 PM', 'Friday: 7:30 AM–11:30 AM' ) ),
+						'rows'  => array(),
+					),
+				),
+				'image'         => 0,
+				'image_style'   => 'right',
+			),
+			array(
+				'acf_fc_layout' => 'map',
+				'heading'       => 'Our Location',
+				'intro'         => 'Find Sunrise English Private School on the map and get directions to our campus.',
+				'button'        => array(
+					'url'    => 'https://www.google.com/maps/search/?api=1&query=' . $query,
+					'title'  => 'View Location',
+					'target' => '_blank',
+				),
+				'embed_url'     => 'https://www.google.com/maps?q=' . $query . '&output=embed',
+			),
+		);
+
+		update_field( 'field_seps_page_sections', $sections, $this->pages['contact'] );
 	}
 
 	/*

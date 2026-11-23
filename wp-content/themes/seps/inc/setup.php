@@ -110,3 +110,16 @@ function excerpt_more(): string {
 	return '&hellip;';
 }
 add_filter( 'excerpt_more', __NAMESPACE__ . '\\excerpt_more' );
+
+/**
+ * Send Contact page enquiries (seps-core plugin) to the school email from
+ * Site Settings, falling back to the site admin email.
+ *
+ * @param string $recipient Default recipient.
+ */
+function enquiry_recipient( string $recipient ): string {
+	$email = sanitize_email( (string) seps_option( 'email' ) );
+
+	return is_email( $email ) ? $email : $recipient;
+}
+add_filter( 'seps_enquiry_recipient', __NAMESPACE__ . '\\enquiry_recipient' );

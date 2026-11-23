@@ -6,6 +6,8 @@
 
 import initNavigation from './modules/navigation';
 import initCarousels from './modules/carousel';
+import initEnquiryForms from './modules/enquiry-form';
 
 initNavigation();
 initCarousels();
+initEnquiryForms();

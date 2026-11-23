@@ -75,11 +75,12 @@ Everything on the home page is editable. Nothing is hard-coded in templates.
 | Footer columns | Appearance → Menus → *Footer: Column 1/2/3*. **The menu name is the column heading.** |
 | Privacy / Terms links | Appearance → Menus → *Footer: Legal links* |
 | Home page sections | Pages → Home. One tab per section, each with a *Show this section* toggle. |
-| Inner pages (About, Academics and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Highlights & Focus Areas, Badge Accordion, Timetable, Documents, Requirements, Info Cards, Text + Image, Notice + Checklist, FAQs, Cards (carousel or grid), Latest posts, Text. The Page Hero also has an optional note line, decoration, "Keep in view" (photo crop focus) and a second (white) button. Text + Image photos can sit left or right, or be a circle, with an optional rounded corner. Every section has an optional **Section ID** so links can jump to it (e.g. `/academics/#mandatory-disclosure`). |
+| Inner pages (About, Academics and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Highlights & Focus Areas, Badge Accordion, Timetable, Documents, Requirements, Info Cards, Text + Image, Notice + Checklist, FAQs, Cards (carousel or grid), Latest posts, Enquiry form, Map, Text. The Page Hero also has an optional note line, decoration, "Keep in view" (photo crop focus), a second (white) button and a *Wide text, narrow photo* layout. Text + Image photos can sit left or right, or be a circle, with an optional rounded corner. Every section has an optional **Section ID** so links can jump to it (e.g. `/academics/#mandatory-disclosure`). |
 | Staff (Principals, Leadership Team) | **Staff** (sidebar). Photo = Featured image, *Position* field, *Team*, and *Order* to sort. Shown by the Team section. |
 | Testimonials | **Testimonials** (sidebar). The home page shows the latest 6 unless specific ones are picked. |
 | FAQs | **FAQs** (sidebar). Ordered by *Order*; can be hand-picked per page. |
-| News | Posts. The newest is featured; the next three are listed. |
+| Contact form submissions | **Enquiries** (sidebar, read-only). Each enquiry is also emailed to the *Email* in Site Settings. Subject and contact-time options are set on the Enquiry form section. Personal data can be exported or erased from Tools → Export / Erase Personal Data. |
+| News | Posts. On the home page the newest is featured and the next three are listed; News & Events lists them all ("All News") below its sections. |
 
 ## Front-end build
 
@@ -153,3 +154,15 @@ The Figma file has desktop frames only. Responsive layouts follow the design's s
 See [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) (logo, social and portal URLs, testimonial and FAQ copy, newsletter integration).
 
 Each sitemap entry is a **single page**: its sub-items (e.g. About → Vision & Mission, Leadership) are sections on that page, not separate pages. Pages not yet designed exist as empty placeholders, ready for the next phases.
+
+## Email delivery (Contact form)
+
+Enquiries are always saved under **Enquiries**, so none are lost, but the
+notification email depends on the server's mail setup:
+
+- **LocalWP:** emails are caught by Mailpit (Local → site → *Tools* → Mailpit).
+- **WP Engine:** sends via its own mail service. For reliable delivery to a
+  school mailbox, set up an SMTP plugin (e.g. WP Mail SMTP with the school's
+  Google Workspace / Microsoft 365 account). Each enquiry shows *Emailed:
+  Yes/No* so failures are visible.
+

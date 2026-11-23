@@ -60,3 +60,15 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 28 | **SEPS Chronicle / ADEK Calendar:** Where should *View SEPS Chronicle* and *View Calendar* go (PDF, page or external link)? | `#` | _Pending_ |
 | 29 | **Love for the UAE:** Can we get the real student blog posts? The Figma shows the news posts. | 3 news posts tagged "Love for the UAE" | _Pending_ |
 | 30 | **Media Gallery:** Where should each *View* button go (album, page or external gallery)? The years differ from the Student Life gallery (2022–23 to 2024–25 here). | `#`; years as in the Figma | _Pending_ |
+
+## Contact page
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 31 | **Hero button:** The Figma button says "View News", which looks like a placeholder on the Contact page. OK to use "Send an Enquiry" (jumps to the form)? | "Send an Enquiry" → form | _Pending_ |
+| 32 | **Enquiry form options:** What should the *Subject* and *Preferred Contact Time* options be? | Subjects: Admissions, Academics, Fees & Payments, Transport, Student Life & Activities, General Enquiry. Times: Morning, Afternoon, Evening | _Pending_ |
+| 33 | **Enquiry email:** Which mailbox should receive enquiries? Should there be an SMTP account (e.g. Google Workspace) for reliable delivery? | The *Email* in Site Settings (school@seps-auh.com) | _Pending_ |
+| 34 | **Privacy / consent:** Should the form show a privacy notice or consent checkbox, and how long should enquiries be kept? | None; enquiries kept until deleted | _Pending_ |
+| 35 | **Map:** Please confirm the pin. Is there a Google Business Profile link to use for *View Location*? | Google Maps search for "Sunrise English Private School, Mussafah, Abu Dhabi" | _Pending_ |
+| 36 | **Postal Address icon:** The Figma uses a heart icon. Is that intended, or should it be a location pin? | Heart (as in the Figma) | _Pending_ |
+| 37 | **Hours:** "Office Hours" includes Saturday and Grades 1–12 run Monday–Thursday. Please confirm these against the school week. | As in the Figma | _Pending_ |

@@ -1,0 +1,38 @@
+@use "../abstracts/mixins" as *;
+
+// Map ("Our Location", Contact).
+
+.map {
+	padding-block: var(--section-space);
+	background: var(--color-lilac);
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2rem;
+		margin-bottom: 2rem;
+	}
+
+	&__intro {
+		font-weight: var(--fw-light);
+	}
+
+	&__frame {
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: var(--color-white);
+		aspect-ratio: 4 / 3;
+
+		@include mq(md) {
+			aspect-ratio: 1617 / 563;
+		}
+	}
+
+	&__embed {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+}

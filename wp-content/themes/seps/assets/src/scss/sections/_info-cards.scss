@@ -27,6 +27,16 @@
 
 	&--white {
 		background: var(--color-white);
+
+		// Lilac cards on white, e.g. "Reach Us Directly" (Contact).
+		.info-box {
+			background: var(--color-lilac);
+		}
+	}
+
+	// Smaller (18px) card titles, e.g. contact details.
+	&--compact .info-box__title {
+		font-size: var(--fs-md);
 	}
 
 	&--corner {

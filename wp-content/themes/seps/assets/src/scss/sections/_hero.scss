@@ -157,3 +157,29 @@
 		transform: translate(-50%, -50%);
 	}
 }
+
+// Wide text, narrow photo (e.g. Contact): 1178 / 742 at 1920, the arc starts
+// at 828 and the flower sits on the seam at 528 / 678.
+.hero--wide {
+	@include mq(lg) {
+		grid-template-columns: 61.35fr 38.65fr;
+	}
+
+	.hero__panel::before {
+		left: 70.3%; // 828 / 1178
+	}
+
+	.hero__content {
+		max-width: 57.625rem; // 922
+	}
+
+	.hero__text {
+		max-width: 49.875rem; // 798
+	}
+
+	.hero__decor--flower-yellow {
+		@include mq(lg) {
+			top: 77.9%;
+		}
+	}
+}

@@ -45,6 +45,9 @@ $seps_image      = seps_image(
 );
 
 $seps_classes = array( 'info-cards', 'info-cards--' . $seps_background );
+if ( ! empty( $args['compact'] ) ) {
+	$seps_classes[] = 'info-cards--compact';
+}
 if ( ! empty( $args['corner'] ) ) {
 	$seps_classes[] = 'info-cards--corner';
 }

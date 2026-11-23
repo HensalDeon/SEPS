@@ -42,6 +42,8 @@ function page_section_templates(): array {
 		'faq'             => 'faq',
 		'card_list'       => 'card-list',
 		'posts'           => 'posts',
+		'contact_form'    => 'contact-form',
+		'map'             => 'map',
 		'text'            => 'text',
 	);
 }
@@ -150,6 +152,19 @@ function page_section_layouts(): array {
 							'center' => __( 'Centre', 'seps' ),
 						),
 						'default_value' => 'upper',
+					)
+				),
+				field(
+					'ps_hero',
+					'layout',
+					'button_group',
+					__( 'Layout', 'seps' ),
+					array(
+						'choices'       => array(
+							'standard' => __( 'Standard', 'seps' ),
+							'wide'     => __( 'Wide text, narrow photo', 'seps' ),
+						),
+						'default_value' => 'standard',
 					)
 				),
 				field(
@@ -564,6 +579,13 @@ function page_section_layouts(): array {
 					__( 'Rounded top-right corner', 'seps' ),
 					array( 'ui' => 1 )
 				),
+				field(
+					'ps_cards',
+					'compact',
+					'true_false',
+					__( 'Smaller card titles', 'seps' ),
+					array( 'ui' => 1 )
+				),
 				field( 'ps_cards', 'heading', 'text', __( 'Heading', 'seps' ) ),
 				$rich( 'ps_cards', 'intro', __( 'Intro', 'seps' ) ),
 				link_field( 'ps_cards', 'button', __( 'Button', 'seps' ) ),
@@ -962,6 +984,84 @@ function page_section_layouts(): array {
 					'image',
 					__( 'Side photo (optional)', 'seps' ),
 					array( 'instructions' => __( 'Shown in a circle on a navy shape to the left of the posts.', 'seps' ) )
+				),
+			)
+		),
+
+		'layout_seps_ps_contact_form' => $layout(
+			'contact_form',
+			__( 'Enquiry form', 'seps' ),
+			array(
+				field(
+					'ps_form',
+					'note',
+					'message',
+					__( 'About this form', 'seps' ),
+					array( 'message' => __( 'Enquiries are saved under Enquiries in the admin menu and emailed to the school email in Site Settings.', 'seps' ) )
+				),
+				field( 'ps_form', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_form', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
+				field(
+					'ps_form',
+					'subjects',
+					'textarea',
+					__( 'Subject options', 'seps' ),
+					array(
+						'instructions' => __( 'One per line.', 'seps' ),
+						'rows'         => 5,
+						'new_lines'    => '',
+						'wrapper'      => array( 'width' => '50' ),
+					)
+				),
+				field(
+					'ps_form',
+					'contact_times',
+					'textarea',
+					__( 'Preferred contact time options', 'seps' ),
+					array(
+						'instructions' => __( 'One per line.', 'seps' ),
+						'rows'         => 5,
+						'new_lines'    => '',
+						'wrapper'      => array( 'width' => '50' ),
+					)
+				),
+				field(
+					'ps_form',
+					'phone_code',
+					'text',
+					__( 'Default country code', 'seps' ),
+					array(
+						'default_value' => '+971',
+						'wrapper'       => array( 'width' => '50' ),
+					)
+				),
+				field(
+					'ps_form',
+					'submit_label',
+					'text',
+					__( 'Button label', 'seps' ),
+					array(
+						'default_value' => 'Send Enquiry',
+						'wrapper'       => array( 'width' => '50' ),
+					)
+				),
+				image_field( 'ps_form', 'image', __( 'Photo (right)', 'seps' ) ),
+			)
+		),
+
+		'layout_seps_ps_map'        => $layout(
+			'map',
+			__( 'Map', 'seps' ),
+			array(
+				field( 'ps_map', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_map', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
+				link_field( 'ps_map', 'button', __( 'Button', 'seps' ), array( 'instructions' => __( 'e.g. "View Location" linking to the school on Google Maps.', 'seps' ) ) ),
+				field(
+					'ps_map',
+					'embed_url',
+					'url',
+					__( 'Google Maps embed URL', 'seps' ),
+					array( 'instructions' => __( 'Google Maps → Share → Embed a map → copy only the src="…" address (starts with https://www.google.com/maps/embed).', 'seps' ) )
 				),
 			)
 		),
