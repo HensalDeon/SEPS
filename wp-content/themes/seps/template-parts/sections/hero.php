@@ -18,6 +18,7 @@
  *     @type string $decor   Page variant only: 'none' (default), 'sun' or 'flower'.
  *     @type string $image_focus Part of the photo kept in view: 'top', 'upper' (default) or 'center'.
  *     @type string $layout  Page variant: 'standard' (default) or 'wide' (wide text, narrow photo).
+ *     @type string $decor_position Page variant: 'auto' (default) or 'top' (near the top of the seam).
  * }
  */
 
@@ -50,7 +51,7 @@ $seps_image   = seps_image(
 	)
 );
 ?>
-<section class="hero<?php echo $seps_is_page ? ' hero--page' : ''; ?><?php echo $seps_is_page && 'wide' === ( $args['layout'] ?? '' ) ? ' hero--wide' : ''; ?><?php echo $seps_focus ? ' hero--focus-' . esc_attr( $seps_focus ) : ''; ?>" aria-labelledby="<?php echo esc_attr( $seps_id ); ?>">
+<section class="hero<?php echo $seps_is_page ? ' hero--page' : ''; ?><?php echo $seps_is_page && 'wide' === ( $args['layout'] ?? '' ) ? ' hero--wide' : ''; ?><?php echo $seps_focus ? ' hero--focus-' . esc_attr( $seps_focus ) : ''; ?><?php echo $seps_is_page && 'top' === ( $args['decor_position'] ?? '' ) ? ' hero--decor-top' : ''; ?>" aria-labelledby="<?php echo esc_attr( $seps_id ); ?>">
 	<div class="hero__panel">
 		<div class="hero__content">
 			<h1 id="<?php echo esc_attr( $seps_id ); ?>" class="hero__title"><?php echo seps_multiline( $seps_title ); ?></h1>

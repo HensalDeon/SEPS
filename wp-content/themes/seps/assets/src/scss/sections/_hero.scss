@@ -183,3 +183,10 @@
 		}
 	}
 }
+
+// Decoration near the top of the seam (e.g. Careers sun: top at 95 / 700).
+.hero--decor-top .hero__decor {
+	@include mq(lg) {
+		top: 13.57%;
+	}
+}

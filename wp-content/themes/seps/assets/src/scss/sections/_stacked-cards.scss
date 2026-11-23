@@ -1,0 +1,110 @@
+@use "../abstracts/mixins" as *;
+
+// Photo + stacked cards — e.g. "Teaching & Academic Roles" (Careers): a tall
+// photo (414px) that fills the height of the cards beside it.
+
+.stacked {
+	padding-block: var(--section-space);
+
+	&--white {
+		background: var(--color-white);
+	}
+
+	&--lilac {
+		background: var(--color-lilac);
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		margin-bottom: 2rem;
+	}
+
+	&__intro {
+		font-weight: var(--fw-light);
+	}
+
+	&__body {
+		display: grid;
+		gap: 2rem;
+
+		@include mq(lg) {
+			.stacked--has-media & {
+				grid-template-columns: minmax(0, 25.875rem) minmax(0, 1fr); // 414
+			}
+		}
+	}
+
+	// Photo: fills the height of the card list on wide screens (out of flow).
+	&__media {
+		position: relative;
+		min-height: 18rem;
+	}
+
+	&__image {
+		position: absolute;
+		inset: 0;
+		border-radius: var(--radius);
+
+		@include cover-image;
+	}
+
+	&__list {
+		@include bare-list;
+
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	&__card {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding: 1.5rem;
+		border-radius: var(--radius);
+		background: var(--color-lilac);
+
+		@include mq(md) {
+			flex-direction: row;
+			align-items: center;
+			gap: 2rem;
+		}
+	}
+
+	&--lilac &__card {
+		background: var(--color-white);
+	}
+
+	&__thumb {
+		flex-shrink: 0;
+		width: 100%;
+		border-radius: var(--radius);
+
+		@include rounded-photo(204, 136);
+
+		height: auto; // Let the aspect ratio set the height.
+
+		@include mq(md) {
+			width: 12.75rem; // 204
+		}
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.5rem;
+		min-width: 0;
+	}
+
+	&__title {
+		color: var(--color-brand);
+		font-size: clamp(1.25rem, 1.15rem + 0.3vw, 1.5rem); // → 24
+	}
+
+	&__text {
+		font-weight: var(--fw-light);
+	}
+}

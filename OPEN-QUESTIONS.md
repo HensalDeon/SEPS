@@ -72,3 +72,10 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 35 | **Map:** Please confirm the pin. Is there a Google Business Profile link to use for *View Location*? | Google Maps search for "Sunrise English Private School, Mussafah, Abu Dhabi" | _Pending_ |
 | 36 | **Postal Address icon:** The Figma uses a heart icon. Is that intended, or should it be a location pin? | Heart (as in the Figma) | _Pending_ |
 | 37 | **Hours:** "Office Hours" includes Saturday and Grades 1–12 run Monday–Thursday. Please confirm these against the school week. | As in the Figma | _Pending_ |
+
+## Careers page
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 38 | **Application forms:** What should *View Academic Application Form* and *View Non-Academic Application Form* open: PDFs to download, an online form (e.g. Google Forms), or an application form on the site with CV upload? | `#` | _Pending_ |
+| 39 | **Vacancies:** Should the page list current openings (job title, department, closing date), or only link to the application forms as in the Figma? | Forms only, as in the Figma | _Pending_ |

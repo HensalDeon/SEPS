@@ -63,6 +63,7 @@ final class Seed_Command {
 		'student-life' => 'Student Life page',
 		'news-events'  => 'News & Events page',
 		'contact'      => 'Contact page',
+		'careers'      => 'Careers page',
 	);
 
 	/**
@@ -77,7 +78,7 @@ final class Seed_Command {
 	 * : Comma-separated steps to run (default: all). Available: identity,
 	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
 	 * about, academics, admissions, student-life,
-	 * news-events (run after posts), contact.
+	 * news-events (run after posts), contact, careers.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -133,6 +134,7 @@ final class Seed_Command {
 			'student-life' => fn() => $this->seed_student_life(),
 			'news-events'  => fn() => $this->seed_news_events(),
 			'contact'      => fn() => $this->seed_contact(),
+			'careers'      => fn() => $this->seed_careers(),
 		);
 
 		foreach ( self::STEPS as $key => $label ) {
@@ -1573,6 +1575,57 @@ final class Seed_Command {
 		);
 
 		update_field( 'field_seps_page_sections', $sections, $this->pages['contact'] );
+	}
+
+	/**
+	 * Careers page: hero and teaching / non-teaching roles.
+	 */
+	private function seed_careers(): void {
+		$link = static fn( string $title, string $url = '#' ): array => array(
+			'url'    => $url,
+			'title'  => $title,
+			'target' => '',
+		);
+
+		$sections = array(
+			array(
+				'acf_fc_layout'  => 'page_hero',
+				'title'          => "Build Your Career\nat SEPS",
+				'text'           => 'Join a school community committed to quality education, where educators and staff can contribute their expertise, grow professionally and make a meaningful difference in students’ lives.',
+				'note'           => '',
+				'button'         => $link( 'Learn More', '#roles' ),
+				'button_2'       => null,
+				'image'          => $this->image( 'careers-hero.jpg', 'Graduates in caps and gowns on campus' ),
+				'image_focus'    => 'center',
+				'layout'         => 'standard',
+				'decor'          => 'sun',
+				'decor_position' => 'top',
+			),
+			array(
+				'acf_fc_layout' => 'stacked_cards',
+				'background'    => 'white',
+				'heading'       => 'Teaching & Academic Roles',
+				'intro'         => 'Explore opportunities to join SEPS’s teaching and academic teams and contribute to students’ learning and development.',
+				'image'         => $this->image( 'careers-roles.jpg', 'Smiling graduate in a cap and gown' ),
+				'cards'         => array(
+					array(
+						'image' => $this->image( 'careers-academic.jpg', 'Teacher at the board with students raising hands' ),
+						'title' => 'Academic Careers',
+						'text'  => 'Bring your subject expertise and passion for education to the SEPS teaching community.',
+						'link'  => $link( 'View Academic Application Form' ),
+					),
+					array(
+						'image' => $this->image( 'careers-non-academic.jpg', 'Staff member helping a student with her work' ),
+						'title' => 'Non-Academic Careers',
+						'text'  => 'Explore roles that support the school’s wider operations and help our community thrive.',
+						'link'  => $link( 'View Non-Academic Application Form' ),
+					),
+				),
+				'anchor'        => 'roles',
+			),
+		);
+
+		update_field( 'field_seps_page_sections', $sections, $this->pages['careers'] );
 	}
 
 	/*

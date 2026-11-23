@@ -44,6 +44,7 @@ function page_section_templates(): array {
 		'posts'           => 'posts',
 		'contact_form'    => 'contact-form',
 		'map'             => 'map',
+		'stacked_cards'   => 'stacked-cards',
 		'text'            => 'text',
 	);
 }
@@ -130,9 +131,13 @@ function page_section_layouts(): array {
 				field(
 					'ps_hero',
 					'title',
-					'text',
+					'textarea',
 					__( 'Heading', 'seps' ),
-					array( 'instructions' => __( 'Leave empty to use the page title.', 'seps' ) )
+					array(
+						'instructions' => __( 'Leave empty to use the page title. Press Enter for a line break (wide screens only).', 'seps' ),
+						'rows'         => 2,
+						'new_lines'    => '',
+					)
 				),
 				field( 'ps_hero', 'text', 'textarea', __( 'Intro', 'seps' ), $text ),
 				field( 'ps_hero', 'note', 'text', __( 'Small note above the button', 'seps' ), array( 'placeholder' => 'Admissions 2026–2027' ) ),
@@ -179,6 +184,19 @@ function page_section_layouts(): array {
 							'flower' => __( 'Flower', 'seps' ),
 						),
 						'default_value' => 'none',
+					)
+				),
+				field(
+					'ps_hero',
+					'decor_position',
+					'button_group',
+					__( 'Decoration height', 'seps' ),
+					array(
+						'choices'       => array(
+							'auto' => __( 'Default', 'seps' ),
+							'top'  => __( 'Near the top', 'seps' ),
+						),
+						'default_value' => 'auto',
 					)
 				),
 			)
@@ -1062,6 +1080,37 @@ function page_section_layouts(): array {
 					'url',
 					__( 'Google Maps embed URL', 'seps' ),
 					array( 'instructions' => __( 'Google Maps → Share → Embed a map → copy only the src="…" address (starts with https://www.google.com/maps/embed).', 'seps' ) )
+				),
+			)
+		),
+
+		'layout_seps_ps_stacked_cards' => $layout(
+			'stacked_cards',
+			__( 'Photo + stacked cards', 'seps' ),
+			array(
+				$background( 'ps_stack', array(
+						'white' => __( 'White', 'seps' ),
+						'lilac' => __( 'Lilac', 'seps' ),
+					), 'white' ),
+				field( 'ps_stack', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_stack', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
+				image_field( 'ps_stack', 'image', __( 'Photo (left, fills the height of the cards)', 'seps' ) ),
+				field(
+					'ps_stack',
+					'cards',
+					'repeater',
+					__( 'Cards', 'seps' ),
+					array(
+						'layout'       => 'block',
+						'button_label' => __( 'Add card', 'seps' ),
+						'collapsed'    => 'field_seps_ps_stack_cards_title',
+						'sub_fields'   => array(
+							image_field( 'ps_stack_cards', 'image', __( 'Photo', 'seps' ), array( 'wrapper' => array( 'width' => '30' ) ) ),
+							field( 'ps_stack_cards', 'title', 'text', __( 'Title', 'seps' ), array( 'required' => 1 ) ),
+							field( 'ps_stack_cards', 'text', 'textarea', __( 'Text', 'seps' ), $text ),
+							link_field( 'ps_stack_cards', 'link', __( 'Button', 'seps' ) ),
+						),
+					)
 				),
 			)
 		),
