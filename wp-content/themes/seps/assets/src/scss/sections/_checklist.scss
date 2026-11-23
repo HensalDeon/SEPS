@@ -1,0 +1,98 @@
+@use "../abstracts/mixins" as *;
+
+// Notice + Checklist — e.g. "Withdrawals" (Admissions).
+
+.checklist {
+	padding-block: var(--section-space);
+	background: var(--color-lilac);
+
+	&__heading {
+		margin-bottom: 2rem;
+	}
+
+	&__body {
+		display: grid;
+		gap: 2.5rem;
+		margin-top: 2.5rem;
+
+		&--has-image {
+			@include mq(lg) {
+				grid-template-columns: minmax(0, 1106fr) minmax(0, 436fr);
+				gap: clamp(2.5rem, 4.17vw, 5rem); // → 80
+				align-items: center;
+			}
+		}
+	}
+
+	&__main {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2rem;
+	}
+
+	&__title {
+		font-size: clamp(1.25rem, 1.15rem + 0.3vw, 1.5rem); // → 24
+	}
+
+	&__intro {
+		font-weight: var(--fw-light);
+	}
+
+	// White card; list items separated by brand hairlines; bold in brand.
+	&__list {
+		width: 100%;
+		padding: 2rem 1.5rem;
+		border-radius: var(--radius);
+		background: var(--color-white);
+		font-weight: var(--fw-light);
+
+		// Hanging bullets; dividers are drawn from the bullet column so they
+		// span the card, as designed, while wrapped lines stay aligned.
+		ul {
+			--bullet-indent: 1.25rem;
+
+			margin: 0;
+			padding-left: var(--bullet-indent);
+		}
+
+		li + li {
+			position: relative;
+			margin-top: 1.5rem;
+			padding-top: 1.5rem;
+
+			&::before {
+				position: absolute;
+				top: 0;
+				right: 0;
+				left: calc(var(--bullet-indent) * -1);
+				border-top: 1px solid rgb(40 48 146 / 50%);
+				content: "";
+			}
+		}
+
+		strong {
+			color: var(--color-brand);
+		}
+	}
+
+	&__media {
+		position: relative;
+		justify-self: center;
+		width: min(100%, 27.25rem); // 436
+	}
+
+	&__image {
+		aspect-ratio: 1;
+		border-radius: 50%;
+
+		@include cover-image;
+	}
+
+	&__decor {
+		position: absolute;
+		top: 5.6%;
+		left: 9.2%;
+		width: 11.5%;
+	}
+}

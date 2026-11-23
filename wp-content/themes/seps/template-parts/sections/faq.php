@@ -11,7 +11,8 @@
  * @var array $args {
  *     @type string $heading Heading (line breaks preserved).
  *     @type int    $image   Attachment ID.
- *     @type int[]  $items   Selected FAQ IDs (optional).
+ *     @type int[]  $items      Selected FAQ IDs (optional).
+ *     @type string $background 'lilac' (default) or 'white' (section builder).
  * }
  */
 
@@ -55,8 +56,9 @@ $seps_image   = seps_image(
 	)
 );
 $seps_schema  = array();
+$seps_id      = wp_unique_id( 'seps-faq-' );
 ?>
-<section class="faq"<?php echo $seps_heading ? ' aria-labelledby="faq-title"' : ''; ?>>
+<section class="faq<?php echo 'white' === ( $args['background'] ?? 'lilac' ) ? ' faq--white' : ''; ?>"<?php echo $seps_heading ? ' aria-labelledby="' . esc_attr( $seps_id ) . '"' : ''; ?>>
 	<div class="container faq__inner">
 		<?php if ( $seps_image ) : ?>
 			<div class="faq__media"><?php echo $seps_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?></div>
@@ -64,7 +66,7 @@ $seps_schema  = array();
 
 		<div class="faq__content">
 			<?php if ( $seps_heading ) : ?>
-				<h2 id="faq-title" class="section-title faq__title"><?php echo seps_multiline( $seps_heading ); ?></h2>
+				<h2 id="<?php echo esc_attr( $seps_id ); ?>" class="section-title faq__title"><?php echo seps_multiline( $seps_heading ); ?></h2>
 			<?php endif; ?>
 
 			<div class="faq__list">

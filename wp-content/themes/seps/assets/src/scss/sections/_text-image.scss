@@ -1,0 +1,114 @@
+@use "../abstracts/mixins" as *;
+
+// Text + Image — e.g. "Transport" (white, narrow photo filling the text
+// height, flower) and "Registrations" (navy, wide landscape photo, half
+// circles) on Admissions.
+
+.text-image {
+	position: relative;
+	padding-block: var(--section-space);
+
+	&--white {
+		background: var(--color-white);
+	}
+
+	&--lilac {
+		background: var(--color-lilac);
+	}
+
+	&--navy {
+		--focus-color: var(--color-accent);
+
+		background: var(--color-navy);
+		color: var(--color-white);
+
+		.section-title {
+			color: var(--color-white);
+		}
+
+		// Registrations: yellow button with brand text, as in the design.
+		.btn--accent {
+			color: var(--color-brand);
+		}
+	}
+
+	&__inner {
+		display: grid;
+		gap: 2.5rem;
+
+		@include mq(lg) {
+			grid-template-columns: minmax(0, 1fr) minmax(0, var(--text-image-media, 24rem));
+			gap: clamp(2.5rem, 4.17vw, 5rem); // → 80
+		}
+	}
+
+	&--wide &__inner {
+		--text-image-media: 37.0625rem; // 593
+
+		align-items: center;
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: center;
+		gap: 1.5rem;
+		max-width: 64.3rem; // 1029
+	}
+
+	&__text {
+		font-weight: var(--fw-light);
+	}
+
+	&__buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+	}
+
+	&__media {
+		position: relative;
+	}
+
+	// Narrow: the photo fills the text height (out of flow).
+	&--narrow &__media {
+		min-height: 16rem;
+
+		@include mq(lg) {
+			min-height: 0;
+		}
+	}
+
+	&--narrow &__image {
+		position: absolute;
+		inset: 0;
+		border-radius: var(--radius);
+
+		@include cover-image;
+	}
+
+	&--wide &__image {
+		@include rounded-photo(593, 291);
+	}
+
+	&__decor {
+		position: absolute;
+		z-index: 1;
+	}
+
+	// Flower on the photo's top-right corner (centred on the container edge).
+	.decor--flower-brand {
+		top: clamp(1rem, 3.9vw, 4.6875rem); // → 75
+		right: calc(var(--edge) - clamp(1.125rem, 1.3vw, 1.5625rem));
+		width: clamp(2.25rem, 2.6vw, 3.125rem);
+	}
+
+	// Three half circles (drawn upright, shown rotated), top right.
+	.decor--halves-lilac {
+		top: clamp(0.5rem, 1.35vw, 1.625rem);
+		right: calc(var(--edge) - clamp(1rem, 2.7vw, 3.25rem));
+		width: clamp(3.5rem, 5.2vw, 6.25rem);
+		transform: rotate(-90deg);
+	}
+}

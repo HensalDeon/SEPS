@@ -94,3 +94,39 @@
 	display: block;
 	scroll-margin-top: 1rem;
 }
+
+.badge--navy {
+	min-width: 7.25rem; // 116
+	padding: 0.5rem 1.5rem;
+	background: var(--color-navy);
+}
+
+// Editor rich text inside sections (paragraphs, bold, lists, links).
+.rich-text {
+	> * + * {
+		margin-top: 1em;
+	}
+
+	strong {
+		font-weight: var(--fw-semibold);
+	}
+
+	ul,
+	ol {
+		padding-left: 1.5rem;
+	}
+
+	// Solid bullets even when nested inside list-based cards.
+	ul {
+		list-style: disc;
+	}
+
+	li + li {
+		margin-top: 0.75rem;
+	}
+
+	a {
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+	}
+}

@@ -35,6 +35,11 @@ function page_section_templates(): array {
 		'badge_accordion' => 'badge-accordion',
 		'timetable'       => 'timetable',
 		'documents'       => 'documents',
+		'requirements'    => 'requirements',
+		'info_cards'      => 'info-cards',
+		'text_image'      => 'text-image',
+		'checklist'       => 'checklist',
+		'faq'             => 'faq',
 		'text'            => 'text',
 	);
 }
@@ -48,6 +53,34 @@ function page_section_layouts(): array {
 	$text = array(
 		'rows'      => 3,
 		'new_lines' => '',
+	);
+
+	// Short rich text (bold, links, lists) without media.
+	$rich = static fn( string $prefix, string $name, string $label, array $args = array() ): array => field(
+		$prefix,
+		$name,
+		'wysiwyg',
+		$label,
+		array_merge(
+			array(
+				'tabs'         => 'visual',
+				'toolbar'      => 'basic',
+				'media_upload' => 0,
+				'delay'        => 1,
+			),
+			$args
+		)
+	);
+
+	$background = static fn( string $prefix, array $choices, string $default ): array => field(
+		$prefix,
+		'background',
+		'button_group',
+		__( 'Background', 'seps' ),
+		array(
+			'choices'       => $choices,
+			'default_value' => $default,
+		)
 	);
 
 	$icon = static fn( string $prefix, string $name = 'icon', string $label = '' ): array => field(
@@ -98,6 +131,7 @@ function page_section_layouts(): array {
 					array( 'instructions' => __( 'Leave empty to use the page title.', 'seps' ) )
 				),
 				field( 'ps_hero', 'text', 'textarea', __( 'Intro', 'seps' ), $text ),
+				field( 'ps_hero', 'note', 'text', __( 'Small note above the button', 'seps' ), array( 'placeholder' => 'Admissions 2026–2027' ) ),
 				link_field( 'ps_hero', 'button', __( 'Button', 'seps' ) ),
 				image_field( 'ps_hero', 'image', __( 'Image', 'seps' ), array( 'required' => 1 ) ),
 				field(
@@ -454,6 +488,251 @@ function page_section_layouts(): array {
 								)
 							),
 						),
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_requirements' => $layout(
+			'requirements',
+			__( 'Requirements (badges + checklist)', 'seps' ),
+			array(
+				field( 'ps_req', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_req', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
+				link_field( 'ps_req', 'button', __( 'Button', 'seps' ) ),
+				field( 'ps_req', 'left_title', 'text', __( 'Left column: title', 'seps' ), array( 'placeholder' => 'Age Requirements' ) ),
+				field(
+					'ps_req',
+					'left_rows',
+					'repeater',
+					__( 'Left column: rows', 'seps' ),
+					array(
+						'layout'       => 'table',
+						'button_label' => __( 'Add row', 'seps' ),
+						'sub_fields'   => array(
+							field( 'ps_req_rows', 'badge', 'text', __( 'Badge', 'seps' ), array( 'placeholder' => 'KG 1' ) ),
+							field( 'ps_req_rows', 'text', 'textarea', __( 'Text', 'seps' ), array_merge( $text, array( 'rows' => 2 ) ) ),
+						),
+					)
+				),
+				field( 'ps_req', 'right_title', 'text', __( 'Right column: title', 'seps' ), array( 'placeholder' => 'Documents Required' ) ),
+				field(
+					'ps_req',
+					'right_items',
+					'textarea',
+					__( 'Right column: checklist', 'seps' ),
+					array(
+						'rows'         => 8,
+						'new_lines'    => '',
+						'instructions' => __( 'One item per line.', 'seps' ),
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_info_cards' => $layout(
+			'info_cards',
+			__( 'Info Cards (with photo)', 'seps' ),
+			array(
+				$background( 'ps_cards', array(
+						'white' => __( 'White', 'seps' ),
+						'lilac' => __( 'Lilac', 'seps' ),
+						'navy'  => __( 'Navy', 'seps' ),
+					), 'navy' ),
+				field(
+					'ps_cards',
+					'corner',
+					'true_false',
+					__( 'Rounded top-right corner', 'seps' ),
+					array( 'ui' => 1 )
+				),
+				field( 'ps_cards', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				$rich( 'ps_cards', 'intro', __( 'Intro', 'seps' ) ),
+				link_field( 'ps_cards', 'button', __( 'Button', 'seps' ) ),
+				field(
+					'ps_cards',
+					'icon_style',
+					'button_group',
+					__( 'Card icon position', 'seps' ),
+					array(
+						'choices'       => array(
+							'above'  => __( 'Above the title', 'seps' ),
+							'inline' => __( 'Beside the title', 'seps' ),
+						),
+						'default_value' => 'above',
+					)
+				),
+				field(
+					'ps_cards',
+					'cards',
+					'repeater',
+					__( 'Cards', 'seps' ),
+					array(
+						'layout'       => 'block',
+						'button_label' => __( 'Add card', 'seps' ),
+						'collapsed'    => 'field_seps_ps_cards_items_title',
+						'sub_fields'   => array(
+							$icon( 'ps_cards_items' ),
+							field( 'ps_cards_items', 'title', 'text', __( 'Title', 'seps' ), array( 'required' => 1 ) ),
+							field(
+								'ps_cards_items',
+								'width',
+								'button_group',
+								__( 'Width', 'seps' ),
+								array(
+									'choices'       => array(
+										'half' => __( 'Half', 'seps' ),
+										'full' => __( 'Full', 'seps' ),
+									),
+									'default_value' => 'half',
+								)
+							),
+							$rich( 'ps_cards_items', 'text', __( 'Text', 'seps' ) ),
+							field(
+								'ps_cards_items',
+								'rows',
+								'repeater',
+								__( 'Details table (optional)', 'seps' ),
+								array(
+									'layout'       => 'table',
+									'button_label' => __( 'Add row', 'seps' ),
+									'sub_fields'   => array(
+										field( 'ps_cards_rows', 'label', 'text', __( 'Label', 'seps' ) ),
+										field( 'ps_cards_rows', 'value', 'text', __( 'Value', 'seps' ) ),
+									),
+								)
+							),
+						),
+					)
+				),
+				image_field( 'ps_cards', 'image', __( 'Photo', 'seps' ) ),
+				field(
+					'ps_cards',
+					'image_style',
+					'button_group',
+					__( 'Photo style', 'seps' ),
+					array(
+						'choices'       => array(
+							'right'  => __( 'Rounded, right', 'seps' ),
+							'circle' => __( 'Circle, left (with sun)', 'seps' ),
+						),
+						'default_value' => 'right',
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_text_image' => $layout(
+			'text_image',
+			__( 'Text + Image', 'seps' ),
+			array(
+				$background( 'ps_ti', array(
+						'white' => __( 'White', 'seps' ),
+						'lilac' => __( 'Lilac', 'seps' ),
+						'navy'  => __( 'Navy', 'seps' ),
+					), 'white' ),
+				field( 'ps_ti', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				$rich( 'ps_ti', 'content', __( 'Text', 'seps' ) ),
+				field(
+					'ps_ti',
+					'buttons',
+					'repeater',
+					__( 'Buttons', 'seps' ),
+					array(
+						'layout'       => 'table',
+						'max'          => 2,
+						'button_label' => __( 'Add button', 'seps' ),
+						'sub_fields'   => array(
+							link_field( 'ps_ti_buttons', 'link', __( 'Link', 'seps' ) ),
+							field(
+								'ps_ti_buttons',
+								'style',
+								'select',
+								__( 'Style', 'seps' ),
+								array(
+									'choices'       => array(
+										'accent'  => __( 'Yellow', 'seps' ),
+										'primary' => __( 'Blue', 'seps' ),
+									),
+									'default_value' => 'accent',
+								)
+							),
+						),
+					)
+				),
+				image_field( 'ps_ti', 'image', __( 'Photo', 'seps' ) ),
+				field(
+					'ps_ti',
+					'image_size',
+					'button_group',
+					__( 'Photo size', 'seps' ),
+					array(
+						'choices'       => array(
+							'narrow' => __( 'Narrow (fills height)', 'seps' ),
+							'wide'   => __( 'Wide (landscape)', 'seps' ),
+						),
+						'default_value' => 'narrow',
+					)
+				),
+				field(
+					'ps_ti',
+					'decor',
+					'button_group',
+					__( 'Decoration', 'seps' ),
+					array(
+						'choices'       => array(
+							'none'   => __( 'None', 'seps' ),
+							'flower' => __( 'Flower', 'seps' ),
+							'halves' => __( 'Half circles', 'seps' ),
+						),
+						'default_value' => 'none',
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_checklist'  => $layout(
+			'checklist',
+			__( 'Notice + Checklist', 'seps' ),
+			array(
+				field( 'ps_check', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				$icon( 'ps_check', 'notice_icon', __( 'Notice: icon', 'seps' ) ),
+				field( 'ps_check', 'notice_title', 'text', __( 'Notice: title', 'seps' ) ),
+				$rich( 'ps_check', 'notice_text', __( 'Notice: text', 'seps' ) ),
+				image_field( 'ps_check', 'notice_image', __( 'Notice: photo', 'seps' ) ),
+				field( 'ps_check', 'list_title', 'text', __( 'Checklist: title', 'seps' ) ),
+				$rich( 'ps_check', 'list_intro', __( 'Checklist: intro', 'seps' ) ),
+				$rich( 'ps_check', 'list', __( 'Checklist', 'seps' ), array( 'instructions' => __( 'Use a bulleted list; bold text is shown in brand blue.', 'seps' ) ) ),
+				link_field( 'ps_check', 'button', __( 'Button', 'seps' ) ),
+				image_field( 'ps_check', 'image', __( 'Photo (circle)', 'seps' ) ),
+			)
+		),
+
+		'layout_seps_ps_faq'        => $layout(
+			'faq',
+			__( 'FAQs', 'seps' ),
+			array(
+				$background(
+					'ps_faq',
+					array(
+						'lilac' => __( 'Lilac', 'seps' ),
+						'white' => __( 'White', 'seps' ),
+					),
+					'lilac'
+				),
+				field( 'ps_faq', 'heading', 'textarea', __( 'Heading', 'seps' ), array( 'rows' => 2, 'new_lines' => '' ) ),
+				image_field( 'ps_faq', 'image', __( 'Photo', 'seps' ) ),
+				field(
+					'ps_faq',
+					'items',
+					'relationship',
+					__( 'Questions', 'seps' ),
+					array(
+						'post_type'     => array( 'seps_faq' ),
+						'filters'       => array( 'search', 'taxonomy' ),
+						'return_format' => 'id',
+						'max'           => 8,
+						'instructions'  => __( 'Pick and order questions (manage them under FAQs).', 'seps' ),
 					)
 				),
 			)

@@ -79,24 +79,30 @@ function seps_asset_url( string $path ): string {
  * @param string $class Extra class names.
  */
 function seps_decor( string $name, string $class = '' ): string {
+	// Intrinsic size: width, or [width, height] for non-square shapes.
 	$sizes = array(
-		'flower-yellow'  => 50,
-		'flower-brand'   => 50,
-		'sun-yellow'     => 100,
-		'sun-lilac'      => 100,
-		'hourglass-navy' => 100,
+		'flower-yellow'   => 50,
+		'flower-brand'    => 50,
+		'flower-grey'     => 50,
+		'sun-yellow'      => 100,
+		'sun-lilac'       => 100,
+		'hourglass-navy'  => 100,
 		'hourglass-brand' => 100,
+		'halves-lilac'    => array( 100, 148 ),
 	);
 
 	if ( ! isset( $sizes[ $name ] ) ) {
 		return '';
 	}
 
+	[ $width, $height ] = is_array( $sizes[ $name ] ) ? $sizes[ $name ] : array( $sizes[ $name ], $sizes[ $name ] );
+
 	return sprintf(
-		'<img class="%1$s" src="%2$s" width="%3$d" height="%3$d" alt="" aria-hidden="true" loading="lazy" decoding="async">',
+		'<img class="%1$s" src="%2$s" width="%3$d" height="%4$d" alt="" aria-hidden="true" loading="lazy" decoding="async">',
 		esc_attr( trim( 'decor decor--' . $name . ' ' . $class ) ),
 		esc_url( seps_asset_url( "images/decor/{$name}.svg" ) ),
-		$sizes[ $name ]
+		$width,
+		$height
 	);
 }
 
@@ -144,6 +150,12 @@ function seps_content_icon_choices(): array {
 		'people'       => __( 'People', 'seps' ),
 		'certificate'  => __( 'Certificate', 'seps' ),
 		'student'      => __( 'Graduate', 'seps' ),
+		'payment'      => __( 'Payment card', 'seps' ),
+		'calendar'     => __( 'Calendar', 'seps' ),
+		'clock'        => __( 'Clock', 'seps' ),
+		'boy'          => __( 'Boy', 'seps' ),
+		'girl'         => __( 'Girl', 'seps' ),
+		'alert'        => __( 'Alert', 'seps' ),
 	);
 }
 

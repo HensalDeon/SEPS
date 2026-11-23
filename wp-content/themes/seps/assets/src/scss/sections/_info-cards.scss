@@ -1,0 +1,185 @@
+@use "../abstracts/mixins" as *;
+
+// Info Cards — e.g. "Fee Structure" (navy, photo right) and "Uniform"
+// (lilac, circle photo left with sun) on Admissions.
+
+.info-cards {
+	position: relative;
+	padding-block: var(--section-space);
+
+	&--navy {
+		--focus-color: var(--color-accent);
+
+		background: var(--color-navy);
+
+		.section-title {
+			color: var(--color-white);
+		}
+
+		.info-cards__intro {
+			color: var(--color-muted-on-dark);
+		}
+	}
+
+	&--lilac {
+		background: var(--color-lilac);
+	}
+
+	&--white {
+		background: var(--color-white);
+	}
+
+	&--corner {
+		border-top-right-radius: clamp(6rem, 20.8vw, 25rem); // → 400
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.5rem;
+		max-width: 89rem; // 1424
+		margin-bottom: 2rem;
+	}
+
+	&__intro {
+		font-weight: var(--fw-light);
+	}
+
+	&__body {
+		display: grid;
+		gap: 1.5rem;
+	}
+
+	// Photo right: fills the height of the card grid (out of flow).
+	&--image-right &__body {
+		@include mq(lg) {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); // 384
+		}
+	}
+
+	&--image-right &__media {
+		position: relative;
+		min-height: 18rem;
+
+		@include mq(lg) {
+			order: 2;
+			min-height: 0;
+		}
+	}
+
+	&--image-right &__image {
+		position: absolute;
+		inset: 0;
+		border-radius: var(--radius);
+
+		@include cover-image;
+	}
+
+	// Circle photo left (418px) with a sun at its lower left.
+	&--image-circle &__body {
+		align-items: center;
+
+		@include mq(lg) {
+			grid-template-columns: minmax(0, 26.125rem) minmax(0, 1fr);
+			gap: clamp(2.5rem, 4.17vw, 5rem); // → 80
+		}
+	}
+
+	&--image-circle &__media {
+		position: relative;
+		width: min(100%, 26.125rem);
+		justify-self: center;
+	}
+
+	&--image-circle &__image {
+		aspect-ratio: 1;
+		border-radius: 50%;
+
+		@include cover-image;
+	}
+
+	&__decor {
+		position: absolute;
+		top: 76%; // 318 / 418
+		left: 4.3%;
+		width: 24%;
+	}
+
+	&__grid {
+		display: grid;
+		gap: 1.5rem;
+
+		@include mq(md) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+}
+
+.info-box {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem; // 20
+	padding: clamp(1.5rem, 1.67vw, 2rem) 1.5rem;
+	border-radius: var(--radius);
+	background: var(--color-white);
+
+	&--full {
+		grid-column: 1 / -1;
+	}
+
+	&__head {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.25rem;
+	}
+
+	&--inline &__head {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	&__icon {
+		width: 1.5rem; // 24
+		height: 1.5rem;
+		color: var(--color-brand);
+	}
+
+	&__title {
+		font-size: clamp(1.25rem, 1.15rem + 0.3vw, 1.5rem); // → 24
+	}
+
+	&__text {
+		font-weight: var(--fw-light);
+		line-height: 1.6;
+	}
+
+	// Label / value table, e.g. bank transfer details.
+	&__rows {
+		margin: 0;
+
+		div {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			gap: 0.25rem 1rem;
+			padding-block: 0.5rem;
+			border-bottom: 1px solid rgb(40 48 146 / 25%);
+
+			&:last-child {
+				border-bottom: 0;
+			}
+		}
+
+		dt {
+			font-weight: var(--fw-semibold);
+		}
+
+		dd {
+			margin: 0;
+			font-weight: var(--fw-light);
+			overflow-wrap: anywhere;
+		}
+	}
+}

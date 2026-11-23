@@ -34,14 +34,6 @@ if ( ! $seps_tiles && ! $seps_cards && '' === $seps_callout_title ) {
 }
 
 $seps_id            = wp_unique_id( 'seps-features-' );
-$seps_callout_image = seps_image(
-	$args['callout_image'] ?? 0,
-	'large',
-	array(
-		'class' => 'callout__image',
-		'sizes' => '(min-width: 1024px) 615px, 100vw',
-	)
-);
 ?>
 <section class="features"<?php echo $seps_heading ? ' aria-labelledby="' . esc_attr( $seps_id ) . '"' : ''; ?>>
 	<div class="container features__inner">
@@ -86,23 +78,17 @@ $seps_callout_image = seps_image(
 			</div>
 		<?php endif; ?>
 
-		<?php if ( $seps_callout_title || $seps_callout_text ) : ?>
-			<div class="callout<?php echo $seps_callout_image ? ' callout--has-image' : ''; ?>">
-				<div class="callout__body">
-					<?php if ( $seps_callout_title ) : ?>
-						<h3 class="callout__title">
-							<?php echo seps_content_icon( (string) ( $args['callout_icon'] ?? '' ), 'callout__icon' ); ?>
-							<?php echo esc_html( $seps_callout_title ); ?>
-						</h3>
-					<?php endif; ?>
-					<?php if ( $seps_callout_text ) : ?>
-						<p class="callout__text"><?php echo esc_html( $seps_callout_text ); ?></p>
-					<?php endif; ?>
-				</div>
-				<?php if ( $seps_callout_image ) : ?>
-					<div class="callout__media"><?php echo $seps_callout_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?></div>
-				<?php endif; ?>
-			</div>
-		<?php endif; ?>
+		<?php
+		get_template_part(
+			'template-parts/components/callout',
+			null,
+			array(
+				'icon'  => (string) ( $args['callout_icon'] ?? '' ),
+				'title' => $seps_callout_title,
+				'html'  => $seps_callout_text ? '<p>' . esc_html( $seps_callout_text ) . '</p>' : '',
+				'image' => $args['callout_image'] ?? 0,
+			)
+		);
+		?>
 	</div>
 </section>

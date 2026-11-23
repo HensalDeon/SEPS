@@ -98,6 +98,19 @@
 
 	&__text {
 		font-weight: var(--fw-light);
+
+		strong {
+			font-weight: var(--fw-semibold);
+		}
+	}
+
+	// White variant (e.g. Withdrawal Notice): larger title.
+	&--light &__body {
+		background: var(--color-white);
+	}
+
+	&--light &__title {
+		font-size: clamp(1.25rem, 1.15rem + 0.3vw, 1.5rem); // → 24
 	}
 
 	// The photo fills the callout's height (set by the text); out of flow so it

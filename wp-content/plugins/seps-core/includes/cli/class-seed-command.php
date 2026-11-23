@@ -59,6 +59,7 @@ final class Seed_Command {
 		'staff'        => 'Staff',
 		'about'        => 'About page',
 		'academics'    => 'Academics page',
+		'admissions'   => 'Admissions page',
 	);
 
 	/**
@@ -72,7 +73,7 @@ final class Seed_Command {
 	 * [--only=<steps>]
 	 * : Comma-separated steps to run (default: all). Available: identity,
 	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
-	 * about, academics.
+	 * about, academics, admissions.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -124,6 +125,7 @@ final class Seed_Command {
 			'staff'        => fn() => $this->seed_staff(),
 			'about'        => fn() => $this->seed_about(),
 			'academics'    => fn() => $this->seed_academics(),
+			'admissions'   => fn() => $this->seed_admissions(),
 		);
 
 		foreach ( self::STEPS as $key => $label ) {
@@ -942,6 +944,268 @@ final class Seed_Command {
 		);
 
 		update_field( 'field_seps_page_sections', $sections, $this->pages['academics'] );
+	}
+
+	/**
+	 * Admissions page: process, fees, transport, uniform, registrations,
+	 * withdrawals and admissions FAQs (FAQ posts in the "Admissions" topic).
+	 */
+	private function seed_admissions(): void {
+		$register = $this->link( 'register-now', 'Apply Now' );
+		$link     = static fn( string $title, string $url = '#' ): array => array(
+			'url'    => $url,
+			'title'  => $title,
+			'target' => '',
+		);
+
+		// Admissions FAQs. Only the first answer is in the design; the others
+		// summarise content published elsewhere on the site.
+		$topic = term_exists( 'Admissions', 'seps_faq_topic' ) ?: wp_insert_term( 'Admissions', 'seps_faq_topic' );
+		$faqs  = array(
+			array( 'What curriculum does the school follow?', 'We follow the CBSE (Central Board of Secondary Education) curriculum, offering a structured and well-balanced academic framework from KG I to Grade XII.' ),
+			array( 'What is the admission process?', 'Complete the online registration form, then submit the printed form together with the documents listed under Admission Process on this page. Our admissions team will guide you through the next steps.' ),
+			array( 'What are the school timings?', 'From Monday to Thursday the school day runs from the 7:25 AM assembly to 2:10 PM. Friday is a half day. The full timetable is on the Academics page.' ),
+			array( 'Does the school offer extracurricular activities?', 'Yes. Students can take part in sports, arts, music, clubs and student council initiatives that complement classroom learning.' ),
+			array( 'Is transportation available?', 'Yes. School transport is provided through Fast Rent a Car, our authorized transport provider. See Transport on this page for details and fees.' ),
+		);
+		$faq_ids = array();
+		foreach ( $faqs as $index => [ $question, $answer ] ) {
+			$id = $this->post(
+				'seps_faq',
+				'faq-admissions-' . ( $index + 1 ),
+				array(
+					'post_title'   => $question,
+					'post_content' => $answer,
+					'menu_order'   => 100 + $index,
+				)
+			);
+			if ( is_array( $topic ) ) {
+				wp_set_object_terms( $id, (int) $topic['term_id'], 'seps_faq_topic' );
+			}
+			$faq_ids[] = $id;
+		}
+
+		$list = static fn( array $items ): string => '<ul><li>' . implode( '</li><li>', $items ) . '</li></ul>';
+
+		$sections = array(
+			array(
+				'acf_fc_layout' => 'page_hero',
+				'title'         => 'Begin Your Child’s Journey at SEPS',
+				'text'          => 'Give your child a strong start with quality CBSE education in a supportive learning environment, where academic growth, values and holistic development go hand in hand.',
+				'note'          => 'Admissions 2026–2027',
+				'button'        => $register,
+				'image'         => $this->image( 'admissions-hero.jpg', 'Graduate in cap and gown holding books' ),
+				'decor'         => 'none',
+			),
+			array(
+				'acf_fc_layout' => 'requirements',
+				'heading'       => 'Admission Process',
+				'intro'         => 'Dear Parent, welcome to Sunrise English Private School. We are pleased that you are considering SEPS for your child’s education.',
+				'button'        => $register,
+				'left_title'    => 'Age Requirements',
+				'left_rows'     => array(
+					array(
+						'badge' => 'KG 1',
+						'text'  => '4 years by 31st March 2026',
+					),
+					array(
+						'badge' => 'KG 2',
+						'text'  => '5 years by 31 March 2026, or passed KG 1 within the UAE under MOE recognition',
+					),
+					array(
+						'badge' => 'Grade 1',
+						'text'  => '6 years by 31 March 2026, or passed KG 2 within the UAE under MOE recognition',
+					),
+					array(
+						'badge' => 'Grade 2+',
+						'text'  => 'Based on the Transfer Certificate and Final Report Card of the previous year, duly attested and stamped by the Ministry of Foreign Affairs and the Embassy in the country of origin.',
+					),
+				),
+				'right_title'   => 'Documents Required',
+				'right_items'   => implode(
+					"\n",
+					array(
+						'Printed online registration form',
+						'2 photographs',
+						'Valid Emirates ID copies of the student and parents',
+						'Attested Transfer Certificate, for Grade 2 and above',
+						'Final report card of the last grade attended',
+						'Vaccination record',
+						'Electricity/water bill or tenancy contract mentioning the premises ID',
+						'Passport and residence visa copies of the student/parent',
+						'Attested birth certificate',
+					)
+				),
+			),
+			array(
+				'acf_fc_layout' => 'info_cards',
+				'background'    => 'navy',
+				'corner'        => 1,
+				'heading'       => 'Fee Structure',
+				'intro'         => '<p>We keep our fee information clear and accessible for families. Find details on fee terms, payment timings, accepted payment methods and bank transfer information below.</p>',
+				'button'        => $link( 'View Fee Structure 2026–27', get_permalink( $this->pages['academics'] ) . '#mandatory-disclosure' ),
+				'icon_style'    => 'above',
+				'cards'         => array(
+					array(
+						'icon'  => 'payment',
+						'title' => 'Modes of Payment',
+						'width' => 'full',
+						'text'  => '<p>Payment can be made by <strong>cash at the school counter, current-dated cheque or bank transfer.</strong> For bank transfers, please mention the student\'s name, grade and section as the reference.</p>',
+						'rows'  => array(),
+					),
+					array(
+						'icon'  => 'calendar',
+						'title' => 'Three Terms a Year',
+						'width' => 'half',
+						'text'  => '<p>School fees are collected in three terms: <strong>April, October and January</strong>. Part-payment of fees is not permitted.</p>',
+						'rows'  => array(),
+					),
+					array(
+						'icon'  => 'clock',
+						'title' => 'Collection Hours',
+						'width' => 'half',
+						'text'  => '<p><strong>Sunday to Thursday</strong>: 8:00 AM – 2:00 PM<br><strong>Friday &amp; Saturday</strong>: 8:00 AM – 12:00 PM</p>',
+						'rows'  => array(),
+					),
+					array(
+						'icon'  => '',
+						'title' => 'Bank Transfer Details',
+						'width' => 'full',
+						'text'  => '',
+						'rows'  => array(
+							array(
+								'label' => 'Account Name',
+								'value' => 'Sunrise English Private School',
+							),
+							array(
+								'label' => 'Bank Name',
+								'value' => 'Abu Dhabi Commercial Bank',
+							),
+							array(
+								'label' => 'Account No.',
+								'value' => '252369920001',
+							),
+							array(
+								'label' => 'IBAN',
+								'value' => 'AE980030000252369920001',
+							),
+						),
+					),
+				),
+				'image'         => $this->image( 'admissions-fee.jpg', 'Students studying together in the library' ),
+				'image_style'   => 'right',
+			),
+			array(
+				'acf_fc_layout' => 'text_image',
+				'background'    => 'white',
+				'heading'       => 'Transport',
+				'content'       => '<p>Sunrise English Private School provides safe and reliable transportation through <strong>Fast Rent a Car,</strong> our authorized transport provider. Students should arrive at their pick-up point at least 5 minutes before the scheduled bus time.</p><p>For <strong>KG1 to Grade 6</strong>, an authorized adult with a Guardian Card must be present at drop-off. Alternative drop-off and later return requests require prior written approval and are subject to route and seat availability.</p>',
+				'buttons'       => array(
+					array(
+						'link'  => $link( 'View Transport Fee' ),
+						'style' => 'accent',
+					),
+					array(
+						'link'  => $link( 'View Transport Fee Policy' ),
+						'style' => 'primary',
+					),
+				),
+				'image'         => $this->image( 'admissions-transport.jpg', 'Yellow school bus on the road' ),
+				'image_size'    => 'narrow',
+				'decor'         => 'flower',
+			),
+			array(
+				'acf_fc_layout' => 'info_cards',
+				'background'    => 'lilac',
+				'corner'        => 0,
+				'heading'       => 'Uniform',
+				'intro'         => '<p>All students at Sunrise English Private School must wear a <strong>clean, neatly ironed and complete school uniform</strong>, maintaining a smart and presentable appearance.</p>',
+				'icon_style'    => 'inline',
+				'cards'         => array(
+					array(
+						'icon'  => 'boy',
+						'title' => 'Boys',
+						'width' => 'half',
+						'text'  => $list( array( 'Fancy shoes are not allowed', 'Hair must be short and neatly trimmed', 'Full-sleeve shirts and round-neck inner T-shirts are not allowed', 'Shirts must be neatly tucked in' ) ),
+						'rows'  => array(),
+					),
+					array(
+						'icon'  => 'girl',
+						'title' => 'Girls',
+						'width' => 'half',
+						'text'  => $list( array( 'Short hair must not fall on the brow or face', 'Long hair must be worn in double plaits with black ribbons', 'Flowers or decorative ornaments are not allowed' ) ),
+						'rows'  => array(),
+					),
+					array(
+						'icon'  => '',
+						'title' => 'Regular Uniform',
+						'width' => 'half',
+						'text'  => '<p><strong>For Boys</strong>: Dark grey classic trousers, sky blue shirt with school logo, school tie, black belt, navy blue socks and black shoes.</p><p><strong>For Girls</strong>: Sky blue shirt, blue and white checked pinafore with school logo, navy blue socks and black ribbon.</p>',
+						'rows'  => array(),
+					),
+					array(
+						'icon'  => '',
+						'title' => 'Same for Girls & Boys',
+						'width' => 'half',
+						'text'  => '<p><strong>Sports Uniform</strong>: White polo shirt with house colour and school logo, navy blue track pants with house colour lining, navy blue socks and white canvas shoes.</p><p><strong>Winter Jacket</strong>: Navy blue fleece jacket.</p>',
+						'rows'  => array(),
+					),
+				),
+				'image'         => $this->image( 'admissions-uniform.jpg', 'Teacher writing on a chalkboard' ),
+				'image_style'   => 'circle',
+			),
+			array(
+				'acf_fc_layout' => 'text_image',
+				'background'    => 'navy',
+				'heading'       => 'Registrations',
+				'content'       => '<p>Stay informed about the registration and admission timelines for the <strong>2026–2027 academic year</strong>, including registration dates, interviews, document submission, entrance tests and fee payment.</p>',
+				'buttons'       => array(
+					array(
+						'link'  => $this->link( 'register-now', 'View Registration' ),
+						'style' => 'accent',
+					),
+				),
+				'image'         => $this->image( 'admissions-registration.jpg', 'Parent reading with a child in a library' ),
+				'image_size'    => 'wide',
+				'decor'         => 'halves',
+			),
+			array(
+				'acf_fc_layout' => 'checklist',
+				'heading'       => 'Withdrawals',
+				'notice_icon'   => 'alert',
+				'notice_title'  => 'Withdrawal Notice',
+				'notice_text'   => '<p>Parents who wish to withdraw their ward from the school at any time must submit a <strong>TC application in the prescribed format</strong> available on the school website.</p>',
+				'notice_image'  => $this->image( 'admissions-withdrawal-notice.jpg', 'Three students studying outdoors with a laptop' ),
+				'list_title'    => 'Application Checklist',
+				'list_intro'    => '<p>Please ensure all required documents are ready before submitting the application. <strong>Incomplete applications cannot be processed.</strong></p>',
+				'list'          => $list(
+					array(
+						'Clear all pending dues before submitting the form.',
+						'<strong>N.O.C. from the new school</strong> is required for transfers within Abu Dhabi, Al Ain or the Western Region.',
+						'TCs are issued within <strong>10 working days</strong> during the academic year.',
+						'Post-academic-year applications must be submitted by the <strong>second week of January.</strong>',
+						'Early TC requests require <strong>ADEK approval.</strong>',
+						'Mid-session discontinuation requires <strong>Ministry approval.</strong>',
+						'The student\'s attendance must continue until the last date stated on the TC form.',
+						'TCs for use outside Abu Dhabi require <strong>Abu Dhabi Education Council attestation.</strong>',
+						'TC issuance is subject to <strong>seat availability.</strong>',
+						'TC requests are suspended during summer vacation; submit requests <strong>15 days before school closure</strong> if discontinuing after the break.',
+						'For <strong>Grades X &amp; XII</strong>, TCs are issued after results are declared and ADEK approval is received.',
+					)
+				),
+				'button'        => $link( 'Download TC Application Form' ),
+				'image'         => $this->image( 'admissions-withdrawal.jpg', 'Student listening to a teacher in class' ),
+			),
+			array(
+				'acf_fc_layout' => 'faq',
+				'background'    => 'white',
+				'heading'       => "Frequently Asked\nQuestions",
+				'image'         => $this->image( 'admissions-faq.jpg', 'Three students studying on a bench outdoors' ),
+				'items'         => $faq_ids,
+			),
+		);
+
+		update_field( 'field_seps_page_sections', $sections, $this->pages['admissions'] );
 	}
 
 	/*

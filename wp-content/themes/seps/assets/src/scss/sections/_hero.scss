@@ -60,6 +60,13 @@
 		font-weight: var(--fw-light);
 	}
 
+	// e.g. "Admissions 2026–2027", sits just above the button.
+	&__note {
+		margin-bottom: -0.5rem;
+		color: rgb(255 255 255 / 50%);
+		font-weight: var(--fw-light);
+	}
+
 	&__media {
 		position: relative;
 		z-index: 2;

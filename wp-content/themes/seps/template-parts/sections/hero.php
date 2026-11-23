@@ -10,6 +10,7 @@
  * @var array $args {
  *     @type string $title   Heading (line breaks preserved).
  *     @type string $text    Intro paragraph.
+ *     @type string $note    Small note above the button (page variant).
  *     @type array  $button  SCF link.
  *     @type int    $image   Attachment ID.
  *     @type string $variant 'home' (default) or 'page'.
@@ -52,6 +53,10 @@ $seps_image   = seps_image(
 
 			<?php if ( $seps_text ) : ?>
 				<p class="hero__text"><?php echo esc_html( $seps_text ); ?></p>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $args['note'] ) ) : ?>
+				<p class="hero__note"><?php echo esc_html( $args['note'] ); ?></p>
 			<?php endif; ?>
 
 			<?php echo seps_button( $args['button'] ?? null, 'accent' ); ?>

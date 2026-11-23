@@ -4,6 +4,10 @@
 	padding-block: var(--section-space);
 	background: var(--color-lilac);
 
+	&--white {
+		background: var(--color-white);
+	}
+
 	&__inner {
 		display: grid;
 		gap: 2.5rem;
