@@ -12,6 +12,7 @@
  *     @type string $text    Intro paragraph.
  *     @type string $note    Small note above the button (page variant).
  *     @type array  $button  SCF link.
+ *     @type array  $button_2 Second (white) button, page variant.
  *     @type int    $image   Attachment ID.
  *     @type string $variant 'home' (default) or 'page'.
  *     @type string $decor   Page variant only: 'none' (default), 'sun' or 'flower'.
@@ -61,7 +62,12 @@ $seps_image   = seps_image(
 				<p class="hero__note"><?php echo esc_html( $args['note'] ); ?></p>
 			<?php endif; ?>
 
-			<?php echo seps_button( $args['button'] ?? null, 'accent' ); ?>
+			<?php
+			$seps_buttons = seps_button( $args['button'] ?? null, 'accent' ) . seps_button( $args['button_2'] ?? null, 'light', 'hero__button-alt' );
+			?>
+			<?php if ( $seps_buttons ) : ?>
+				<div class="hero__buttons"><?php echo $seps_buttons; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from seps_button(). ?></div>
+			<?php endif; ?>
 		</div>
 	</div>
 

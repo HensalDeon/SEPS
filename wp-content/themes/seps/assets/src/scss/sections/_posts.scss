@@ -1,0 +1,227 @@
+@use "../abstracts/mixins" as *;
+
+// Latest posts — e.g. "Love for the UAE" on News & Events. Optional circle
+// photo on a navy shape that flows down from the section above (left).
+
+.posts {
+	position: relative;
+	padding-block: var(--section-space);
+	overflow-x: clip;
+	background: var(--color-white);
+
+	&__inner {
+		position: relative;
+		z-index: 1;
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2rem;
+		margin-bottom: 2rem;
+	}
+
+	&__intro {
+		font-weight: var(--fw-light);
+	}
+
+	&__side {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		margin-top: 2.5rem;
+		padding-inline: var(--gutter);
+	}
+
+	&__shape,
+	&__flower {
+		display: none;
+	}
+
+	&__photo {
+		@include cover-image;
+
+		width: min(100%, 20rem);
+		height: auto;
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+
+	@include mq(xl) {
+		// 603 × 641 shape at the left edge; content starts at 579 (0.96 of it).
+		--posts-shape: min(31.41cqi, 37.6875rem);
+
+		&--has-side {
+			min-height: calc(var(--posts-shape) * 1.063);
+		}
+
+		&--has-side &__content {
+			margin-left: calc(var(--posts-shape) * 0.96 - var(--gutter));
+		}
+
+		&__side {
+			position: absolute;
+			top: 0;
+			left: calc(var(--edge) - var(--gutter));
+			display: block;
+			width: var(--posts-shape);
+			margin: 0;
+			padding: 0;
+
+			// Wider than the design: continue the shape's straight left part
+			// (391.5 / 641 of its height) to the screen edge.
+			&::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				right: calc(100% - 1px);
+				width: calc(var(--edge) - var(--gutter) + 1px);
+				height: 61.08%;
+				background: var(--color-navy);
+			}
+		}
+
+		&__shape {
+			display: block;
+			width: 100%;
+		}
+
+		// 416px circle at (40, 196) on the shape.
+		&__photo {
+			position: absolute;
+			top: 30.58%;
+			left: 6.63%;
+			width: 68.99%;
+		}
+
+		&__flower {
+			position: absolute;
+			display: block;
+			width: 8.26%;
+
+			&--1 {
+				top: 39.63%;
+				left: 9.29%;
+			}
+
+			&--2 {
+				top: 71.14%;
+				left: 67.33%;
+			}
+		}
+	}
+}
+
+// Grid of post cards (Latest posts section, News & Events list).
+.post-grid {
+	@include bare-list;
+
+	display: grid;
+	gap: 2.5rem clamp(1.5rem, 2.5vw, 3rem); // → 48
+
+	@include mq(md) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	@include mq(lg) {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	&__item {
+		display: flex;
+	}
+}
+
+.post-card {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 1rem;
+
+	&__image {
+		@include rounded-photo(365, 180);
+
+		width: 100%;
+	}
+
+	&__body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.5rem;
+		padding-block: 1rem;
+	}
+
+	&__title {
+		color: var(--color-brand);
+		font-size: var(--fs-md);
+		font-weight: var(--fw-semibold);
+		line-height: var(--lh-body);
+
+		a:hover {
+			text-decoration: underline;
+			text-underline-offset: 0.2em;
+		}
+	}
+
+	&__excerpt {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		line-clamp: 3;
+	}
+
+	&__more {
+		margin-top: auto;
+	}
+}
+
+// Paginated list of posts (News & Events "All News", archives, search).
+.post-list {
+	padding-block: var(--section-space);
+
+	&__header {
+		margin-bottom: 2rem;
+	}
+
+	.pagination {
+		margin-top: clamp(2.5rem, 4.17vw, 5rem);
+	}
+
+	.nav-links {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5rem;
+	}
+
+	.page-numbers {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 2.6875rem;
+		min-height: 2.6875rem;
+		padding-inline: 1rem;
+		border-radius: var(--radius-pill);
+		background: var(--color-lilac);
+		color: var(--color-brand);
+		font-weight: var(--fw-semibold);
+		transition:
+			background-color var(--duration) var(--ease-out),
+			color var(--duration) var(--ease-out);
+
+		&:hover,
+		&.current {
+			background: var(--color-brand);
+			color: var(--color-white);
+		}
+
+		&.dots {
+			background: none;
+			color: var(--color-text);
+		}
+	}
+}

@@ -75,7 +75,7 @@ Everything on the home page is editable. Nothing is hard-coded in templates.
 | Footer columns | Appearance → Menus → *Footer: Column 1/2/3*. **The menu name is the column heading.** |
 | Privacy / Terms links | Appearance → Menus → *Footer: Legal links* |
 | Home page sections | Pages → Home. One tab per section, each with a *Show this section* toggle. |
-| Inner pages (About, Academics and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Highlights & Focus Areas, Badge Accordion, Timetable, Documents, Requirements, Info Cards, Text + Image, Notice + Checklist, FAQs, Cards (carousel or grid), Text. The Page Hero also has an optional note line, decoration and "Keep in view" (photo crop focus); Text + Image photos can sit left or right. Every section has an optional **Section ID** so links can jump to it (e.g. `/academics/#mandatory-disclosure`). |
+| Inner pages (About, Academics and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Highlights & Focus Areas, Badge Accordion, Timetable, Documents, Requirements, Info Cards, Text + Image, Notice + Checklist, FAQs, Cards (carousel or grid), Latest posts, Text. The Page Hero also has an optional note line, decoration, "Keep in view" (photo crop focus) and a second (white) button. Text + Image photos can sit left or right, or be a circle, with an optional rounded corner. Every section has an optional **Section ID** so links can jump to it (e.g. `/academics/#mandatory-disclosure`). |
 | Staff (Principals, Leadership Team) | **Staff** (sidebar). Photo = Featured image, *Position* field, *Team*, and *Order* to sort. Shown by the Team section. |
 | Testimonials | **Testimonials** (sidebar). The home page shows the latest 6 unless specific ones are picked. |
 | FAQs | **FAQs** (sidebar). Ordered by *Order*; can be hand-picked per page. |
@@ -108,7 +108,9 @@ composer lint
 
 ## Building inner pages (section builder)
 
-Every page except Home and the News page is built from **Page Sections** (`inc/scf/fields-page-sections.php`). Each section type is a template in `template-parts/sections/` that receives its data as `$args`, the same contract the home page uses.
+Every page except Home is built from **Page Sections** (`inc/scf/fields-page-sections.php`). Each section type is a template in `template-parts/sections/` that receives its data as `$args`, the same contract the home page uses.
+
+News & Events is the WordPress posts page: `home.php` renders its sections on page 1, then the paginated list of all posts (`#all-news`). Later pages, category archives and search show the list only (`template-parts/post-list.php`).
 
 To add a section type for a new design:
 

@@ -16,6 +16,11 @@
 		background: var(--color-lilac);
 	}
 
+	// e.g. "SEPS Chronicle": 400px bottom-right corner at 1920.
+	&--corner {
+		border-bottom-right-radius: clamp(6rem, 20.8vw, 25rem);
+	}
+
 	&--navy {
 		--focus-color: var(--color-accent);
 
@@ -113,6 +118,38 @@
 
 	&--large &__image {
 		@include rounded-photo(798, 496);
+	}
+
+	// Circle: 338px photo beside the text, e.g. "SEPS Chronicle".
+	&--circle &__inner {
+		--text-image-media: 21.125rem; // 338
+
+		align-items: center;
+	}
+
+	&--circle &__media {
+		justify-self: center;
+		width: min(100%, 17.5rem);
+
+		@include mq(lg) {
+			width: 100%;
+		}
+	}
+
+	&--circle &__image {
+		@include cover-image;
+
+		height: auto;
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+
+	// Flower near the top of the circle (at 222 / -13 on the 338px photo).
+	&__photo-decor {
+		position: absolute;
+		top: -3.85%;
+		left: 65.7%;
+		width: 14.73%;
 	}
 
 	&__decor {

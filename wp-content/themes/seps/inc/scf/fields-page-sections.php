@@ -41,6 +41,7 @@ function page_section_templates(): array {
 		'checklist'       => 'checklist',
 		'faq'             => 'faq',
 		'card_list'       => 'card-list',
+		'posts'           => 'posts',
 		'text'            => 'text',
 	);
 }
@@ -134,6 +135,7 @@ function page_section_layouts(): array {
 				field( 'ps_hero', 'text', 'textarea', __( 'Intro', 'seps' ), $text ),
 				field( 'ps_hero', 'note', 'text', __( 'Small note above the button', 'seps' ), array( 'placeholder' => 'Admissions 2026–2027' ) ),
 				link_field( 'ps_hero', 'button', __( 'Button', 'seps' ) ),
+				link_field( 'ps_hero', 'button_2', __( 'Second button (white, optional)', 'seps' ) ),
 				image_field( 'ps_hero', 'image', __( 'Image', 'seps' ), array( 'required' => 1 ) ),
 				field(
 					'ps_hero',
@@ -687,6 +689,7 @@ function page_section_layouts(): array {
 							'narrow' => __( 'Narrow (fills height)', 'seps' ),
 							'wide'   => __( 'Wide (landscape)', 'seps' ),
 							'large'  => __( 'Large (half width)', 'seps' ),
+							'circle' => __( 'Circle', 'seps' ),
 						),
 						'default_value' => 'narrow',
 					)
@@ -711,12 +714,20 @@ function page_section_layouts(): array {
 					__( 'Decoration', 'seps' ),
 					array(
 						'choices'       => array(
-							'none'   => __( 'None', 'seps' ),
-							'flower' => __( 'Flower', 'seps' ),
-							'halves' => __( 'Half circles', 'seps' ),
+							'none'         => __( 'None', 'seps' ),
+							'flower'       => __( 'Flower', 'seps' ),
+							'halves'       => __( 'Half circles', 'seps' ),
+							'flower_photo' => __( 'Flower on the photo', 'seps' ),
 						),
 						'default_value' => 'none',
 					)
+				),
+				field(
+					'ps_ti',
+					'corner',
+					'true_false',
+					__( 'Rounded bottom-right corner', 'seps' ),
+					array( 'ui' => 1 )
 				),
 			)
 		),
@@ -899,11 +910,58 @@ function page_section_layouts(): array {
 					__( 'Decoration', 'seps' ),
 					array(
 						'choices'       => array(
-							'none' => __( 'None', 'seps' ),
-							'sun'  => __( 'Sun', 'seps' ),
+							'none'   => __( 'None', 'seps' ),
+							'sun'    => __( 'Sun', 'seps' ),
+							'halves' => __( 'Half circles', 'seps' ),
 						),
 						'default_value' => 'none',
 					)
+				),
+			)
+		),
+
+		'layout_seps_ps_posts'      => $layout(
+			'posts',
+			__( 'Latest posts', 'seps' ),
+			array(
+				field( 'ps_posts', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				$rich( 'ps_posts', 'intro', __( 'Intro', 'seps' ) ),
+				link_field( 'ps_posts', 'button', __( 'Button', 'seps' ) ),
+				field(
+					'ps_posts',
+					'category',
+					'taxonomy',
+					__( 'Category (optional)', 'seps' ),
+					array(
+						'instructions'  => __( 'Show only posts from this category. Leave empty for the latest posts.', 'seps' ),
+						'taxonomy'      => 'category',
+						'field_type'    => 'select',
+						'allow_null'    => 1,
+						'add_term'      => 0,
+						'save_terms'    => 0,
+						'load_terms'    => 0,
+						'return_format' => 'id',
+						'multiple'      => 0,
+						'wrapper'       => array( 'width' => '50' ),
+					)
+				),
+				field(
+					'ps_posts',
+					'count',
+					'number',
+					__( 'Number of posts', 'seps' ),
+					array(
+						'default_value' => 3,
+						'min'           => 1,
+						'max'           => 12,
+						'wrapper'       => array( 'width' => '50' ),
+					)
+				),
+				image_field(
+					'ps_posts',
+					'image',
+					__( 'Side photo (optional)', 'seps' ),
+					array( 'instructions' => __( 'Shown in a circle on a navy shape to the left of the posts.', 'seps' ) )
 				),
 			)
 		),
@@ -953,11 +1011,6 @@ function register_page_section_fields(): void {
 						'param'    => 'page_type',
 						'operator' => '!=',
 						'value'    => 'front_page',
-					),
-					array(
-						'param'    => 'page_type',
-						'operator' => '!=',
-						'value'    => 'posts_page',
 					),
 				),
 			),

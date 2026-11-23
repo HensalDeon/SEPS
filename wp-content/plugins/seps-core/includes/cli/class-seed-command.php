@@ -61,6 +61,7 @@ final class Seed_Command {
 		'academics'    => 'Academics page',
 		'admissions'   => 'Admissions page',
 		'student-life' => 'Student Life page',
+		'news-events'  => 'News & Events page',
 	);
 
 	/**
@@ -74,7 +75,8 @@ final class Seed_Command {
 	 * [--only=<steps>]
 	 * : Comma-separated steps to run (default: all). Available: identity,
 	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
-	 * about, academics, admissions, student-life.
+	 * about, academics, admissions, student-life,
+	 * news-events (run after posts).
 	 *
 	 * ## EXAMPLES
 	 *
@@ -128,6 +130,7 @@ final class Seed_Command {
 			'academics'    => fn() => $this->seed_academics(),
 			'admissions'   => fn() => $this->seed_admissions(),
 			'student-life' => fn() => $this->seed_student_life(),
+			'news-events'  => fn() => $this->seed_news_events(),
 		);
 
 		foreach ( self::STEPS as $key => $label ) {
@@ -1358,6 +1361,124 @@ final class Seed_Command {
 		);
 
 		update_field( 'field_seps_page_sections', $sections, $this->pages['student-life'] );
+	}
+
+	/**
+	 * News & Events page (the posts page): hero, SEPS Chronicle, ADEK
+	 * calendar, media gallery and "Love for the UAE" posts. The list of all
+	 * posts follows the sections automatically (home.php).
+	 *
+	 * Adds the "Love for the UAE" category to three of the seeded news posts.
+	 */
+	private function seed_news_events(): void {
+		$link = static fn( string $title, string $url = '#' ): array => array(
+			'url'    => $url,
+			'title'  => $title,
+			'target' => '',
+		);
+
+		$term = term_exists( 'Love for the UAE', 'category' ) ?: wp_insert_term( 'Love for the UAE', 'category' );
+		$uae  = is_array( $term ) ? (int) $term['term_id'] : 0;
+
+		if ( $uae ) {
+			foreach ( array( 'news-2', 'news-3', 'news-4' ) as $key ) {
+				$id = $this->find( 'post', $key );
+				if ( $id ) {
+					wp_set_post_categories( $id, array( $uae ), true );
+				}
+			}
+		}
+
+		$news     = term_exists( 'News', 'category' );
+		$news_url = is_array( $news ) ? get_category_link( (int) $news['term_id'] ) : '#';
+		$gallery  = array(
+			array( 'news-events-gallery-1.jpg', 'Empty classroom with desks and a chalkboard', '2022–23', 'Memorable moments from the 2022–23 academic year.' ),
+			array( 'news-events-gallery-2.jpg', 'Students raising their hands in class', '2023–24', 'A glimpse into school life and memorable moments from 2023–24.' ),
+			array( 'news-events-gallery-3.jpg', 'Students listening in a lecture hall', '2024–25', 'Explore moments from classrooms, activities, events and celebrations from 2024–25.' ),
+		);
+
+		$sections = array(
+			array(
+				'acf_fc_layout' => 'page_hero',
+				'title'         => 'Where SEPS Comes to Life',
+				'text'          => 'Stay connected with the latest news, events and stories from Sunrise English Private School, from academic activities and student achievements to celebrations, competitions and community initiatives.',
+				'note'          => '',
+				'button'        => $link( 'View News', '#all-news' ),
+				'button_2'      => $link( 'Explore News', (string) $news_url ),
+				'image'         => $this->image( 'news-events-hero.jpg', 'Young children raising their hands in class' ),
+				'image_focus'   => 'center',
+				'decor'         => 'none',
+			),
+			array(
+				'acf_fc_layout'  => 'text_image',
+				'background'     => 'lilac',
+				'heading'        => 'SEPS Chronicle',
+				'content'        => '<p>A collection of the moments, milestones and stories that make life at SEPS memorable.</p><p>Explore student achievements, school events, activities and celebrations that showcase the many ways our community learns, participates and grows together.</p>',
+				'buttons'        => array(
+					array(
+						'link'  => $link( 'View SEPS Chronicle' ),
+						'style' => 'primary',
+					),
+				),
+				'image'          => $this->image( 'news-events-chronicle.jpg', 'Students talking with a teacher in the library' ),
+				'image_size'     => 'circle',
+				'image_position' => 'left',
+				'decor'          => 'flower_photo',
+				'corner'         => 1,
+			),
+			array(
+				'acf_fc_layout'  => 'text_image',
+				'background'     => 'white',
+				'heading'        => 'ADEK School Calendar',
+				'content'        => '<p>Stay up to date with important dates across the school year, including academic terms, holidays and key school milestones.</p><p>Keep the calendar handy to plan ahead and stay informed throughout the year.</p>',
+				'buttons'        => array(
+					array(
+						'link'  => $link( 'View Calendar' ),
+						'style' => 'primary',
+					),
+				),
+				'image'          => $this->image( 'news-events-calendar.jpg', 'Close-up of a printed calendar' ),
+				'image_size'     => 'wide',
+				'image_position' => 'right',
+				'decor'          => 'none',
+				'corner'         => 0,
+			),
+			array(
+				'acf_fc_layout' => 'card_list',
+				'background'    => 'navy',
+				'heading'       => 'Media Gallery',
+				'intro'         => '<p>Every school year brings moments worth remembering. Explore our gallery of classrooms, celebrations, activities and everyday experiences that make life at SEPS memorable.</p>',
+				'signature'     => '',
+				'button'        => null,
+				'display'       => 'grid',
+				'columns'       => '3',
+				'image_height'  => 'large',
+				'panel'         => 0,
+				'panel_title'   => '',
+				'cards'         => array_map(
+					fn( array $row ): array => array(
+						'image' => $this->image( $row[0], $row[1] ),
+						'title' => $row[2],
+						'text'  => $row[3],
+						'link'  => $link( 'View' ),
+					),
+					$gallery
+				),
+				'image'         => 0,
+				'decor'         => 'halves',
+			),
+			array(
+				'acf_fc_layout' => 'posts',
+				'heading'       => 'Love for the UAE',
+				'intro'         => '<p>Explore how our students express their appreciation for the UAE through stories, poems, creative work and reflections on its culture, heritage and national identity.</p><p>Discover student voices that celebrate the country they call home and the values that connect our school community to the UAE.</p>',
+				'button'        => $link( 'View Blogs', $uae ? (string) get_category_link( $uae ) : '#' ),
+				'category'      => $uae,
+				'count'         => 3,
+				'image'         => $this->image( 'news-events-uae.jpg', 'Student presenting her work while a classmate raises a hand' ),
+			),
+		);
+
+		update_field( 'field_seps_page_sections', $sections, $this->pages['news-events'] );
 	}
 
 	/*

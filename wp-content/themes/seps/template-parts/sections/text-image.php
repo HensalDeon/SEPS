@@ -10,9 +10,10 @@
  *     @type string $content    Text (HTML).
  *     @type array  $buttons    Repeater: link, style ('accent'|'primary').
  *     @type int    $image      Attachment ID.
- *     @type string $image_size     'narrow' (fills the text height) | 'wide' (landscape) | 'large' (half width).
+ *     @type string $image_size     'narrow' (fills the text height) | 'wide' (landscape) | 'large' (half width) | 'circle'.
  *     @type string $image_position 'right' (default) | 'left'.
- *     @type string $decor      'none' | 'flower' | 'halves'.
+ *     @type string $decor      'none' | 'flower' | 'halves' | 'flower_photo' (yellow, on the photo).
+ *     @type bool   $corner     Rounded bottom-right corner.
  * }
  */
 
@@ -26,11 +27,12 @@ if ( '' === $seps_heading && '' === $seps_content ) {
 }
 
 $seps_background = in_array( $args['background'] ?? '', array( 'white', 'lilac', 'navy' ), true ) ? $args['background'] : 'white';
-$seps_size       = in_array( $args['image_size'] ?? '', array( 'narrow', 'wide', 'large' ), true ) ? $args['image_size'] : 'narrow';
+$seps_size       = in_array( $args['image_size'] ?? '', array( 'narrow', 'wide', 'large', 'circle' ), true ) ? $args['image_size'] : 'narrow';
 $seps_decor      = array(
 	'flower' => 'flower-brand',
 	'halves' => 'halves-lilac',
 )[ $args['decor'] ?? 'none' ] ?? '';
+$seps_photo_dec  = 'flower_photo' === ( $args['decor'] ?? 'none' );
 $seps_id         = wp_unique_id( 'seps-text-image-' );
 $seps_image      = seps_image(
 	$args['image'] ?? 0,
@@ -41,11 +43,15 @@ $seps_image      = seps_image(
 			'narrow' => '(min-width: 1024px) 384px, 100vw',
 			'wide'   => '(min-width: 1024px) 593px, 100vw',
 			'large'  => '(min-width: 1024px) 50vw, 100vw',
+			'circle' => '(min-width: 1024px) 338px, 280px',
 		)[ $seps_size ],
 	)
 );
 
 $seps_classes = array( 'text-image', 'text-image--' . $seps_background );
+if ( ! empty( $args['corner'] ) ) {
+	$seps_classes[] = 'text-image--corner';
+}
 if ( $seps_image ) {
 	$seps_classes[] = 'text-image--' . $seps_size;
 
@@ -81,7 +87,12 @@ if ( $seps_image ) {
 		</div>
 
 		<?php if ( $seps_image ) : ?>
-			<div class="text-image__media"><?php echo $seps_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?></div>
+			<div class="text-image__media">
+				<?php echo $seps_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?>
+				<?php if ( $seps_photo_dec ) : ?>
+					<?php echo seps_decor( 'flower-yellow', 'text-image__photo-decor' ); ?>
+				<?php endif; ?>
+			</div>
 		<?php endif; ?>
 	</div>
 </section>

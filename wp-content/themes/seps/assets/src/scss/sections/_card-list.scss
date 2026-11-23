@@ -8,6 +8,7 @@
 
 	position: relative;
 	padding-block: var(--section-space);
+	overflow-x: clip; // Decorations may run off the screen edge.
 
 	&--white {
 		background: var(--color-white);
@@ -206,6 +207,17 @@
 		top: clamp(1rem, 4.375vw, 5.25rem);
 		right: calc(var(--edge) + clamp(0rem, 11vw, 13.1875rem));
 		width: clamp(3.5rem, 5.2vw, 6.25rem);
+	}
+
+	// Three half circles (drawn upright, shown rotated) running off the top
+	// right corner, e.g. News & Events "Media Gallery".
+	&__decor--halves-white {
+		--size: clamp(3.5rem, 5.2vw, 6.25rem);
+
+		top: calc(clamp(0.5rem, 0.9vw, 1.0625rem) - var(--size) * 0.24);
+		right: calc(var(--edge) - 0.5rem);
+		width: var(--size);
+		transform: rotate(-90deg);
 	}
 }
 

@@ -20,7 +20,7 @@
  *     @type string $panel_title  Panel title.
  *     @type array  $cards        Repeater: image, title, text, link.
  *     @type int    $image        Side photo (circle on a lilac shape).
- *     @type string $decor        'none' | 'sun'.
+ *     @type string $decor        'none' | 'sun' | 'halves'.
  * }
  */
 
@@ -95,8 +95,14 @@ foreach ( $seps_cards as $seps_card ) {
 $seps_items = (string) ob_get_clean();
 ?>
 <section class="<?php echo esc_attr( implode( ' ', $seps_classes ) ); ?>"<?php echo $seps_heading ? ' aria-labelledby="' . esc_attr( $seps_id ) . '"' : ''; ?>>
-	<?php if ( 'sun' === ( $args['decor'] ?? 'none' ) ) : ?>
-		<?php echo seps_decor( 'sun-yellow', 'card-list__decor' ); ?>
+	<?php
+	$seps_decor = array(
+		'sun'    => 'sun-yellow',
+		'halves' => 'halves-white',
+	)[ $args['decor'] ?? 'none' ] ?? '';
+	?>
+	<?php if ( $seps_decor ) : ?>
+		<?php echo seps_decor( $seps_decor, 'card-list__decor card-list__decor--' . $seps_decor ); ?>
 	<?php endif; ?>
 
 	<div class="container card-list__inner">

@@ -60,6 +60,17 @@
 		font-weight: var(--fw-light);
 	}
 
+	&__buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+	}
+
+	// e.g. "Explore News": white, same size as the main button.
+	&__button-alt {
+		padding-inline: 1.5rem;
+	}
+
 	// e.g. "Admissions 2026–2027", sits just above the button.
 	&__note {
 		margin-bottom: -0.5rem;
@@ -105,6 +116,10 @@
 
 		.hero__panel::before {
 			left: 64.4%; // 649 / 1008
+		}
+
+		.hero__content {
+			max-width: 47.1875rem; // 755
 		}
 	}
 

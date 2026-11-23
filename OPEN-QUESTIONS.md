@@ -51,3 +51,12 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 24 | **Achievements:** Where should *View Teachers' Achievements 2025–26* and each year's *View* button go? | `#` | _Pending_ |
 | 25 | **Media Gallery:** The year labels don't match the descriptions (e.g. card "2023–24" says "moments from the 2022–23 academic year"). Which is right? Where should *View* go? | As in the Figma; `#` | _Pending_ |
 | 26 | **Photos:** Can we get higher-resolution versions of the hero photo (Figma original 320×480px) and the campus photo (735×372px)? | Figma images | _Pending_ |
+
+## News & Events page
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 27 | **News list:** The design has no list of all news, but "View News" needs one. We added an "All News" grid (with pages) under the sections, in the same card style as "Love for the UAE". OK? | "All News" grid; *View News* jumps to it, *Explore News* opens the News category | _Pending_ |
+| 28 | **SEPS Chronicle / ADEK Calendar:** Where should *View SEPS Chronicle* and *View Calendar* go (PDF, page or external link)? | `#` | _Pending_ |
+| 29 | **Love for the UAE:** Can we get the real student blog posts? The Figma shows the news posts. | 3 news posts tagged "Love for the UAE" | _Pending_ |
+| 30 | **Media Gallery:** Where should each *View* button go (album, page or external gallery)? The years differ from the Student Life gallery (2022–23 to 2024–25 here). | `#`; years as in the Figma | _Pending_ |
