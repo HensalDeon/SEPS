@@ -66,9 +66,9 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | # | Question | Current placeholder | Answer |
 |---|---|---|---|
 | 31 | **Hero button:** The Figma button says "View News", which looks like a placeholder on the Contact page. OK to use "Send an Enquiry" (jumps to the form)? | "Send an Enquiry" → form | _Pending_ |
-| 32 | **Enquiry form options:** What should the *Subject* and *Preferred Contact Time* options be? | Subjects: Admissions, Academics, Fees & Payments, Transport, Student Life & Activities, General Enquiry. Times: Morning, Afternoon, Evening | _Pending_ |
-| 33 | **Enquiry email:** Which mailbox should receive enquiries? Should there be an SMTP account (e.g. Google Workspace) for reliable delivery? | The *Email* in Site Settings (school@seps-auh.com) | _Pending_ |
-| 34 | **Privacy / consent:** Should the form show a privacy notice or consent checkbox, and how long should enquiries be kept? | None; enquiries kept until deleted | _Pending_ |
+| 32 | **Enquiry form options:** What should the *Subject* and *Preferred Contact Time* options be? (Editable in Contact → Contact Forms.) | Subjects: Admissions, Academics, Fees & Payments, Transport, Student Life & Activities, General Enquiry. Times: Morning, Afternoon, Evening | _Pending_ |
+| 33 | **Enquiry email:** Which mailboxes should receive enquiries (To / Cc), and should parents get an automatic reply? Should there be an SMTP account (e.g. Google Workspace) for reliable delivery? | To: school@seps-auh.com (Site Settings); no auto-reply | _Pending_ |
+| 34 | **Privacy / consent and spam:** Should the form show a privacy notice or consent checkbox? How long should enquiries be kept (Flamingo)? Can we use Cloudflare Turnstile (free) against spam? | None; kept until deleted; no captcha yet | _Pending_ |
 | 35 | **Map:** Please confirm the pin. Is there a Google Business Profile link to use for *View Location*? | Google Maps search for "Sunrise English Private School, Mussafah, Abu Dhabi" | _Pending_ |
 | 36 | **Postal Address icon:** The Figma uses a heart icon. Is that intended, or should it be a location pin? | Heart (as in the Figma) | _Pending_ |
 | 37 | **Hours:** "Office Hours" includes Saturday and Grades 1–12 run Monday–Thursday. Please confirm these against the school week. | As in the Figma | _Pending_ |

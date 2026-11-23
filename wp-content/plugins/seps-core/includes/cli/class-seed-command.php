@@ -1513,10 +1513,7 @@ final class Seed_Command {
 				'acf_fc_layout' => 'contact_form',
 				'heading'       => 'We’d Love to Hear From You',
 				'intro'         => 'Have a question or need more information about SEPS? Send us your enquiry, and our team will get back to you as soon as possible.',
-				'subjects'      => implode( "\n", array( 'Admissions', 'Academics', 'Fees & Payments', 'Transport', 'Student Life & Activities', 'General Enquiry' ) ),
-				'contact_times' => implode( "\n", array( 'Morning', 'Afternoon', 'Evening' ) ),
-				'phone_code'    => '+971',
-				'submit_label'  => 'Send Enquiry',
+				'form'          => $this->enquiry_form(),
 				'image'         => $this->image( 'contact-enquiry.jpg', 'Grandfather and grandson reading together' ),
 			),
 			array(
@@ -1626,6 +1623,107 @@ final class Seed_Command {
 		);
 
 		update_field( 'field_seps_page_sections', $sections, $this->pages['careers'] );
+	}
+
+	/**
+	 * Create or update the Contact page enquiry form (Contact Form 7).
+	 *
+	 * The form template uses the theme's markup (see the Enquiry form section
+	 * and _enquiry.scss). Emails go to the school email from Site Settings;
+	 * change recipients and wording in Contact → Contact Forms.
+	 *
+	 * @return int Form ID, or 0 when Contact Form 7 is not active.
+	 */
+	private function enquiry_form(): int {
+		if ( ! class_exists( 'WPCF7_ContactForm' ) ) {
+			WP_CLI::warning( 'Contact Form 7 is not active: the Contact page form was skipped. Install and activate it (wp plugin install contact-form-7 flamingo --activate), then run: wp seps seed --only=contact' );
+			return 0;
+		}
+
+		$field = static fn( string $id, string $label, string $tag, string $class = '' ): string => sprintf(
+			"<div class=\"enquiry__field%s\">\n\t<label class=\"enquiry__label\" for=\"%s\">%s</label>\n\t%s\n</div>",
+			$class ? ' ' . $class : '',
+			$id,
+			$label,
+			$tag
+		);
+
+		$subjects = array( 'Admissions', 'Academics', 'Fees & Payments', 'Transport', 'Student Life & Activities', 'General Enquiry' );
+		$times    = array( 'Morning', 'Afternoon', 'Evening' );
+		$quote    = static fn( array $items ): string => '"' . implode( '" "', $items ) . '"';
+
+		$template = implode(
+			"\n\n",
+			array(
+				$field( 'enquiry-name', 'Parent’s Name', '[text* your-name id:enquiry-name class:enquiry__control autocomplete:name maxlength:100 placeholder "Enter full name here"]' ),
+				$field( 'enquiry-phone', 'Phone Number', "<div class=\"enquiry__phone\">[text phone-code class:enquiry__control class:enquiry__code maxlength:5 autocomplete:tel-country-code \"+971\"][tel* your-phone id:enquiry-phone class:enquiry__control maxlength:20 autocomplete:tel-national placeholder \"Enter phone number here\"]</div>" ),
+				$field( 'enquiry-email', 'Email Address', '[email* your-email id:enquiry-email class:enquiry__control autocomplete:email placeholder "Enter email address here"]', 'enquiry__field--full' ),
+				$field( 'enquiry-subject', 'Subject', '[select* your-subject id:enquiry-subject class:enquiry__control class:enquiry__select first_as_label "What is this regarding" ' . $quote( $subjects ) . ']' ),
+				$field( 'enquiry-time', 'Preferred Contact Time', '[select contact-time id:enquiry-time class:enquiry__control class:enquiry__select ' . $quote( $times ) . ']' ),
+				$field( 'enquiry-message', 'Message', '[textarea* your-message id:enquiry-message class:enquiry__control class:enquiry__textarea maxlength:5000 placeholder "Tell us a bit about your enquiry..."]', 'enquiry__field--full' ),
+				"<div class=\"enquiry__actions\">[submit class:btn class:btn--primary class:enquiry__submit \"Send Enquiry\"]</div>",
+			)
+		);
+
+		$school = sanitize_email( (string) get_field( 'email', 'option' ) );
+		$domain = (string) preg_replace( '/^www\./', '', (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
+
+		$properties = array(
+			'form'     => $template,
+			'mail'     => array(
+				'active'             => true,
+				'recipient'          => is_email( $school ) ? $school : '[_site_admin_email]',
+				// A real address on this site's domain (CF7 rejects mail-tags inside
+				// the address). Update it per environment: see README "Email delivery".
+				'sender'             => '[_site_title] <wordpress@' . $domain . '>',
+				'subject'            => 'New enquiry: [your-subject] ([your-name])',
+				'additional_headers' => 'Reply-To: [your-name] <[your-email]>',
+				'body'               => implode(
+					"\n",
+					array(
+						'Parent’s name: [your-name]',
+						'Phone: [phone-code] [your-phone]',
+						'Email: [your-email]',
+						'Subject: [your-subject]',
+						'Preferred contact time: [contact-time]',
+						'',
+						'Message:',
+						'[your-message]',
+						'',
+						'-- ',
+						'Sent from the Contact page of [_site_title] ([_site_url]).',
+					)
+				),
+				'attachments'        => '',
+				'use_html'           => false,
+				'exclude_blank'      => false,
+			),
+			'messages' => array(
+				'mail_sent_ok'     => 'Thank you! Your enquiry has been sent. Our team will get back to you as soon as possible.',
+				'mail_sent_ng'     => 'Sorry, something went wrong and your enquiry was not sent. Please try again, or email us directly.',
+				'validation_error' => 'Please check the highlighted fields and try again.',
+				'spam'             => 'Sorry, something went wrong and your enquiry was not sent. Please try again, or email us directly.',
+			),
+		);
+
+		$id   = $this->find( 'wpcf7_contact_form', 'contact-enquiry' );
+		$form = $id ? \WPCF7_ContactForm::get_instance( $id ) : null;
+
+		if ( ! $form ) {
+			$form = \WPCF7_ContactForm::get_template( array( 'title' => 'Contact page enquiry' ) );
+		}
+
+		$form->set_title( 'Contact page enquiry' );
+		$form->set_properties( array_merge( $form->get_properties(), $properties, array( 'messages' => array_merge( $form->prop( 'messages' ), $properties['messages'] ) ) ) );
+		$id = (int) $form->save();
+
+		update_post_meta( $id, self::SEED_META, 'contact-enquiry' );
+
+		if ( ! class_exists( 'Flamingo_Inbound_Message' ) ) {
+			WP_CLI::log( '  Tip: activate the Flamingo plugin to keep a copy of every enquiry in the admin.' );
+		}
+
+		return $id;
 	}
 
 	/*

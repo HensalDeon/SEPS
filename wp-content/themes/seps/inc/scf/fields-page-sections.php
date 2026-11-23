@@ -1015,52 +1015,21 @@ function page_section_layouts(): array {
 					'note',
 					'message',
 					__( 'About this form', 'seps' ),
-					array( 'message' => __( 'Enquiries are saved under Enquiries in the admin menu and emailed to the school email in Site Settings.', 'seps' ) )
+					array( 'message' => __( 'The form itself (fields, email recipients, email text and messages) is edited in Contact → Contact Forms. Submissions are kept under Flamingo → Inbound Messages when the Flamingo plugin is active.', 'seps' ) )
 				),
 				field( 'ps_form', 'heading', 'text', __( 'Heading', 'seps' ) ),
 				field( 'ps_form', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
 				field(
 					'ps_form',
-					'subjects',
-					'textarea',
-					__( 'Subject options', 'seps' ),
+					'form',
+					'post_object',
+					__( 'Contact Form 7 form', 'seps' ),
 					array(
-						'instructions' => __( 'One per line.', 'seps' ),
-						'rows'         => 5,
-						'new_lines'    => '',
-						'wrapper'      => array( 'width' => '50' ),
-					)
-				),
-				field(
-					'ps_form',
-					'contact_times',
-					'textarea',
-					__( 'Preferred contact time options', 'seps' ),
-					array(
-						'instructions' => __( 'One per line.', 'seps' ),
-						'rows'         => 5,
-						'new_lines'    => '',
-						'wrapper'      => array( 'width' => '50' ),
-					)
-				),
-				field(
-					'ps_form',
-					'phone_code',
-					'text',
-					__( 'Default country code', 'seps' ),
-					array(
-						'default_value' => '+971',
-						'wrapper'       => array( 'width' => '50' ),
-					)
-				),
-				field(
-					'ps_form',
-					'submit_label',
-					'text',
-					__( 'Button label', 'seps' ),
-					array(
-						'default_value' => 'Send Enquiry',
-						'wrapper'       => array( 'width' => '50' ),
+						'post_type'     => array( 'wpcf7_contact_form' ),
+						'return_format' => 'id',
+						'allow_null'    => 1,
+						'multiple'      => 0,
+						'ui'            => 1,
 					)
 				),
 				image_field( 'ps_form', 'image', __( 'Photo (right)', 'seps' ) ),

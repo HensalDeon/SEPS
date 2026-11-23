@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       SEPS Core
- * Description:       Content model for the SEPS website: Testimonials, FAQs, Staff and Enquiries (Contact form) post types, their fields, and the `wp seps seed` demo-content command. Kept separate from the theme so content survives a redesign.
+ * Description:       Content model for the SEPS website: Testimonials, FAQs and Staff post types, their fields, and the `wp seps seed` demo-content command. Kept separate from the theme so content survives a redesign.
  * Version:           1.0.0
  * Requires at least: 6.5
  * Requires PHP:      8.1
@@ -21,7 +21,6 @@ define( 'SEPS_CORE_DIR', plugin_dir_path( __FILE__ ) );
 
 require_once SEPS_CORE_DIR . 'includes/post-types.php';
 require_once SEPS_CORE_DIR . 'includes/fields.php';
-require_once SEPS_CORE_DIR . 'includes/enquiries.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once SEPS_CORE_DIR . 'includes/cli/class-seed-command.php';

@@ -17,6 +17,7 @@ $seps_modules = array(
 	'inc/setup.php',
 	'inc/assets.php',
 	'inc/template-tags.php',
+	'inc/integrations/contact-form-7.php',
 	'inc/scf/bootstrap.php',
 	'inc/scf/fields-site-settings.php',
 	'inc/scf/fields-front-page.php',

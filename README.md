@@ -36,7 +36,7 @@ The post types live in a plugin so that content survives a future theme change.
 3. In LocalWP, click **Open site shell** and run:
 
    ```bash
-   wp plugin install secure-custom-fields --activate
+   wp plugin install secure-custom-fields contact-form-7 flamingo --activate
    wp theme activate seps
    wp plugin activate seps-core
    wp seps seed
@@ -79,7 +79,8 @@ Everything on the home page is editable. Nothing is hard-coded in templates.
 | Staff (Principals, Leadership Team) | **Staff** (sidebar). Photo = Featured image, *Position* field, *Team*, and *Order* to sort. Shown by the Team section. |
 | Testimonials | **Testimonials** (sidebar). The home page shows the latest 6 unless specific ones are picked. |
 | FAQs | **FAQs** (sidebar). Ordered by *Order*; can be hand-picked per page. |
-| Contact form submissions | **Enquiries** (sidebar, read-only). Each enquiry is also emailed to the *Email* in Site Settings. Subject and contact-time options are set on the Enquiry form section. Personal data can be exported or erased from Tools → Export / Erase Personal Data. |
+| Contact page form | **Contact → Contact Forms → Contact page enquiry** (Contact Form 7). *Form* tab: fields and dropdown options (keep the theme's markup and classes). *Mail* tab: who receives enquiries (To, Cc, Bcc via *Additional headers*), the email subject and text; *Mail (2)* can send parents an automatic reply. *Messages* tab: the texts shown after sending. The form shown on the page is picked in the Enquiry form section. |
+| Form submissions | **Flamingo → Inbound Messages** keeps a copy of every enquiry (requires the Flamingo plugin). |
 | News | Posts. On the home page the newest is featured and the next three are listed; News & Events lists them all ("All News") below its sections. |
 
 ## Front-end build
@@ -155,14 +156,36 @@ See [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) (logo, social and portal URLs, testim
 
 Each sitemap entry is a **single page**: its sub-items (e.g. About → Vision & Mission, Leadership) are sections on that page, not separate pages. Pages not yet designed exist as empty placeholders, ready for the next phases.
 
-## Email delivery (Contact form)
+## Contact form (Contact Form 7)
 
-Enquiries are always saved under **Enquiries**, so none are lost, but the
-notification email depends on the server's mail setup:
+The Contact page form is a Contact Form 7 form styled by the theme
+(`template-parts/sections/contact-form.php`, `_enquiry.scss`). The seeder
+creates it with the design's fields and sends enquiries to the *Email* in
+Site Settings; after that, edit it in **Contact → Contact Forms**.
+
+- **Keep the markup** when editing the *Form* tab: each field sits in
+  `<div class="enquiry__field">` with `class:enquiry__control` on the tag, so
+  it matches the design. Add new fields by copying an existing block.
+- **CF7 loads only where a form is shown** (the theme turns off its
+  site-wide script and stylesheet and its automatic `<p>` tags).
+- **Spam:** connect Cloudflare Turnstile or reCAPTCHA in Contact → Integration.
+- **Saved copies:** with Flamingo active, every submission is listed under
+  Flamingo → Inbound Messages, so nothing is lost if an email fails.
+
+### Email delivery
+
+The form's **From** address (Contact → Contact Forms → *Mail* tab) must be a
+real address on the site's own domain; CF7 does not accept mail-tags such as
+`[_site_domain]` inside it. The seeder sets it to `wordpress@<this site's
+domain>`, so after pushing to another environment, update it there:
+
+| Environment | From |
+|---|---|
+| LocalWP | `[_site_title] <wordpress@seps.local>` |
+| WP Engine staging | `[_site_title] <wordpress@seps.wpenginepowered.com>` |
+| Live (with SMTP) | the school mailbox used by the SMTP plugin, e.g. `[_site_title] <website@seps-auh.com>` |
 
 - **LocalWP:** emails are caught by Mailpit (Local → site → *Tools* → Mailpit).
 - **WP Engine:** sends via its own mail service. For reliable delivery to a
   school mailbox, set up an SMTP plugin (e.g. WP Mail SMTP with the school's
-  Google Workspace / Microsoft 365 account). Each enquiry shows *Emailed:
-  Yes/No* so failures are visible.
-
+  Google Workspace / Microsoft 365 account).
