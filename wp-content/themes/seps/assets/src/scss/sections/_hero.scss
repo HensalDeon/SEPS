@@ -77,6 +77,7 @@
 	&__image {
 		position: absolute;
 		inset: 0;
+		object-position: center 28%; // Portrait photos: keep faces in frame (as in the design).
 
 		@include cover-image;
 	}
@@ -106,5 +107,15 @@
 			left: 0;
 			transform: translateX(-50%);
 		}
+	}
+}
+
+// Sun decoration (inner pages): 100px, centred on the seam at 425/700.
+// After .hero__decor so it overrides its size and position.
+.hero__decor--sun-yellow {
+	width: clamp(3.5rem, 5.2vw, 6.25rem);
+
+	@include mq(lg) {
+		top: 60.71%;
 	}
 }

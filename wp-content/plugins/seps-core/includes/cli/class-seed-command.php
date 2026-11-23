@@ -58,6 +58,7 @@ final class Seed_Command {
 		'home'         => 'Home page sections',
 		'staff'        => 'Staff',
 		'about'        => 'About page',
+		'academics'    => 'Academics page',
 	);
 
 	/**
@@ -71,7 +72,7 @@ final class Seed_Command {
 	 * [--only=<steps>]
 	 * : Comma-separated steps to run (default: all). Available: identity,
 	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
-	 * about.
+	 * about, academics.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -122,6 +123,7 @@ final class Seed_Command {
 			'home'         => fn() => $this->seed_front_page(),
 			'staff'        => fn() => $this->seed_staff(),
 			'about'        => fn() => $this->seed_about(),
+			'academics'    => fn() => $this->seed_academics(),
 		);
 
 		foreach ( self::STEPS as $key => $label ) {
@@ -244,8 +246,8 @@ final class Seed_Command {
 			'utility'        => array(
 				'Top Bar',
 				array(
-					// A section of the Resources page (added when that page is built).
-					$link( 'Mandatory Disclosure', get_permalink( $this->pages['resources'] ) . '#mandatory-disclosure' ),
+					// The "CBSE Mandatory Public Disclosure" section on Academics.
+					$link( 'Mandatory Disclosure', get_permalink( $this->pages['academics'] ) . '#mandatory-disclosure' ),
 					$page( 'resources' ),
 					$page( 'careers' ),
 				),
@@ -801,6 +803,145 @@ final class Seed_Command {
 			),
 			$this->pages['about']
 		);
+	}
+
+	/**
+	 * Academics page: curriculum highlights, courses, timetable and the CBSE
+	 * mandatory disclosure documents (Section ID "mandatory-disclosure", linked
+	 * from the top bar).
+	 */
+	private function seed_academics(): void {
+		$url   = (string) get_permalink( $this->pages['academics'] );
+		$tiles = array(
+			array( 'book', 'Structured Syllabus' ),
+			array( 'tick', 'No-Fail Policy Till Grade 8' ),
+			array( 'graduation', 'College Exam Aligned' ),
+			array( 'globe', 'Relocation Friendly' ),
+			array( 'bulb', 'Engineering & Medical Ready' ),
+		);
+		$cards = array(
+			array( 'raindrop', 'Humanities', 'Geography, History, Economics and more.' ),
+			array( 'sun', 'Science & Technology', 'Biology, Chemistry, Physics and related subjects.' ),
+			array( 'cross-circle', 'Visual & Performing Arts', 'Dance, Music, Painting and more subjects.' ),
+			array( 'home', 'Commerce', 'Business Studies, Accountancy, Entrepreneurship and more.' ),
+			array( 'pin', 'Health & PE', 'Supporting students\' physical development, wellbeing and healthy lifestyles.' ),
+		);
+		$item  = static fn( string $badge, string $title, string $content ): array => compact( 'badge', 'title', 'content' );
+
+		$sections = array(
+			array(
+				'acf_fc_layout' => 'page_hero',
+				'title'         => 'A Curriculum Designed to Help Students Grow',
+				'text'          => 'At SEPS, our CBSE curriculum combines structured learning with practical experiences, critical thinking and opportunities for students to explore their interests from KG to Grade XII.',
+				'button'        => array(
+					'url'    => $url . '#curriculum',
+					'title'  => 'Explore Curriculum',
+					'target' => '',
+				),
+				'image'         => $this->image( 'academics-hero.jpg', 'Smiling student holding a laptop against a brick wall' ),
+				'decor'         => 'sun',
+			),
+			array(
+				'acf_fc_layout' => 'features',
+				'anchor'        => 'curriculum',
+				'heading'       => 'CBSE Curriculum',
+				'intro'         => 'The CBSE curriculum combines disciplinary and interdisciplinary learning with academic excellence, independent learning, inquiry and intercultural understanding, preparing students to grow as confident, capable learners.',
+				'tiles'         => array_map(
+					static fn( array $t ): array => array(
+						'icon'  => $t[0],
+						'label' => $t[1],
+					),
+					$tiles
+				),
+				'cards_heading' => 'Curriculum Focus Areas',
+				'cards'         => array_map(
+					static fn( array $c ): array => array(
+						'icon'  => $c[0],
+						'title' => $c[1],
+						'text'  => $c[2],
+					),
+					$cards
+				),
+				'callout_icon'  => 'people',
+				'callout_title' => 'Special Education Support',
+				'callout_text'  => 'Students with learning difficulties may be referred to a Special Education teacher for remedial support, with examination papers adapted to meet their needs.',
+				'callout_image' => $this->image( 'academics-special-education.jpg', 'Empty classroom with rows of desks' ),
+			),
+			array(
+				'acf_fc_layout' => 'badge_accordion',
+				'heading'       => 'Courses Offered',
+				'intro'         => 'Our academic program progresses from KG I through Grade XII, with students building their knowledge and skills across each stage before choosing specialized pathways in senior secondary.',
+				'image'         => $this->image( 'academics-courses.jpg', 'Students studying at desks in a bright classroom' ),
+				'groups'        => array(
+					array(
+						'heading' => '',
+						'items'   => array(
+							$item( 'KG I–II', 'Foundation Years', 'English, Mathematics, UTW, Art & Crafts, Music and Games.' ),
+							$item( 'GRADE I–V', 'Primary', 'Languages, Mathematics, Science, Computing, Social Studies, Arts, Physical Education and more.' ),
+							$item( 'GRADE VI–VIII', 'Middle School', 'Languages, Mathematics, Science, Social Science, Computer Science, Arts and Physical Education.' ),
+							$item( 'GRADE IX–X', 'Secondary', 'Languages, Mathematics, Science, Social Science, Computer Science and Physical Education.' ),
+						),
+					),
+					array(
+						'heading' => 'Senior Secondary Streams (Grade XI & XII)',
+						'items'   => array(
+							$item( 'Group 1', 'Science Stream | Computer Science', 'English, Physics, Chemistry, Mathematics, Computer Science, Arabic, Islamic Studies / Moral Science, GST, Art, PHE.' ),
+							$item( 'Group 2', 'Science Stream | Biology & Mathematics', 'English, Physics, Chemistry, Biology, Mathematics.' ),
+							$item( 'Group 3', 'Science Stream | Biology & Psychology', 'English, Physics, Chemistry, Biology, Psychology.' ),
+							$item( 'Group 4', 'Commerce Stream | Marketing', 'English, Accountancy, Business Studies, Economics, Marketing.' ),
+							$item( 'Group 5', 'Commerce Stream | Informatics Practices', 'English, Accountancy, Business Studies, Economics, Informatics Practices.' ),
+						),
+					),
+				),
+			),
+			array(
+				'acf_fc_layout' => 'timetable',
+				'heading'       => 'A Day at Sunrise',
+				'intro'         => 'Our school day follows a structured timetable that balances classroom learning, breaks and time for students to recharge.',
+				'days'          => array(
+					array(
+						'label' => 'Monday – Thursday (Full School Day)',
+						'rows'  => array(
+							array( 'slots' => "Daily Assembly | 7:25 - 7:40 AM\nPeriod 1 | 7:40 - 8:25 AM\nPeriod 2 | 8:25 - 9:05 AM\nPeriod 3 | 9:05 - 9:45 AM" ),
+							array( 'slots' => "Recess | 9:45 - 10:00 AM\nPeriod 4 | 10:00 - 10:40 AM\nPeriod 5 | 10:40 - 11:20 AM\nPeriod 6 | 11:20 - 12:00 PM\nPeriod 7 | 12:00 - 12:35 PM" ),
+							array( 'slots' => "Recess | 12:35 - 1:00 PM\nPeriod 8 | 1:00 - 1:35 PM\nPeriod 9 | 1:35 - 2:10 PM\nStudent Dispersal | 2:10 PM" ),
+						),
+					),
+					array(
+						'label' => 'Friday (Half Day)',
+						'rows'  => array(
+							array( 'slots' => "Daily Assembly | 7:25 - 7:40 AM\nPeriod 1 | 7:40 - 8:15 AM\nPeriod 2 | 8:15 - 8:50 AM\nPeriod 3 | 8:50 - 9:25 AM" ),
+							array( 'slots' => "Recess | 9:25 - 9:40 AM\nPeriod 4 | 9:40 - 10:15 AM\nPeriod 5 | 10:15 - 10:50 AM\nPeriod 6 | 10:50 - 11:25 AM\nStudent Dispersal | 2:10 PM" ),
+						),
+					),
+				),
+			),
+			array(
+				'acf_fc_layout' => 'documents',
+				'anchor'        => 'mandatory-disclosure',
+				'heading'       => 'CBSE Mandatory Public Disclosure',
+				'intro'         => 'Access official school documents and information published in accordance with CBSE mandatory disclosure requirements.',
+				'items'         => array(
+					array(
+						'title' => 'Fee Structure',
+						'image' => $this->image( 'program-kindergarten.jpg', 'Kindergarten children playing with building blocks' ),
+						'file'  => '',
+					),
+					array(
+						'title' => 'Bus License',
+						'image' => $this->image( 'doc-bus-license.jpg', 'Yellow school bus on the road' ),
+						'file'  => '',
+					),
+					array(
+						'title' => 'Water Test Report',
+						'image' => $this->image( 'doc-water-test.jpg', 'Hands under running tap water' ),
+						'file'  => '',
+					),
+				),
+			),
+		);
+
+		update_field( 'field_seps_page_sections', $sections, $this->pages['academics'] );
 	}
 
 	/*

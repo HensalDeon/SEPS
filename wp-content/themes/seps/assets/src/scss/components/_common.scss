@@ -45,3 +45,52 @@
 		@include dot(var(--color-brand));
 	}
 }
+
+// Large intro text under section headings (24px in the design).
+.lead {
+	color: var(--color-text);
+	font-size: clamp(1.125rem, 1rem + 0.4vw, 1.5rem);
+	font-weight: var(--fw-light);
+
+	&--regular {
+		font-weight: var(--fw-regular);
+	}
+}
+
+// Editor-selectable inline icon, recoloured to the surrounding text colour
+// (see seps_content_icon()). Painted parts follow currentColor; "none" stays.
+.content-icon {
+	display: inline-flex;
+	flex-shrink: 0;
+	width: 1.875rem; // 30
+	height: 1.875rem;
+
+	[fill]:not([fill="none"], clipPath *) {
+		fill: currentcolor;
+	}
+
+	[stroke]:not([stroke="none"]) {
+		stroke: currentcolor;
+	}
+}
+
+// Brand pill label, e.g. "GRADE I–V".
+.badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.6875rem 1.625rem; // 11 / 26
+	border-radius: var(--radius);
+	background: var(--color-brand);
+	color: var(--color-white);
+	font-size: var(--fs-base);
+	font-weight: var(--fw-semibold);
+	line-height: 1.2;
+	white-space: nowrap;
+}
+
+// Target for a section's optional Section ID.
+.section-anchor {
+	display: block;
+	scroll-margin-top: 1rem;
+}

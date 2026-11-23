@@ -85,6 +85,7 @@ function seps_decor( string $name, string $class = '' ): string {
 		'sun-yellow'     => 100,
 		'sun-lilac'      => 100,
 		'hourglass-navy' => 100,
+		'hourglass-brand' => 100,
 	);
 
 	if ( ! isset( $sizes[ $name ] ) ) {
@@ -120,6 +121,76 @@ function seps_icon( string $name, int $size = 24, string $class = '', ?float $he
 		esc_url( seps_asset_url( "images/icons/{$name}.svg" ) ),
 		$size,
 		esc_attr( (string) ( $height ?? $size ) )
+	);
+}
+
+/**
+ * Icons editors can choose for content (tiles, cards, callouts).
+ *
+ * @return array<string,string> Icon file name => admin label.
+ */
+function seps_content_icon_choices(): array {
+	return array(
+		'book'         => __( 'Book', 'seps' ),
+		'tick'         => __( 'Tick', 'seps' ),
+		'graduation'   => __( 'Graduation cap', 'seps' ),
+		'globe'        => __( 'Globe', 'seps' ),
+		'bulb'         => __( 'Light bulb', 'seps' ),
+		'raindrop'     => __( 'Drop', 'seps' ),
+		'sun'          => __( 'Sun', 'seps' ),
+		'cross-circle' => __( 'Circle cross', 'seps' ),
+		'home'         => __( 'Home', 'seps' ),
+		'pin'          => __( 'Location pin', 'seps' ),
+		'people'       => __( 'People', 'seps' ),
+		'certificate'  => __( 'Certificate', 'seps' ),
+		'student'      => __( 'Graduate', 'seps' ),
+	);
+}
+
+/**
+ * Content icon that takes the surrounding text colour.
+ *
+ * The SVG is inlined so CSS can recolour it to currentColor: one icon file
+ * works on light and dark backgrounds (e.g. brand on lilac, white on navy).
+ * Inlining also avoids extra requests and cross-origin (CDN) issues.
+ * IDs get a per-instance suffix so repeated icons stay valid.
+ *
+ * @param string $name  Icon from seps_content_icon_choices().
+ * @param string $class Extra class names.
+ */
+function seps_content_icon( string $name, string $class = '' ): string {
+	static $files    = array();
+	static $instance = 0;
+
+	$name = sanitize_key( $name );
+
+	if ( ! isset( seps_content_icon_choices()[ $name ] ) ) {
+		return '';
+	}
+
+	if ( ! isset( $files[ $name ] ) ) {
+		$path = SEPS_THEME_DIR . "/assets/images/icons/{$name}.svg";
+		$svg  = is_readable( $path ) ? (string) file_get_contents( $path ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local theme file.
+
+		// Trusted theme file: drop the XML prolog and inline display style only.
+		$files[ $name ] = trim( (string) preg_replace( array( '/<\?xml[^>]*\?>/', '/\sstyle="[^"]*"/' ), '', $svg, 1 ) );
+	}
+
+	if ( '' === $files[ $name ] ) {
+		return '';
+	}
+
+	$suffix = '-seps' . ( ++$instance );
+	$svg    = preg_replace(
+		array( '/\sid="([^"]+)"/', '/url\(#([^)]+)\)/', '/href="#([^"]+)"/' ),
+		array( ' id="$1' . $suffix . '"', 'url(#$1' . $suffix . ')', 'href="#$1' . $suffix . '"' ),
+		$files[ $name ]
+	);
+
+	return sprintf(
+		'<span class="%1$s" aria-hidden="true">%2$s</span>',
+		esc_attr( trim( 'content-icon content-icon--' . $name . ' ' . $class ) ),
+		$svg
 	);
 }
 
@@ -272,6 +343,12 @@ function seps_render_page_sections( int $post_id ): int {
 
 		if ( 'page_hero' === $layout && '' === trim( (string) ( $row['title'] ?? '' ) ) ) {
 			$row['title'] = get_the_title( $post_id );
+		}
+
+		// Optional Section ID so links can jump to a section (e.g. /academics/#mandatory-disclosure).
+		$anchor = sanitize_title( (string) ( $row['anchor'] ?? '' ) );
+		if ( '' !== $anchor ) {
+			printf( '<span id="%s" class="section-anchor"></span>', esc_attr( $anchor ) );
 		}
 
 		get_template_part( 'template-parts/sections/' . $templates[ $layout ], null, array_merge( $row, array( 'variant' => 'page' ) ) );

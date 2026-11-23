@@ -44,6 +44,7 @@
 			<property name="customAutoEscapedFunctions" type="array">
 				<element value="seps_button"/>
 				<element value="seps_copyright"/>
+				<element value="seps_content_icon"/>
 				<element value="seps_decor"/>
 				<element value="seps_icon"/>
 				<element value="seps_image"/>

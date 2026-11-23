@@ -21,4 +21,12 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 9 | **Leadership Team list:** The Figma shows 12 cards with repeated names. Is the team these 6 people, or are more members missing? | 6 unique members | _Pending_ |
 | 10 | **Core values:** Can we get the points for *Respect*, *Perseverance* and *Responsibility*? The Figma only shows *Discipline* expanded. | Short sample points | _Pending_ |
 | 11 | **Vision & Mission photo:** Can we get a higher-resolution version? The Figma original is only 480×714px. | Figma image | _Pending_ |
-| 12 | **"Learn More" (Code of Conduct):** Where should it link? | Rules & Regulations page | _Pending_ |
+| 12 | **"Learn More" (Code of Conduct):** Where should it link? | Resources page | _Pending_ |
+
+## Academics page
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 13 | **Course subjects:** The Figma only shows subjects for *KG I–II* and *Group 1*. Can we get the subject lists for Primary, Middle School, Secondary and Groups 2–5? | Lists inferred from each stream's name (please verify) | _Pending_ |
+| 14 | **Friday timetable:** Friday is a half day ending with Period 6 at 11:25 AM, but the Figma shows "Student Dispersal 2:10 PM". What is the correct Friday dispersal time? | 2:10 PM (as in the Figma) | _Pending_ |
+| 15 | **Mandatory disclosure documents:** Can we get the actual files (PDFs) for Fee Structure, Bus License and Water Test Report, plus any other required CBSE disclosures? | Cards open their preview photo | _Pending_ |

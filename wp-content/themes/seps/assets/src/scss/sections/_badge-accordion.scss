@@ -1,0 +1,87 @@
+@use "../abstracts/mixins" as *;
+
+// Badge Accordion — e.g. "Courses Offered" + "Senior Secondary Streams"
+// (Academics). Reuses .accordion-card from _values.scss.
+
+.badge-accordion {
+	padding-block: var(--section-space);
+	background: var(--color-lilac);
+
+	&__inner {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(2rem, 2.6vw, 3.125rem); // → 50
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	&__intro {
+		font-weight: var(--fw-light);
+	}
+
+	&__group {
+		display: grid;
+		gap: 2rem;
+
+		&--has-image {
+			@include mq(lg) {
+				grid-template-columns: minmax(0, 1070fr) minmax(0, 518fr);
+				align-items: stretch;
+			}
+		}
+	}
+
+	&__items {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	// The photo fills the height of the accordion list beside it; it must not
+	// set the row height itself (out of flow).
+	&__media {
+		position: relative;
+
+		@include mq-down(lg) {
+			min-height: 18rem;
+		}
+	}
+
+	&__image {
+		position: absolute;
+		inset: 0;
+		border-radius: var(--radius);
+
+		@include cover-image;
+	}
+}
+
+.accordion-card--badge {
+	padding: 2rem 1.5rem;
+
+	.accordion-card__summary {
+		align-items: center;
+		font-size: var(--fs-base);
+		font-weight: var(--fw-medium);
+	}
+
+	.accordion-card__title {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 1.5rem;
+	}
+
+	&[open] .accordion-card__summary {
+		padding-bottom: 1.5rem;
+	}
+}
+
+.accordion-card__content {
+	padding-top: 1.5rem;
+	font-weight: var(--fw-light);
+}

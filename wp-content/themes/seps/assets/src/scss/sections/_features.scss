@@ -1,0 +1,119 @@
+@use "../abstracts/mixins" as *;
+
+// Highlights & Focus Areas — e.g. "CBSE Curriculum" (Academics).
+// 5 lilac tiles, 5 navy cards, then a callout with a brand left border.
+
+.features {
+	padding-block: var(--section-space);
+
+	&__inner {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(2rem, 2.6vw, 3.125rem); // → 50
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	&__tiles,
+	&__cards {
+		display: grid;
+		gap: clamp(1rem, 1.67vw, 2rem); // → 32
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+	}
+
+	&__cards-block {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	&__cards-title {
+		font-size: clamp(1.25rem, 1.15rem + 0.3vw, 1.5rem); // → 24
+	}
+}
+
+.feature-tile {
+	display: flex;
+	flex-direction: column;
+	gap: 0.9375rem; // 15
+	padding: 2rem 1.5rem;
+	border-radius: var(--radius);
+	background: var(--color-lilac);
+	color: var(--color-brand);
+	font-weight: var(--fw-medium);
+}
+
+.focus-card {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	min-height: clamp(12rem, 13.7vw, 16.4375rem); // → 263
+	padding: 1.5rem;
+	border-radius: var(--radius);
+	background: var(--color-navy);
+	color: var(--color-white);
+
+	&__title {
+		color: inherit;
+		font-size: clamp(1.25rem, 1.15rem + 0.3vw, 1.5rem); // → 24
+	}
+
+	&__text {
+		font-weight: var(--fw-light);
+	}
+}
+
+// Lilac panel with a thick brand left border and an optional photo.
+.callout {
+	display: grid;
+	overflow: hidden;
+	border-radius: 0 var(--radius) var(--radius) 0;
+
+	&--has-image {
+		@include mq(lg) {
+			grid-template-columns: minmax(0, 995fr) minmax(0, 615fr);
+		}
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 1.5rem;
+		padding: 2rem clamp(1.5rem, 2.66vw, 3.1875rem); // → 32 / 51
+		border-left: clamp(0.5rem, 1vw, 1.1875rem) solid var(--color-brand); // → 19
+		background: var(--color-lilac);
+	}
+
+	&__title {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		font-size: var(--fs-md);
+	}
+
+	&__text {
+		font-weight: var(--fw-light);
+	}
+
+	// The photo fills the callout's height (set by the text); out of flow so it
+	// doesn't stretch the callout.
+	&__media {
+		position: relative;
+
+		@include mq-down(lg) {
+			min-height: 14rem;
+		}
+	}
+
+	&__image {
+		position: absolute;
+		inset: 0;
+
+		@include cover-image;
+	}
+}

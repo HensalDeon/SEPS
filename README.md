@@ -75,7 +75,7 @@ Everything on the home page is editable. Nothing is hard-coded in templates.
 | Footer columns | Appearance → Menus → *Footer: Column 1/2/3*. **The menu name is the column heading.** |
 | Privacy / Terms links | Appearance → Menus → *Footer: Legal links* |
 | Home page sections | Pages → Home. One tab per section, each with a *Show this section* toggle. |
-| Inner pages (About and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Text. |
+| Inner pages (About, Academics and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Highlights & Focus Areas, Badge Accordion, Timetable, Documents, Text. Every section has an optional **Section ID** so links can jump to it (e.g. `/academics/#mandatory-disclosure`). |
 | Staff (Principals, Leadership Team) | **Staff** (sidebar). Photo = Featured image, *Position* field, *Team*, and *Order* to sort. Shown by the Team section. |
 | Testimonials | **Testimonials** (sidebar). The home page shows the latest 6 unless specific ones are picked. |
 | FAQs | **FAQs** (sidebar). Ordered by *Order*; can be hand-picked per page. |

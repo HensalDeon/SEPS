@@ -13,6 +13,7 @@
  *     @type array  $button  SCF link.
  *     @type int    $image   Attachment ID.
  *     @type string $variant 'home' (default) or 'page'.
+ *     @type string $decor   Page variant only: 'none' (default), 'sun' or 'flower'.
  * }
  */
 
@@ -25,6 +26,11 @@ if ( '' === $seps_title ) {
 }
 
 $seps_is_page = 'page' === ( $args['variant'] ?? 'home' );
+$seps_decor   = $seps_is_page ? (string) ( $args['decor'] ?? 'none' ) : 'flower';
+$seps_decor   = array(
+	'flower' => 'flower-yellow',
+	'sun'    => 'sun-yellow',
+)[ $seps_decor ] ?? '';
 $seps_id      = wp_unique_id( 'seps-hero-' );
 $seps_text    = trim( (string) ( $args['text'] ?? '' ) );
 $seps_image   = seps_image(
@@ -55,8 +61,8 @@ $seps_image   = seps_image(
 	<?php if ( $seps_image ) : ?>
 		<div class="hero__media">
 			<?php echo $seps_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?>
-			<?php if ( ! $seps_is_page ) : ?>
-				<?php echo seps_decor( 'flower-yellow', 'hero__decor' ); ?>
+			<?php if ( $seps_decor ) : ?>
+				<?php echo seps_decor( $seps_decor, 'hero__decor hero__decor--' . $seps_decor ); ?>
 			<?php endif; ?>
 		</div>
 	<?php endif; ?>

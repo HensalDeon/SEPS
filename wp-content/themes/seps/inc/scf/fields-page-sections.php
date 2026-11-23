@@ -26,12 +26,16 @@ defined( 'ABSPATH' ) || exit;
  */
 function page_section_templates(): array {
 	return array(
-		'page_hero'  => 'hero',
-		'media_text' => 'media-text',
-		'values'     => 'values',
-		'message'    => 'message',
-		'team'       => 'team',
-		'text'       => 'text',
+		'page_hero'       => 'hero',
+		'media_text'      => 'media-text',
+		'values'          => 'values',
+		'message'         => 'message',
+		'team'            => 'team',
+		'features'        => 'features',
+		'badge_accordion' => 'badge-accordion',
+		'timetable'       => 'timetable',
+		'documents'       => 'documents',
+		'text'            => 'text',
 	);
 }
 
@@ -46,12 +50,39 @@ function page_section_layouts(): array {
 		'new_lines' => '',
 	);
 
+	$icon = static fn( string $prefix, string $name = 'icon', string $label = '' ): array => field(
+		$prefix,
+		$name,
+		'select',
+		'' !== $label ? $label : __( 'Icon', 'seps' ),
+		array(
+			'choices'    => seps_content_icon_choices(),
+			'allow_null' => 1,
+			'ui'         => 0,
+		)
+	);
+
+	// Every layout gets an optional Section ID (anchor) as its last field.
 	$layout = static fn( string $name, string $label, array $fields ): array => array(
 		'key'        => "layout_seps_ps_{$name}",
 		'name'       => $name,
 		'label'      => $label,
 		'display'    => 'block',
-		'sub_fields' => $fields,
+		'sub_fields' => array_merge(
+			$fields,
+			array(
+				field(
+					"ps_{$name}",
+					'anchor',
+					'text',
+					__( 'Section ID (optional)', 'seps' ),
+					array(
+						'instructions' => __( 'Lets links jump to this section, e.g. "mandatory-disclosure" → /page/#mandatory-disclosure.', 'seps' ),
+						'wrapper'      => array( 'width' => '50' ),
+					)
+				),
+			)
+		),
 	);
 
 	return array(
@@ -69,6 +100,20 @@ function page_section_layouts(): array {
 				field( 'ps_hero', 'text', 'textarea', __( 'Intro', 'seps' ), $text ),
 				link_field( 'ps_hero', 'button', __( 'Button', 'seps' ) ),
 				image_field( 'ps_hero', 'image', __( 'Image', 'seps' ), array( 'required' => 1 ) ),
+				field(
+					'ps_hero',
+					'decor',
+					'button_group',
+					__( 'Decoration on the image edge', 'seps' ),
+					array(
+						'choices'       => array(
+							'none'   => __( 'None', 'seps' ),
+							'sun'    => __( 'Sun', 'seps' ),
+							'flower' => __( 'Flower', 'seps' ),
+						),
+						'default_value' => 'none',
+					)
+				),
 			)
 		),
 
@@ -243,6 +288,169 @@ function page_section_layouts(): array {
 										'grid'     => __( 'Grid (4 per row)', 'seps' ),
 									),
 									'default_value' => 'grid',
+								)
+							),
+						),
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_features'   => $layout(
+			'features',
+			__( 'Highlights & Focus Areas', 'seps' ),
+			array(
+				field( 'ps_features', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_features', 'intro', 'textarea', __( 'Intro (large text)', 'seps' ), $text ),
+				field(
+					'ps_features',
+					'tiles',
+					'repeater',
+					__( 'Highlight tiles', 'seps' ),
+					array(
+						'layout'       => 'table',
+						'button_label' => __( 'Add tile', 'seps' ),
+						'sub_fields'   => array(
+							$icon( 'ps_features_tiles' ),
+							field( 'ps_features_tiles', 'label', 'text', __( 'Label', 'seps' ) ),
+						),
+					)
+				),
+				field( 'ps_features', 'cards_heading', 'text', __( 'Cards heading', 'seps' ) ),
+				field(
+					'ps_features',
+					'cards',
+					'repeater',
+					__( 'Cards', 'seps' ),
+					array(
+						'layout'       => 'table',
+						'button_label' => __( 'Add card', 'seps' ),
+						'sub_fields'   => array(
+							$icon( 'ps_features_cards' ),
+							field( 'ps_features_cards', 'title', 'text', __( 'Title', 'seps' ) ),
+							field( 'ps_features_cards', 'text', 'textarea', __( 'Text', 'seps' ), array_merge( $text, array( 'rows' => 2 ) ) ),
+						),
+					)
+				),
+				$icon( 'ps_features', 'callout_icon', __( 'Callout: icon', 'seps' ) ),
+				field( 'ps_features', 'callout_title', 'text', __( 'Callout: title', 'seps' ) ),
+				field( 'ps_features', 'callout_text', 'textarea', __( 'Callout: text', 'seps' ), $text ),
+				image_field( 'ps_features', 'callout_image', __( 'Callout: image', 'seps' ) ),
+			)
+		),
+
+		'layout_seps_ps_badge_accordion' => $layout(
+			'badge_accordion',
+			__( 'Badge Accordion (e.g. courses)', 'seps' ),
+			array(
+				field( 'ps_badges', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_badges', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
+				image_field( 'ps_badges', 'image', __( 'Image (beside the first group)', 'seps' ) ),
+				field(
+					'ps_badges',
+					'groups',
+					'repeater',
+					__( 'Groups', 'seps' ),
+					array(
+						'layout'       => 'block',
+						'min'          => 1,
+						'button_label' => __( 'Add group', 'seps' ),
+						'sub_fields'   => array(
+							field( 'ps_badges_groups', 'heading', 'text', __( 'Group heading (optional)', 'seps' ) ),
+							field(
+								'ps_badges_groups',
+								'items',
+								'repeater',
+								__( 'Items', 'seps' ),
+								array(
+									'layout'       => 'table',
+									'button_label' => __( 'Add item', 'seps' ),
+									'sub_fields'   => array(
+										field( 'ps_badges_items', 'badge', 'text', __( 'Badge', 'seps' ), array( 'placeholder' => 'GRADE I–V' ) ),
+										field( 'ps_badges_items', 'title', 'text', __( 'Title', 'seps' ), array( 'required' => 1 ) ),
+										field( 'ps_badges_items', 'content', 'textarea', __( 'Content', 'seps' ), array_merge( $text, array( 'rows' => 2 ) ) ),
+									),
+								)
+							),
+						),
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_timetable'  => $layout(
+			'timetable',
+			__( 'Timetable', 'seps' ),
+			array(
+				field( 'ps_timetable', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_timetable', 'intro', 'textarea', __( 'Intro (large text)', 'seps' ), $text ),
+				field(
+					'ps_timetable',
+					'days',
+					'repeater',
+					__( 'Days', 'seps' ),
+					array(
+						'layout'       => 'block',
+						'button_label' => __( 'Add day', 'seps' ),
+						'collapsed'    => 'field_seps_ps_timetable_days_label',
+						'sub_fields'   => array(
+							field( 'ps_timetable_days', 'label', 'text', __( 'Day label', 'seps' ), array( 'placeholder' => 'Monday – Thursday (Full School Day)' ) ),
+							field(
+								'ps_timetable_days',
+								'rows',
+								'repeater',
+								__( 'Rows', 'seps' ),
+								array(
+									'layout'       => 'table',
+									'button_label' => __( 'Add row', 'seps' ),
+									'sub_fields'   => array(
+										field(
+											'ps_timetable_rows',
+											'slots',
+											'textarea',
+											__( 'Slots', 'seps' ),
+											array(
+												'rows'         => 5,
+												'new_lines'    => '',
+												'instructions' => __( 'One per line: Name | Time, e.g. "Period 1 | 7:40 - 8:25 AM". The last slot of a day fills the row.', 'seps' ),
+											)
+										),
+									),
+								)
+							),
+						),
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_documents'  => $layout(
+			'documents',
+			__( 'Documents', 'seps' ),
+			array(
+				field( 'ps_documents', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_documents', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
+				field(
+					'ps_documents',
+					'items',
+					'repeater',
+					__( 'Documents', 'seps' ),
+					array(
+						'layout'       => 'block',
+						'button_label' => __( 'Add document', 'seps' ),
+						'collapsed'    => 'field_seps_ps_documents_items_title',
+						'sub_fields'   => array(
+							field( 'ps_documents_items', 'title', 'text', __( 'Title', 'seps' ), array( 'required' => 1 ) ),
+							image_field( 'ps_documents_items', 'image', __( 'Preview image', 'seps' ) ),
+							field(
+								'ps_documents_items',
+								'file',
+								'file',
+								__( 'Document (PDF or image)', 'seps' ),
+								array(
+									'return_format' => 'url',
+									'library'       => 'all',
+									'instructions'  => __( 'Opens in a new tab. If empty, the preview image opens instead.', 'seps' ),
 								)
 							),
 						),

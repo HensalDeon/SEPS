@@ -1,0 +1,83 @@
+@use "../abstracts/mixins" as *;
+
+// Documents — e.g. "CBSE Mandatory Public Disclosure" (Academics).
+// Navy panel of preview cards; each card opens its document in a new tab.
+
+.documents {
+	--focus-color: var(--color-accent);
+
+	padding-block: var(--section-space);
+	background: var(--color-lilac);
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		margin-bottom: clamp(2rem, 2.6vw, 3.125rem); // → 50
+	}
+
+	&__intro {
+		font-weight: var(--fw-light);
+	}
+
+	&__panel {
+		padding: clamp(1rem, 1.67vw, 2rem); // → 32
+		border-radius: var(--radius);
+		background: var(--color-navy);
+	}
+
+	&__grid {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+	}
+}
+
+.document-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	height: 100%;
+	padding-bottom: 1.5rem;
+	overflow: hidden;
+	border-radius: var(--radius);
+	background: var(--color-white);
+
+	&__media {
+		display: block;
+		aspect-ratio: 503 / 300;
+		overflow: hidden;
+		background: var(--color-lilac);
+	}
+
+	&__image {
+		transition: transform 600ms var(--ease-out);
+
+		@include cover-image;
+	}
+
+	&:hover &__image {
+		transform: scale(1.04);
+	}
+
+	&__title {
+		padding-inline: 1.5rem;
+		color: var(--color-brand);
+		font-weight: var(--fw-semibold);
+	}
+
+	&:hover &__title {
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	// "View full screen" affordance, top-right as in the design.
+	&__icon {
+		position: absolute;
+		top: 1.07rem;
+		right: 1.07rem;
+		width: 2.8rem;
+		height: auto;
+	}
+}
