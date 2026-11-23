@@ -42,7 +42,7 @@ The post types live in a plugin so that content survives a future theme change.
    wp seps seed
    ```
 
-`wp seps seed` fills a fresh site with the Figma content: the page tree from the sitemap, all six menus, Site Settings, the home page sections, four news posts, testimonials, FAQs, staff, and the About page with its sub-pages, plus the images (with alt text). Seeded items are updated in place, never duplicated.
+`wp seps seed` fills a fresh site with the Figma content: the main pages from the sitemap, all six menus, Site Settings, the home page sections, four news posts, testimonials, FAQs, staff, and the About page, plus the images (with alt text). Seeded items are updated in place, never duplicated.
 
 > **Re-running overwrites edits** to seeded items (Home sections, menus, Site Settings…). On an existing site, run only the steps you need, e.g. `wp seps seed --only=staff,about`. Run `wp help seps seed` for the list of steps.
 
@@ -70,12 +70,12 @@ Everything on the home page is editable. Nothing is hard-coded in templates.
 | Logo | Appearance → Customize → Site Identity |
 | School name / "Abu Dhabi" line | Settings → General (Site Title / Tagline) |
 | Email, phone, address, social links, header CTA, footer heading, subscribe text, footer photo, copyright | **Site Settings** (sidebar) |
-| Header navigation (with dropdowns) | Appearance → Menus → *Header: Primary navigation* |
+| Header navigation | Appearance → Menus → *Header: Primary navigation*. Single level by design: nested items are not shown (no dropdowns). |
 | Top bar links | Appearance → Menus → *Header: Top bar links* |
 | Footer columns | Appearance → Menus → *Footer: Column 1/2/3*. **The menu name is the column heading.** |
 | Privacy / Terms links | Appearance → Menus → *Footer: Legal links* |
 | Home page sections | Pages → Home. One tab per section, each with a *Show this section* toggle. |
-| Inner pages (About, its sub-pages, and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Text. |
+| Inner pages (About and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Text. |
 | Staff (Principals, Leadership Team) | **Staff** (sidebar). Photo = Featured image, *Position* field, *Team*, and *Order* to sort. Shown by the Team section. |
 | Testimonials | **Testimonials** (sidebar). The home page shows the latest 6 unless specific ones are picked. |
 | FAQs | **FAQs** (sidebar). Ordered by *Order*; can be hand-picked per page. |
@@ -143,7 +143,6 @@ The Figma file has desktop frames only. Responsive layouts follow the design's s
 
 ## Deliberate additions beyond the Figma
 
-- **Dropdown chevrons in the header nav.** The sitemap has sub-pages, and the chevron is the keyboard and screen-reader toggle for them.
 - **Accessibility:** skip link, visible focus rings, `aria-current`, screen-reader context on repeated buttons ("Apply Now: Kindergarten"), and alt text on every image.
 - **SEO:** FAQPage structured data (JSON-LD) on the FAQ section.
 
@@ -151,4 +150,4 @@ The Figma file has desktop frames only. Responsive layouts follow the design's s
 
 See [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) (logo, social and portal URLs, testimonial and FAQ copy, newsletter integration).
 
-Inner pages exist as placeholders in the sitemap structure, ready for the next phases.
+Each sitemap entry is a **single page**: its sub-items (e.g. About → Vision & Mission, Leadership) are sections on that page, not separate pages. Pages not yet designed exist as empty placeholders, ready for the next phases.

@@ -57,7 +57,7 @@ final class Seed_Command {
 		'posts'        => 'News posts',
 		'home'         => 'Home page sections',
 		'staff'        => 'Staff',
-		'about'        => 'About page + sub-pages',
+		'about'        => 'About page',
 	);
 
 	/**
@@ -149,86 +149,49 @@ final class Seed_Command {
 	}
 
 	/**
-	 * Page tree mirroring the Figma sitemap. Inner pages are placeholders for
-	 * the next design phases.
+	 * Top-level pages from the Figma sitemap.
+	 *
+	 * Every page is a single page: the sitemap's sub-items (e.g. About →
+	 * Vision & Mission, Leadership) are sections on that page, not separate
+	 * pages. Sub-pages seeded by earlier versions are moved to the Trash.
 	 */
 	private function seed_pages(): void {
-		$tree = array(
-			'home'           => array( 'Home', array() ),
-			'about'          => array(
-				'About',
-				array(
-					'vision-mission'    => 'Vision & Mission',
-					'core-values'       => 'Core Values',
-					'chairmans-message' => 'Chairman’s Message',
-					'leadership'        => 'Leadership',
-				),
-			),
-			'academics'      => array(
-				'Academics',
-				array(
-					'curriculum'     => 'Curriculum',
-					'subjects'       => 'Subjects',
-					'school-timings' => 'School Timings',
-					'cbse-portal'    => 'CBSE Portal',
-				),
-			),
-			'admissions'     => array(
-				'Admissions',
-				array(
-					'process-criteria' => 'Process & Criteria',
-					'fee-structure'    => 'Fee Structure',
-					'transport'        => 'Transport',
-					'uniform'          => 'Uniform',
-					'registrations'    => 'Registrations',
-					'withdrawals'      => 'Withdrawals',
-					'admission-faqs'   => 'FAQs',
-				),
-			),
-			'student-life'   => array(
-				'Student Life',
-				array(
-					'student-council' => 'Student Council',
-					'activities'      => 'Activities',
-					'achievements'    => 'Achievements',
-					'media-gallery'   => 'Media Gallery',
-				),
-			),
-			'news-events'    => array(
-				'News & Events',
-				array(
-					'seps-chronicle' => 'SEPS Chronicle',
-					'adek-calendar'  => 'ADEK Calendar',
-					'media-coverage' => 'Media Coverage',
-					'blogs'          => 'Blogs',
-				),
-			),
-			'contact'        => array( 'Contact', array() ),
-			'resources'      => array(
-				'Resources',
-				array(
-					'mandatory-disclosure' => 'Mandatory Disclosure',
-					'annual-report'        => 'Annual Report',
-					'library'              => 'Library',
-					'school-policies'      => 'School Policies',
-					'rules-regulations'    => 'Rules & Regulations',
-					'inspection-report'    => 'Inspection Report',
-					'parent-handbook'      => 'Parent Handbook',
-					'amenities-gallery'    => 'Amenities Gallery',
-				),
-			),
-			'careers'        => array( 'Careers', array() ),
-			'privacy-policy' => array( 'Privacy Policy', array() ),
-			'terms'          => array( 'Terms & Conditions', array() ),
+		$pages = array(
+			'home'           => 'Home',
+			'about'          => 'About',
+			'academics'      => 'Academics',
+			'admissions'     => 'Admissions',
+			'student-life'   => 'Student Life',
+			'news-events'    => 'News & Events',
+			'contact'        => 'Contact',
+			'register-now'   => 'Register Now',
+			'resources'      => 'Resources',
+			'careers'        => 'Careers',
+			'privacy-policy' => 'Privacy Policy',
+			'terms'          => 'Terms & Conditions',
 		);
 
 		$order = 0;
-		foreach ( $tree as $key => [ $title, $children ] ) {
-			$parent = $this->page( $key, $title, 0, ++$order );
+		foreach ( $pages as $key => $title ) {
+			$this->page( $key, $title, ++$order );
+		}
 
-			$child_order = 0;
-			foreach ( $children as $child_key => $child_title ) {
-				$this->page( $child_key, $child_title, $parent, ++$child_order );
+		// Retire pages from earlier seeds that are no longer in the sitemap.
+		$seeded = get_posts(
+			array(
+				'post_type'        => 'page',
+				'post_status'      => 'any',
+				'posts_per_page'   => -1,
+				'fields'           => 'ids',
+				'meta_key'         => self::SEED_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- CLI only.
+				'suppress_filters' => true,
+			)
+		);
+
+		foreach ( $seeded as $id ) {
+			if ( ! isset( $pages[ (string) get_post_meta( $id, self::SEED_META, true ) ] ) ) {
+				wp_trash_post( $id );
+				WP_CLI::log( sprintf( '  Moved obsolete page to Trash: %s', get_the_title( $id ) ) );
 			}
 		}
 
@@ -260,10 +223,7 @@ final class Seed_Command {
 	 * All theme menu locations. Footer column headings come from menu names.
 	 */
 	private function seed_menus(): void {
-		$page = fn( string $key, array $children = array() ): array => array(
-			'page'     => $key,
-			'children' => $children,
-		);
+		$page = fn( string $key ): array => array( 'page' => $key );
 		$link = fn( string $title, string $url = '#' ): array => array(
 			'title' => $title,
 			'url'   => $url,
@@ -273,25 +233,30 @@ final class Seed_Command {
 			'primary'        => array(
 				'Primary Navigation',
 				array(
-					$page( 'about', array( $page( 'vision-mission' ), $page( 'core-values' ), $page( 'chairmans-message' ), $page( 'leadership' ) ) ),
-					$page( 'academics', array( $page( 'curriculum' ), $page( 'subjects' ), $page( 'school-timings' ), $page( 'cbse-portal' ) ) ),
-					$page( 'admissions', array( $page( 'process-criteria' ), $page( 'fee-structure' ), $page( 'transport' ), $page( 'uniform' ), $page( 'registrations' ), $page( 'withdrawals' ), $page( 'admission-faqs' ) ) ),
-					$page( 'student-life', array( $page( 'student-council' ), $page( 'activities' ), $page( 'achievements' ), $page( 'media-gallery' ) ) ),
-					$page( 'news-events', array( $page( 'seps-chronicle' ), $page( 'adek-calendar' ), $page( 'media-coverage' ), $page( 'blogs' ) ) ),
+					$page( 'about' ),
+					$page( 'academics' ),
+					$page( 'admissions' ),
+					$page( 'student-life' ),
+					$page( 'news-events' ),
 					$page( 'contact' ),
 				),
 			),
 			'utility'        => array(
 				'Top Bar',
-				array( $page( 'mandatory-disclosure' ), $page( 'resources' ), $page( 'careers' ) ),
+				array(
+					// A section of the Resources page (added when that page is built).
+					$link( 'Mandatory Disclosure', get_permalink( $this->pages['resources'] ) . '#mandatory-disclosure' ),
+					$page( 'resources' ),
+					$page( 'careers' ),
+				),
 			),
 			'footer_campus'  => array(
 				'Explore Our Campus',
 				array(
-					$link( 'Facilities & Infrastructure', get_permalink( $this->pages['amenities-gallery'] ) ),
-					$link( 'Sports & Activities', get_permalink( $this->pages['activities'] ) ),
+					$link( 'Facilities & Infrastructure', get_permalink( $this->pages['resources'] ) ),
+					$link( 'Sports & Activities', get_permalink( $this->pages['student-life'] ) ),
 					$link( 'Arts & Student Life', get_permalink( $this->pages['student-life'] ) ),
-					$link( 'Photo Gallery', get_permalink( $this->pages['media-gallery'] ) ),
+					$link( 'Photo Gallery', get_permalink( $this->pages['student-life'] ) ),
 				),
 			),
 			'footer_quick'   => array(
@@ -300,13 +265,13 @@ final class Seed_Command {
 					$page( 'home' ),
 					$page( 'about' ),
 					$page( 'academics' ),
-					$page( 'cbse-portal' ),
+					$link( 'CBSE Portal' ),
 					$page( 'admissions' ),
 					$page( 'student-life' ),
 					$page( 'news-events' ),
 					$page( 'careers' ),
 					$page( 'contact' ),
-					$link( 'Register Now', get_permalink( $this->pages['registrations'] ) ),
+					$page( 'register-now' ),
 				),
 			),
 			'footer_portals' => array(
@@ -316,7 +281,7 @@ final class Seed_Command {
 					$link( 'Student Portal' ),
 					$link( 'Staff Portal' ),
 					$link( 'Fee Payment' ),
-					$link( 'School Calendar', get_permalink( $this->pages['adek-calendar'] ) ),
+					$link( 'School Calendar', get_permalink( $this->pages['news-events'] ) ),
 				),
 			),
 			'legal'          => array(
@@ -367,7 +332,7 @@ final class Seed_Command {
 					'url'     => 'https://www.instagram.com/',
 				),
 			),
-			'header_button'     => $this->link( 'registrations', 'Register Now' ),
+			'header_button'     => $this->link( 'register-now', 'Register Now' ),
 			'footer_heading'    => 'Sunrise English Private School, Abu Dhabi',
 			'newsletter_text'   => 'Stay connected with SEPS. Subscribe for school updates, news and important announcements.',
 			'newsletter_button' => $this->link( 'contact', 'Subscribe Now' ),
@@ -494,7 +459,7 @@ final class Seed_Command {
 	 */
 	private function seed_front_page(): void {
 		$front = $this->pages['home'];
-		$apply = $this->link( 'registrations', 'Apply Now' );
+		$apply = $this->link( 'register-now', 'Apply Now' );
 
 		$sections = array(
 			'hero'         => array(
@@ -573,7 +538,7 @@ final class Seed_Command {
 				'enabled' => 1,
 				'heading' => 'Spaces That Inspire Learning',
 				'intro'   => 'Our learning environment brings together dedicated academic facilities, creative spaces and opportunities for students to explore, experiment and stay active.',
-				'button'  => $this->link( 'media-gallery', 'View Gallery' ),
+				'button'  => $this->link( 'student-life', 'View Gallery' ),
 				'items'   => array(
 					array(
 						'image' => $this->image( 'facility-1.jpg', 'Science laboratory glassware' ),
@@ -694,8 +659,8 @@ final class Seed_Command {
 	}
 
 	/**
-	 * About page and its sub-pages, built with the Page Sections builder.
-	 * Each sub-page reuses the matching About section.
+	 * About page, built with the Page Sections builder. Vision & Mission,
+	 * Core Values, the Chairman's message and Leadership are sections of it.
 	 */
 	private function seed_about(): void {
 		foreach ( array( 'principals', 'leadership-team' ) as $slug ) {
@@ -712,7 +677,7 @@ final class Seed_Command {
 			'acf_fc_layout' => 'page_hero',
 			'title'         => $title,
 			'text'          => $text,
-			'button'        => $this->link( 'registrations', 'Apply Now' ),
+			'button'        => $this->link( 'register-now', 'Apply Now' ),
 			'image'         => $this->image( 'about-hero.jpg', 'Young students drawing at their desks' ),
 		);
 
@@ -772,7 +737,7 @@ final class Seed_Command {
 					'text'  => 'Attend all school examinations and follow examination rules, including regulations against unfair means.',
 				),
 			),
-			'panel_button'  => $this->link( 'rules-regulations', 'Learn More' ),
+			'panel_button'  => $this->link( 'resources', 'Learn More' ),
 			'accordion'     => array(
 				array(
 					'title'    => 'Discipline',
@@ -825,23 +790,17 @@ final class Seed_Command {
 			),
 		);
 
-		$pages = array(
-			'about'             => array(
+		update_field(
+			'field_seps_page_sections',
+			array(
 				$hero( 'Discover Our School', 'Learn more about Sunrise English Private School, our educational approach, core values and commitment to helping every student learn, grow and reach their potential.' ),
 				$vision,
 				$values,
 				$message,
 				$team,
 			),
-			'vision-mission'    => array( $hero( 'Vision & Mission', 'The purpose and principles that guide everything we do at Sunrise English Private School.' ), $vision ),
-			'core-values'       => array( $hero( 'Core Values', 'Discipline, respect, perseverance and responsibility: the values every Sunrise student lives by.' ), $values ),
-			'chairmans-message' => array( $hero( 'Chairman’s Message', 'A message from the Chairman of Sunrise English Private School.' ), $message ),
-			'leadership'        => array( $hero( 'Leadership', 'Meet the principals and leadership team guiding Sunrise English Private School.' ), $team ),
+			$this->pages['about']
 		);
-
-		foreach ( $pages as $key => $sections ) {
-			update_field( 'field_seps_page_sections', $sections, $this->pages[ $key ] );
-		}
 	}
 
 	/*
@@ -941,19 +900,18 @@ final class Seed_Command {
 	/**
 	 * Create or update a seeded page.
 	 *
-	 * @param string $key    Seed key (also the slug).
-	 * @param string $title  Title.
-	 * @param int    $parent Parent page ID.
-	 * @param int    $order  Menu order.
+	 * @param string $key   Seed key (also the slug).
+	 * @param string $title Title.
+	 * @param int    $order Menu order.
 	 */
-	private function page( string $key, string $title, int $parent, int $order ): int {
+	private function page( string $key, string $title, int $order ): int {
 		$this->pages[ $key ] = $this->post(
 			'page',
 			$key,
 			array(
 				'post_title'  => $title,
-				'post_name'   => 'admission-faqs' === $key ? 'faqs' : $key,
-				'post_parent' => $parent,
+				'post_name'   => $key,
+				'post_parent' => 0,
 				'menu_order'  => $order,
 			)
 		);
@@ -1022,18 +980,16 @@ final class Seed_Command {
 	}
 
 	/**
-	 * Recursively add items to a nav menu.
+	 * Add items to a nav menu. Menus are single-level by design (no dropdowns).
 	 *
 	 * @param int                            $menu_id Menu term ID.
-	 * @param array<int,array<string,mixed>> $items   Items (page key or title/url, optional children).
-	 * @param int                            $parent  Parent menu item ID.
+	 * @param array<int,array<string,mixed>> $items   Items: page key, or title + url.
 	 */
-	private function add_menu_items( int $menu_id, array $items, int $parent = 0 ): void {
+	private function add_menu_items( int $menu_id, array $items ): void {
 		foreach ( $items as $position => $item ) {
 			$args = array(
-				'menu-item-status'    => 'publish',
-				'menu-item-parent-id' => $parent,
-				'menu-item-position'  => $position + 1,
+				'menu-item-status'   => 'publish',
+				'menu-item-position' => $position + 1,
 			);
 
 			if ( isset( $item['page'] ) ) {
@@ -1053,10 +1009,6 @@ final class Seed_Command {
 			$item_id = wp_update_nav_menu_item( $menu_id, 0, $args );
 			if ( is_wp_error( $item_id ) ) {
 				WP_CLI::error( $item_id );
-			}
-
-			if ( ! empty( $item['children'] ) ) {
-				$this->add_menu_items( $menu_id, $item['children'], (int) $item_id );
 			}
 		}
 	}

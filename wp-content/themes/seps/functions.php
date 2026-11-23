@@ -16,7 +16,6 @@ define( 'SEPS_THEME_URI', get_template_directory_uri() );
 $seps_modules = array(
 	'inc/setup.php',
 	'inc/assets.php',
-	'inc/navigation.php',
 	'inc/template-tags.php',
 	'inc/scf/bootstrap.php',
 	'inc/scf/fields-site-settings.php',

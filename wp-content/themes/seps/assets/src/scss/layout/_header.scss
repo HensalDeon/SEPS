@@ -321,15 +321,14 @@
 
 .site-nav {
 	width: 100%;
+	color: var(--color-text);
+	font-weight: var(--fw-medium);
 
 	@include mq(nav) {
 		width: auto;
 	}
 
-	color: var(--color-text);
-	font-weight: var(--fw-medium);
-
-	// Top-level list.
+	// Single-level menu by design: no dropdowns (see masthead.php, depth 1).
 	&__menu {
 		@include bare-list;
 
@@ -343,28 +342,16 @@
 		}
 	}
 
-	.menu-item {
-		position: relative;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-
-		@include mq(nav) {
-			flex-wrap: nowrap;
-			white-space: nowrap;
-		}
-	}
-
 	a {
-		flex: 1;
+		display: block;
 		padding-block: 0.875rem;
 		font-size: var(--fs-md);
 		transition: color var(--duration);
 
 		@include mq(nav) {
-			flex: none;
 			padding-block: 0.5rem;
 			font-size: var(--fs-base);
+			white-space: nowrap;
 		}
 
 		&:hover,
@@ -376,76 +363,6 @@
 	&__menu > .menu-item {
 		@include mq-down(nav) {
 			border-bottom: 1px solid var(--color-lilac);
-		}
-	}
-
-	// Sub-menu disclosure button (injected by inc/navigation.php).
-	&__toggle {
-		display: grid;
-		place-items: center;
-		width: 2.75rem;
-		height: 2.75rem;
-		color: var(--color-brand);
-		transition: transform var(--duration);
-
-		@include mq(nav) {
-			width: 1rem;
-			height: 1rem;
-			margin-left: 0.25rem;
-		}
-
-		&[aria-expanded="true"] {
-			transform: rotate(180deg);
-		}
-	}
-
-	.sub-menu {
-		@include bare-list;
-
-		flex-basis: 100%;
-		display: none;
-		padding: 0 0 0.75rem 1rem;
-
-		a {
-			padding-block: 0.5rem;
-			font-size: var(--fs-base);
-			font-weight: var(--fw-regular);
-		}
-
-		@include mq(nav) {
-			position: absolute;
-			top: 100%;
-			left: -1rem;
-			display: block;
-			min-width: 15rem;
-			padding: 0.75rem 0;
-			border-radius: var(--radius);
-			background: var(--color-white);
-			box-shadow: 0 1rem 2.5rem rgb(24 29 88 / 15%);
-			opacity: 0;
-			visibility: hidden;
-			transform: translateY(0.5rem);
-			transition: opacity var(--duration), transform var(--duration) var(--ease-out), visibility var(--duration);
-
-			a {
-				display: block;
-				padding: 0.5rem 1.25rem;
-				white-space: nowrap;
-			}
-		}
-	}
-
-	.menu-item.is-open > .sub-menu {
-		display: block;
-	}
-
-	@include mq(nav) {
-		.menu-item:hover > .sub-menu,
-		.menu-item:focus-within > .sub-menu,
-		.menu-item.is-open > .sub-menu {
-			opacity: 1;
-			visibility: visible;
-			transform: none;
 		}
 	}
 }

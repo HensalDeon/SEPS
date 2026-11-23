@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 $seps_logo_id  = (int) get_theme_mod( 'custom_logo' );
 $seps_tagline  = get_bloginfo( 'description', 'display' );
-$seps_primary  = seps_menu( 'primary', 'site-nav__menu', 2 );
+$seps_primary  = seps_menu( 'primary', 'site-nav__menu' ); // Single level: no dropdowns.
 $seps_utility  = seps_menu( 'utility', 'site-drawer__utility' );
 $seps_button   = seps_button( seps_option( 'header_button' ), 'primary', 'masthead__cta' );
 $seps_has_menu = '' !== $seps_primary . $seps_button . $seps_utility;

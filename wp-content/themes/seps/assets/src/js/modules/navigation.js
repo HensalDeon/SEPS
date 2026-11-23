@@ -1,6 +1,6 @@
 /**
- * Header navigation: off-canvas drawer (below the `nav` breakpoint) and
- * sub-menu disclosure buttons.
+ * Header navigation: off-canvas drawer below the `nav` breakpoint.
+ * The menu is single-level by design (no dropdowns).
  *
  * Drawer behaviour: toggle button with aria-expanded, Escape to close,
  * click on the backdrop to close, focus kept inside while open, focus
@@ -92,30 +92,6 @@ function initDrawer() {
 	syncInert();
 }
 
-function initSubmenus() {
-	const toggles = document.querySelectorAll( '[data-submenu-toggle]' );
-
-	toggles.forEach( ( button ) => {
-		const item = button.closest( '.menu-item' );
-
-		button.addEventListener( 'click', () => {
-			const expanded = button.getAttribute( 'aria-expanded' ) === 'true';
-
-			button.setAttribute( 'aria-expanded', String( ! expanded ) );
-			item?.classList.toggle( 'is-open', ! expanded );
-		} );
-
-		// Close an open desktop dropdown when focus leaves it.
-		item?.addEventListener( 'focusout', ( event ) => {
-			if ( ! item.contains( event.relatedTarget ) && window.matchMedia( DESKTOP_QUERY ).matches ) {
-				button.setAttribute( 'aria-expanded', 'false' );
-				item.classList.remove( 'is-open' );
-			}
-		} );
-	} );
-}
-
 export default function initNavigation() {
 	initDrawer();
-	initSubmenus();
 }

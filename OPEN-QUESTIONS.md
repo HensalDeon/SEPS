@@ -11,7 +11,7 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 4 | **Testimonials:** Can we get real parent testimonials (quote, name, "Parent of …")? The Figma shows two; the carousel design implies at least four. | Testimonials 3–4 are sample copy | _Pending_ |
 | 5 | **FAQ answers:** Can we get the answers to questions 2–5? The Figma only shows the first. | Generic answers pointing to the relevant pages | _Pending_ |
 | 6 | **Subscribe Now:** Should this connect to a newsletter service (e.g. Mailchimp, Brevo), or link to a page? | Links to the Contact page | _Pending_ |
-| 7 | **Header dropdowns:** We added small chevrons to nav items that have sub-pages (needed for keyboard and screen-reader access). OK to keep? | Chevrons shown | _Pending_ |
+| 7 | ~~**Header dropdowns**~~ | Resolved: no dropdowns. Every menu item is a single page. | Resolved 2026-11-23 |
 
 ## About page
 
