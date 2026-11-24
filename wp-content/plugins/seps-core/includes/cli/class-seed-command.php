@@ -290,6 +290,9 @@ final class Seed_Command {
 			'title' => $title,
 			'url'   => $url,
 		);
+		// ETH Digital Campus (DC Netra): one sign-in for parents, students
+		// and staff. The current school website links its logins here too.
+		$portal = 'https://seps.ethdigitalcampus.com/SEPS/';
 
 		$locations = array(
 			'primary'        => array(
@@ -327,7 +330,7 @@ final class Seed_Command {
 					$page( 'home' ),
 					$page( 'about' ),
 					$page( 'academics' ),
-					$link( 'CBSE Portal' ),
+					$link( 'CBSE Portal', 'https://www.cbse.gov.in/' ),
 					$page( 'admissions' ),
 					$page( 'student-life' ),
 					$page( 'news-events' ),
@@ -339,10 +342,10 @@ final class Seed_Command {
 			'footer_portals' => array(
 				'SEPS Portals',
 				array(
-					$link( 'Parent Portal' ),
-					$link( 'Student Portal' ),
-					$link( 'Staff Portal' ),
-					$link( 'Fee Payment' ),
+					$link( 'Parent Portal', $portal ),
+					$link( 'Student Portal', $portal ),
+					$link( 'Staff Portal', $portal ),
+					$link( 'Fee Payment', $portal ), // Paid after signing in (to confirm: open question #55).
 					$link( 'School Calendar', get_permalink( $this->pages['news-events'] ) ),
 				),
 			),
@@ -383,15 +386,15 @@ final class Seed_Command {
 			'social_links'      => array(
 				array(
 					'network' => 'facebook',
-					'url'     => 'https://www.facebook.com/',
+					'url'     => 'https://www.facebook.com/sepsauh/',
 				),
 				array(
 					'network' => 'x',
-					'url'     => 'https://x.com/',
+					'url'     => 'https://x.com/PrivateSunrise',
 				),
 				array(
 					'network' => 'instagram',
-					'url'     => 'https://www.instagram.com/',
+					'url'     => 'https://www.instagram.com/sepsauh/',
 				),
 			),
 			'header_button'     => $this->link( 'register-now', 'Register Now' ),

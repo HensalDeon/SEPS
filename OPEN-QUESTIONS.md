@@ -109,3 +109,14 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 52 | **Retention periods:** How long does the school keep enquiries, unsuccessful registrations and job applications (including CVs)? The policy currently says "only as long as needed". | General wording | _Pending_ |
 | 53 | **Privacy contact:** Is there a named data protection contact or a dedicated email (e.g. privacy@…) for privacy requests? | school@seps-auh.com | _Pending_ |
 | 54 | **Analytics:** Will the school add Google Analytics or similar? If so, the cookies section (and a consent banner) must be updated. | No analytics | _Pending_ |
+
+## Footer: SEPS Portals
+
+Links taken from the current website (seps-auh.com): its "Parent Login" and "Staff Login" both open the ETH Digital Campus sign-in, https://seps.ethdigitalcampus.com/SEPS/.
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 55 | **Fee Payment:** Do parents pay fees online after signing in to the ETH Digital Campus portal, or is there a separate payment link? | Links to the portal sign-in | _Pending_ |
+| 56 | **Student Portal:** Do students sign in on the same portal as parents and staff? | Same portal sign-in for Parent, Student and Staff | _Pending_ |
+| 57 | **Register Now:** The current website sends "Register Now" to the ETH Digital Campus registration portal (https://seps.ethdigitalcampus.com/RegistrationPortal?dbConnVar=SEPS). The new design has its own Registration Form page, which emails the school. Should the new site keep its own form, or link to the ETH portal so registrations go straight into the school system? | The new Registration Form page | _Pending_ |
+| 58 | **YouTube:** The current website links a YouTube channel (https://www.youtube.com/channel/UCfLTdr7uO4GoMqRRN5mSoww). The design's social icons are Facebook, X and Instagram only. Add YouTube? | Not shown | _Pending_ |
