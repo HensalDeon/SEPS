@@ -26,7 +26,7 @@ The post types live in a plugin so that content survives a future theme change.
 
 ## Local setup (LocalWP)
 
-1. In LocalWP, create a site (e.g. **seps**, preferred setup) on the **same PHP version as WP Engine** (currently 8.3).
+1. In LocalWP, create a site (e.g. **seps**, preferred setup) on the **same PHP version as WP Engine** (currently 8.4).
 2. Copy the theme and plugin into it:
 
    ```bash
@@ -57,7 +57,7 @@ The post types live in a plugin so that content survives a future theme change.
    - **Code changes only:** Files → *Select files* → tick `themes/seps` and `plugins/seps-core`. Leave **Database unticked** so content edited on staging isn't overwritten.
    - **First deploy, or a deliberate content reset:** All files + Database.
    - ⚠️ **Always untick every red "Will be deleted" row** before pushing. Those are WP Engine's own files that don't exist in Local (`wp-content/advanced-cache.php`, favicons). Deleting `advanced-cache.php` disables WP Engine's cache integration.
-   - ⚠️ **Plugins (e.g. Contact Form 7, Flamingo, SCF):** keep them on the **same version in Local and on staging**, and push a plugin folder with **"all files"**, never "only newer files". A partial push mixes two versions of the plugin and crashes the site (it happened with CF7: Local 6.1.4 on PHP 8.2 vs staging 6.2.6 on PHP 8.3). If a plugin crashes staging, deactivate it in the WP Engine portal (**Plugins and themes**), then re-push the whole folder. Don't *delete* Contact Form 7 in wp-admin: its uninstall removes the saved forms.
+   - ⚠️ **Plugins (e.g. Contact Form 7, Flamingo, SCF):** keep them on the **same version in Local and on staging**, and push a plugin folder with **"all files"**, never "only newer files". A partial push mixes two versions of the plugin and crashes the site (it happened with CF7: Local 6.1.4 on PHP 8.2 vs staging 6.2.6 on PHP 8.4). If a plugin crashes staging, deactivate it in the WP Engine portal (**Plugins and themes**), then re-push the whole folder. Don't *delete* Contact Form 7 in wp-admin: its uninstall removes the saved forms.
 3. In the WP Engine portal: **Cache → Clear all caches**.
 
 The sync script excludes development files (`node_modules`, SCSS/JS sources, build configs), so only what the site needs goes to the server.
