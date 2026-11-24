@@ -1,0 +1,128 @@
+@use "../abstracts/mixins" as *;
+
+// Photo + accordion panel — e.g. "School Rules & Regulations" (Resources):
+// a tall photo (594) beside a lilac panel of white expandable cards. The
+// cards reuse .accordion-card (see _values.scss).
+
+.accp {
+	position: relative;
+	padding-block: var(--section-space);
+	overflow-x: clip;
+
+	&--navy {
+		--focus-color: var(--color-accent);
+
+		background: var(--color-navy);
+		color: var(--color-white);
+
+		.section-title {
+			color: var(--color-white);
+		}
+	}
+
+	&--lilac {
+		background: var(--color-lilac);
+	}
+
+	&--white {
+		background: var(--color-white);
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		max-width: 62.6875rem; // 1003
+		margin-bottom: 2rem;
+	}
+
+	&__intro {
+		font-size: clamp(1.125rem, 1.02rem + 0.45vw, 1.5rem); // → 24
+		font-weight: var(--fw-light);
+	}
+
+	&__body {
+		display: grid;
+		gap: 2rem;
+
+		@include mq(lg) {
+			.accp--has-media & {
+				grid-template-columns: minmax(0, 594fr) minmax(0, 946fr);
+				gap: clamp(2.5rem, 4.17vw, 5rem); // → 80
+			}
+		}
+	}
+
+	// Photo: fills the height of the panel on wide screens (out of flow).
+	&__media {
+		position: relative;
+		min-height: 18rem;
+	}
+
+	&__image {
+		position: absolute;
+		inset: 0;
+		border-radius: var(--radius);
+
+		@include cover-image;
+	}
+
+	&__panel {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding: 1.5rem;
+		border-radius: var(--radius);
+		background: var(--color-lilac);
+	}
+
+	&--lilac &__panel {
+		background: var(--color-white);
+	}
+
+	&__item {
+		padding: 1.25rem 1.375rem; // 20 / 22
+
+		.accordion-card__summary {
+			font-size: var(--fs-base);
+		}
+
+		&[open] {
+			padding-block: 2rem; // 32
+		}
+
+		&[open] .accordion-card__summary {
+			padding-bottom: 1.5rem;
+		}
+	}
+
+	&--lilac &__item {
+		background: var(--color-lilac);
+	}
+
+	&__content {
+		padding-top: 1.5rem;
+		color: var(--color-text);
+		font-weight: var(--fw-light);
+
+		ul {
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+			padding-left: 1.5rem;
+			list-style: disc;
+		}
+
+		strong {
+			color: var(--color-brand);
+		}
+	}
+
+	// Two half circles, top right (100px at 1670 / 83).
+	&__decor {
+		position: absolute;
+		top: clamp(1rem, 4.32vw, 5.1875rem); // → 83
+		right: var(--edge);
+		width: clamp(3.5rem, 5.2vw, 6.25rem);
+	}
+}

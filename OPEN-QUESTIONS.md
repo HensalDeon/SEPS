@@ -79,3 +79,12 @@ place so the site works meanwhile; answer inline and we'll update the build.
 |---|---|---|---|
 | 38 | **Application forms:** What should *View Academic Application Form* and *View Non-Academic Application Form* open: PDFs to download, an online form (e.g. Google Forms), or an application form on the site with CV upload? | `#` | _Pending_ |
 | 39 | **Vacancies:** Should the page list current openings (job title, department, closing date), or only link to the application forms as in the Figma? | Forms only, as in the Figma | _Pending_ |
+
+## Resources page
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 40 | **Documents:** Can we get the files (or links) for the Annual Report 2024–25, the ADEK Irtiqa’a Inspection Report 2024/25 and the Parent Handbook? Where should *Explore Library* go? | `#` | _Pending_ |
+| 41 | **Policies:** Which policies should be listed, and can we get each one as a PDF? The Figma shows four with carousel dots, which implies more. | Attendance, Curriculum, Assessment, Student Protection (not linked yet) | _Pending_ |
+| 42 | **School rules:** The Figma only spells out *General Rules*. Can we get the content for *Attendance & Leave*, *Special Care / Special Needs* and *Disciplinary Behaviour & Classroom Conduct*? | Short summaries from existing site content, pointing to the Parent Handbook | _Pending_ |
+| 43 | **Parent Handbook preview:** The Figma shows the *School Diary* cover. Is that the handbook, or do you have a handbook cover to use? | School Diary cover from the Figma | _Pending_ |

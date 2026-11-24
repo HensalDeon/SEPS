@@ -2,7 +2,8 @@
 
 // Text + Image — e.g. "Transport" (white, narrow photo filling the text
 // height, flower) and "Registrations" (navy, wide landscape photo, half
-// circles) on Admissions.
+// circles) on Admissions; circles, a document preview and a wide photo
+// filling the text height on News & Events and Resources.
 
 .text-image {
 	position: relative;
@@ -95,8 +96,12 @@
 		position: relative;
 	}
 
-	// Narrow: the photo fills the text height (out of flow).
-	&--narrow &__media {
+	// Narrow (384) / fill (592): the photo fills the text height (out of flow).
+	&--fill &__inner {
+		--text-image-media: 37rem; // 592
+	}
+
+	&--fills &__media {
 		min-height: 16rem;
 
 		@include mq(lg) {
@@ -104,7 +109,7 @@
 		}
 	}
 
-	&--narrow &__image {
+	&--fills &__image {
 		position: absolute;
 		inset: 0;
 		border-radius: var(--radius);
@@ -120,23 +125,42 @@
 		@include rounded-photo(798, 496);
 	}
 
-	// Circle: 338px photo beside the text, e.g. "SEPS Chronicle".
+	// Circles: 338px ("SEPS Chronicle"), 278px ("Progress & Achievements"),
+	// 506px ("School Inspection Report").
 	&--circle &__inner {
 		--text-image-media: 21.125rem; // 338
+	}
 
+	&--circle-small &__inner {
+		--text-image-media: 17.375rem; // 278
+	}
+
+	&--circle-large &__inner {
+		--text-image-media: 31.625rem; // 506
+	}
+
+	&--round &__inner {
 		align-items: center;
 	}
 
-	&--circle &__media {
+	&--round &__media {
 		justify-self: center;
-		width: min(100%, 17.5rem);
+		width: min(100%, var(--text-image-round, 17.5rem));
 
 		@include mq(lg) {
 			width: 100%;
 		}
 	}
 
-	&--circle &__image {
+	&--circle-small &__media {
+		--text-image-round: 15rem;
+	}
+
+	&--circle-large &__media {
+		--text-image-round: 20rem;
+	}
+
+	&--round &__image {
 		@include cover-image;
 
 		height: auto;
@@ -144,12 +168,74 @@
 		border-radius: 50%;
 	}
 
-	// Flower near the top of the circle (at 222 / -13 on the 338px photo).
+	// Document preview (e.g. "Parent Handbook"): a framed page (427 wide) with
+	// a full-screen icon that opens the document.
+	&--document &__inner {
+		--text-image-media: 26.6875rem; // 427
+
+		align-items: center;
+	}
+
+	&--document &__media {
+		justify-self: center;
+		width: min(100%, 26.6875rem);
+		padding: 1.5rem;
+		border-radius: var(--radius);
+		background: var(--color-white);
+		box-shadow: 0 4px 4.45px rgb(0 0 0 / 10%);
+	}
+
+	&__page {
+		position: relative;
+		overflow: hidden;
+		border-radius: var(--radius);
+
+		// Soft shade towards the bottom of the page, as designed.
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(to bottom, rgb(0 0 0 / 0%) 32%, rgb(0 0 0 / 25%));
+			pointer-events: none;
+		}
+	}
+
+	&--document &__image {
+		display: block;
+		width: 100%;
+		aspect-ratio: 379 / 542;
+		object-fit: cover;
+		object-position: top;
+	}
+
+	&__zoom {
+		position: absolute;
+		top: 1.75rem;
+		right: 1.75rem;
+		line-height: 0;
+		transition: transform var(--duration) var(--ease-out);
+
+		&:hover {
+			transform: scale(1.08);
+		}
+	}
+
 	&__photo-decor {
 		position: absolute;
+	}
+
+	// Flower near the top of the circle (at 222 / -13 on the 338px photo).
+	&__photo-decor--flower-yellow {
 		top: -3.85%;
 		left: 65.7%;
 		width: 14.73%;
+	}
+
+	// Sun on the circle's left edge (at -50 / 191 on the 506px photo).
+	&__photo-decor--sun-yellow {
+		top: 37.75%;
+		left: -9.88%;
+		width: 19.76%;
 	}
 
 	&__decor {
@@ -170,5 +256,22 @@
 		right: calc(var(--edge) - clamp(1rem, 2.7vw, 3.25rem));
 		width: clamp(3.5rem, 5.2vw, 6.25rem);
 		transform: rotate(-90deg);
+	}
+
+	// Three upright blue half circles just outside the container's right
+	// edge, vertically centred (e.g. "Progress & Achievements"). Wide screens
+	// only: on smaller ones there is no room beside the content.
+	.decor--halves-brand {
+		--size: clamp(3.5rem, 5.2vw, 6.25rem);
+
+		top: 50%;
+		right: calc(var(--edge) - var(--size));
+		display: none;
+		width: var(--size);
+		translate: 0 -50%;
+
+		@include mq(xl) {
+			display: block;
+		}
 	}
 }

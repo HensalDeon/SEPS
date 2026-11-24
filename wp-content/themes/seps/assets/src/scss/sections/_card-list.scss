@@ -12,6 +12,15 @@
 
 	&--white {
 		background: var(--color-white);
+
+		// Lilac cards on white (no panel), e.g. "Policies" (Resources).
+		.photo-card {
+			background: var(--color-lilac);
+		}
+
+		.card-list__panel .photo-card {
+			background: var(--color-white);
+		}
 	}
 
 	&--lilac {

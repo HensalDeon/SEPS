@@ -64,6 +64,7 @@ final class Seed_Command {
 		'news-events'  => 'News & Events page',
 		'contact'      => 'Contact page',
 		'careers'      => 'Careers page',
+		'resources'    => 'Resources page',
 	);
 
 	/**
@@ -78,7 +79,7 @@ final class Seed_Command {
 	 * : Comma-separated steps to run (default: all). Available: identity,
 	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
 	 * about, academics, admissions, student-life,
-	 * news-events (run after posts), contact, careers.
+	 * news-events (run after posts), contact, careers, resources.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -135,6 +136,7 @@ final class Seed_Command {
 			'news-events'  => fn() => $this->seed_news_events(),
 			'contact'      => fn() => $this->seed_contact(),
 			'careers'      => fn() => $this->seed_careers(),
+			'resources'    => fn() => $this->seed_resources(),
 		);
 
 		foreach ( self::STEPS as $key => $label ) {
@@ -552,38 +554,7 @@ final class Seed_Command {
 				'heading' => 'Spaces That Inspire Learning',
 				'intro'   => 'Our learning environment brings together dedicated academic facilities, creative spaces and opportunities for students to explore, experiment and stay active.',
 				'button'  => $this->link( 'student-life', 'View Gallery' ),
-				'items'   => array(
-					array(
-						'image' => $this->image( 'facility-1.jpg', 'Science laboratory glassware' ),
-						'title' => 'Science Laboratories',
-						'tags'  => "Physics\nChemistry\nBiology",
-					),
-					array(
-						'image' => $this->image( 'facility-2.jpg', 'Robotic arm in the computer science lab' ),
-						'title' => 'Computer Science & Robotics',
-						'tags'  => "Technology\nInnovation",
-					),
-					array(
-						'image' => $this->image( 'facility-3.jpg', 'Indoor sports hall' ),
-						'title' => 'Sports Facilities',
-						'tags'  => "Football\nPhysical Education",
-					),
-					array(
-						'image' => $this->image( 'facility-4.jpg', 'Library bookshelves and reading tables' ),
-						'title' => 'Libraries',
-						'tags'  => "Reading\nResearch",
-					),
-					array(
-						'image' => $this->image( 'facility-5.jpg', 'Students raising hands in a science class' ),
-						'title' => 'Art & Music',
-						'tags'  => 'Creative Expression',
-					),
-					array(
-						'image' => $this->image( 'facility-6.jpg', 'Student gardening in the organic farm' ),
-						'title' => 'Organic Farm',
-						'tags'  => "Sustainability\nAwareness",
-					),
-				),
+				'items'   => $this->facility_items(),
 			),
 			'highlights'   => array(
 				'enabled' => 1,
@@ -1724,6 +1695,217 @@ final class Seed_Command {
 		}
 
 		return $id;
+	}
+
+	/**
+	 * Resources page: annual report, library, policies, school rules,
+	 * inspection report, parent handbook and facilities.
+	 */
+	private function seed_resources(): void {
+		$link   = static fn( string $title, string $url = '#' ): array => array(
+			'url'    => $url,
+			'title'  => $title,
+			'target' => '',
+		);
+		$button = static fn( string $title ): array => array(
+			array(
+				'link'  => $link( $title ),
+				'style' => 'primary',
+			),
+		);
+		$policy = fn( string $image, string $alt, string $title ): array => array(
+			'image' => $this->image( $image, $alt ),
+			'title' => $title,
+			'text'  => '',
+			'link'  => null,
+		);
+		$list   = static fn( array $items ): string => '<ul><li>' . implode( '</li><li>', $items ) . '</li></ul>';
+
+		// Only "General Rules" is written out in the design; the other items
+		// repeat what the site already says and point to the Parent Handbook.
+		$rules = array(
+			array(
+				'title'    => 'General Rules',
+				'subtitle' => 'Safe and responsible school life.',
+				'content'  => $list(
+					array(
+						'Be at school by <strong>7:20 a.m.</strong> and follow entry rules.',
+						'Inform the school by <strong>7:45 a.m.</strong> if a student is on leave.',
+						'Own Transport pickup is at <strong>2:20 p.m.</strong> and students must be picked up by <strong>2:45 p.m.</strong>, or by <strong>4:00 p.m.</strong> if staying for an after-school activity.',
+						'Wear the school ID card and proper school uniform every day.',
+						'Maintain personal hygiene, cleanliness and tidiness.',
+						'Take care of school facilities and property.',
+						'Maintain discipline in corridors, bathrooms, buses, playgrounds and other shared areas.',
+					)
+				),
+			),
+			array(
+				'title'    => 'Attendance & Leave',
+				'subtitle' => 'Guidelines for regular attendance and approved leave.',
+				'content'  => $list(
+					array(
+						'Regular attendance is expected throughout the school year.',
+						'Inform the school by <strong>7:45 a.m.</strong> if a student is on leave.',
+						'The full attendance and leave guidelines are in the Parent Handbook.',
+					)
+				),
+			),
+			array(
+				'title'    => 'Special Care / Special Needs',
+				'subtitle' => 'Supporting students who require special care.',
+				'content'  => '<p>Students who need special care are supported by our Special Education team. Please speak to the school about your child’s needs; the full guidelines are in the Parent Handbook.</p>',
+			),
+			array(
+				'title'    => 'Disciplinary Behavior & Classroom Conduct',
+				'subtitle' => 'Guidelines for respectful and responsible behaviour.',
+				'content'  => '<p>Students are expected to be respectful and responsible in class and around the school. The full code of conduct is in the Parent Handbook.</p>',
+			),
+		);
+
+		$sections = array(
+			array(
+				'acf_fc_layout'  => 'page_hero',
+				'title'          => "Explore Our School\nResources",
+				'text'           => 'Find the information and resources you need, from academic guidance and school policies to parent handbooks, calendars and essential documents.',
+				'note'           => '',
+				'button'         => $link( 'Learn More', '#explore' ),
+				'button_2'       => null,
+				'image'          => $this->image( 'resources-hero.jpg', 'Students talking with a teacher in the library' ),
+				'image_focus'    => 'center',
+				'layout'         => 'standard',
+				'decor'          => 'none',
+				'decor_position' => 'auto',
+			),
+			array(
+				'acf_fc_layout'  => 'text_image',
+				'background'     => 'white',
+				'heading'        => 'Progress & Achievements',
+				'content'        => '<p>Go behind the highlights of the year and discover the achievements, activities, academic progress and milestones that shaped life at SEPS in 2024–25.</p>',
+				'buttons'        => $button( 'View Annual Report 2024–25' ),
+				'image'          => $this->image( 'resources-progress.jpg', 'Young children raising their hands in class' ),
+				'image_size'     => 'circle_small',
+				'image_position' => 'left',
+				'decor'          => 'halves_brand',
+				'corner'         => 0,
+				'anchor'         => 'explore',
+			),
+			array(
+				'acf_fc_layout'  => 'text_image',
+				'background'     => 'lilac',
+				'heading'        => 'Explore Our Library',
+				'content'        => '<p>A space for reading, research and discovery, our library brings together books, reference materials and digital resources to support learning across grades and subjects.</p><p>From guided reading and book reviews to reading activities that encourage students to discover new books and ideas, the library helps make reading a part of everyday school life.</p>',
+				'buttons'        => $button( 'Explore Library' ),
+				'image'          => $this->image( 'resources-library.jpg', 'Children reading books in the library' ),
+				'image_size'     => 'fill',
+				'image_position' => 'right',
+				'decor'          => 'none',
+				'corner'         => 0,
+			),
+			array(
+				'acf_fc_layout' => 'card_list',
+				'background'    => 'white',
+				'heading'       => 'Policies',
+				'intro'         => '<p>Our policies provide clear guidance for learning, student wellbeing, safety and the wider school community.</p><p>Explore the policies that guide everyday life at SEPS, covering academics, attendance, assessment, student support, safeguarding, transport, staff responsibilities and more.</p>',
+				'signature'     => '',
+				'button'        => null,
+				'display'       => 'carousel',
+				'columns'       => '4',
+				'image_height'  => 'small',
+				'panel'         => 0,
+				'panel_title'   => '',
+				'cards'         => array(
+					$policy( 'resources-policy-1.jpg', 'Teacher presenting to a class', 'Attendance Policy' ),
+					$policy( 'resources-policy-2.jpg', 'Two staff members meeting at a desk', 'Curriculum Policy' ),
+					$policy( 'resources-policy-3.jpg', 'Teacher with young students in a classroom', 'Assessment Policy' ),
+					$policy( 'resources-policy-4.jpg', 'Student writing in a notebook', 'Student Protection Policy' ),
+				),
+				'image'         => 0,
+				'decor'         => 'none',
+			),
+			array(
+				'acf_fc_layout' => 'accordion_panel',
+				'background'    => 'navy',
+				'heading'       => 'School Rules & Regulations',
+				'intro'         => 'Essential guidelines for students and parents covering daily conduct, attendance, special care and classroom behaviour at SEPS.',
+				'image'         => $this->image( 'resources-rules.jpg', 'Young students writing at their desks' ),
+				'items'         => $rules,
+				'decor'         => 'halves',
+			),
+			array(
+				'acf_fc_layout'  => 'text_image',
+				'background'     => 'white',
+				'heading'        => 'School Inspection Report',
+				'content'        => '<p>Take a closer look at SEPS through the 2024/25 ADEK Irtiqa’a School Inspection Report, covering teaching and learning, academic performance, student development and school leadership.</p><p>Discover the report’s findings, strengths and areas identified for continued improvement.</p>',
+				'buttons'        => $button( 'View Report' ),
+				'image'          => $this->image( 'resources-inspection.jpg', 'Student writing in class' ),
+				'image_size'     => 'circle_large',
+				'image_position' => 'right',
+				'decor'          => 'sun_photo',
+				'corner'         => 0,
+			),
+			array(
+				'acf_fc_layout'  => 'text_image',
+				'background'     => 'lilac',
+				'heading'        => 'Parent Handbook',
+				'content'        => '<p>Everything parents need to know about life at SEPS, from school routines and expectations to important guidelines and everyday information.</p><p>Keep the handbook handy for useful information throughout the school year.</p>',
+				'buttons'        => $button( 'View Handbook' ),
+				'image'          => $this->image( 'resources-handbook.jpg', 'Cover of the SEPS school diary' ),
+				'image_size'     => 'document',
+				'image_position' => 'left',
+				'decor'          => 'none',
+				'corner'         => 0,
+			),
+			array(
+				'acf_fc_layout' => 'facilities',
+				'heading'       => 'Spaces That Inspire Learning',
+				'intro'         => 'Our learning environment brings together dedicated academic facilities, creative spaces and opportunities for students to explore, experiment and stay active.',
+				'button'        => $this->link( 'student-life', 'View Gallery' ),
+				'items'         => $this->facility_items(),
+			),
+		);
+
+		update_field( 'field_seps_page_sections', $sections, $this->pages['resources'] );
+	}
+
+	/**
+	 * Facilities ("Spaces That Inspire Learning"), shared by the home page and
+	 * Resources.
+	 *
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function facility_items(): array {
+		return array(
+			array(
+				'image' => $this->image( 'facility-1.jpg', 'Science laboratory glassware' ),
+				'title' => 'Science Laboratories',
+				'tags'  => "Physics\nChemistry\nBiology",
+			),
+			array(
+				'image' => $this->image( 'facility-2.jpg', 'Robotic arm in the computer science lab' ),
+				'title' => 'Computer Science & Robotics',
+				'tags'  => "Technology\nInnovation",
+			),
+			array(
+				'image' => $this->image( 'facility-3.jpg', 'Indoor sports hall' ),
+				'title' => 'Sports Facilities',
+				'tags'  => "Football\nPhysical Education",
+			),
+			array(
+				'image' => $this->image( 'facility-4.jpg', 'Library bookshelves and reading tables' ),
+				'title' => 'Libraries',
+				'tags'  => "Reading\nResearch",
+			),
+			array(
+				'image' => $this->image( 'facility-5.jpg', 'Students raising hands in a science class' ),
+				'title' => 'Art & Music',
+				'tags'  => 'Creative Expression',
+			),
+			array(
+				'image' => $this->image( 'facility-6.jpg', 'Student gardening in the organic farm' ),
+				'title' => 'Organic Farm',
+				'tags'  => "Sustainability\nAwareness",
+			),
+		);
 	}
 
 	/*

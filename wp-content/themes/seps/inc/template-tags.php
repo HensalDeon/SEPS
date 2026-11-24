@@ -93,6 +93,8 @@ function seps_decor( string $name, string $class = '' ): string {
 		'halves-white'    => array( 100, 148 ),
 		'drop-navy'       => array( 603, 641 ),
 		'halves-pair-brand' => 100,
+		'halves-pair-white' => 100,
+		'halves-brand'    => array( 100, 148 ),
 	);
 
 	if ( ! isset( $sizes[ $name ] ) ) {

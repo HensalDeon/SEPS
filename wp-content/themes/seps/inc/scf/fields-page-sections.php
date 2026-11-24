@@ -45,6 +45,8 @@ function page_section_templates(): array {
 		'contact_form'    => 'contact-form',
 		'map'             => 'map',
 		'stacked_cards'   => 'stacked-cards',
+		'accordion_panel' => 'accordion-panel',
+		'facilities'      => 'facilities',
 		'text'            => 'text',
 	);
 }
@@ -729,9 +731,14 @@ function page_section_layouts(): array {
 							'narrow' => __( 'Narrow (fills height)', 'seps' ),
 							'wide'   => __( 'Wide (landscape)', 'seps' ),
 							'large'  => __( 'Large (half width)', 'seps' ),
+							'fill'   => __( 'Wide (fills height)', 'seps' ),
 							'circle' => __( 'Circle', 'seps' ),
+							'circle_small' => __( 'Small circle', 'seps' ),
+							'circle_large' => __( 'Large circle', 'seps' ),
+							'document'     => __( 'Document preview', 'seps' ),
 						),
 						'default_value' => 'narrow',
+						'instructions'  => __( 'Document preview: a framed page with a full-screen icon that opens the first button\'s link.', 'seps' ),
 					)
 				),
 				field(
@@ -758,6 +765,8 @@ function page_section_layouts(): array {
 							'flower'       => __( 'Flower', 'seps' ),
 							'halves'       => __( 'Half circles', 'seps' ),
 							'flower_photo' => __( 'Flower on the photo', 'seps' ),
+							'sun_photo'    => __( 'Sun beside the photo', 'seps' ),
+							'halves_brand' => __( 'Blue half circles (right)', 'seps' ),
 						),
 						'default_value' => 'none',
 					)
@@ -1078,6 +1087,77 @@ function page_section_layouts(): array {
 							field( 'ps_stack_cards', 'title', 'text', __( 'Title', 'seps' ), array( 'required' => 1 ) ),
 							field( 'ps_stack_cards', 'text', 'textarea', __( 'Text', 'seps' ), $text ),
 							link_field( 'ps_stack_cards', 'link', __( 'Button', 'seps' ) ),
+						),
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_accordion_panel' => $layout(
+			'accordion_panel',
+			__( 'Photo + accordion panel', 'seps' ),
+			array(
+				$background( 'ps_accp', array(
+						'navy'  => __( 'Navy', 'seps' ),
+						'lilac' => __( 'Lilac', 'seps' ),
+						'white' => __( 'White', 'seps' ),
+					), 'navy' ),
+				field( 'ps_accp', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_accp', 'intro', 'textarea', __( 'Intro (large text)', 'seps' ), $text ),
+				image_field( 'ps_accp', 'image', __( 'Photo (left, fills the height of the panel)', 'seps' ) ),
+				field(
+					'ps_accp',
+					'items',
+					'repeater',
+					__( 'Items', 'seps' ),
+					array(
+						'instructions' => __( 'The first item starts open; opening one closes the others.', 'seps' ),
+						'layout'       => 'block',
+						'button_label' => __( 'Add item', 'seps' ),
+						'collapsed'    => 'field_seps_ps_accp_items_title',
+						'sub_fields'   => array(
+							field( 'ps_accp_items', 'title', 'text', __( 'Title (bold)', 'seps' ), array( 'required' => 1, 'wrapper' => array( 'width' => '40' ) ) ),
+							field( 'ps_accp_items', 'subtitle', 'text', __( 'Short description', 'seps' ), array( 'wrapper' => array( 'width' => '60' ) ) ),
+							$rich( 'ps_accp_items', 'content', __( 'Content', 'seps' ) ),
+						),
+					)
+				),
+				field(
+					'ps_accp',
+					'decor',
+					'button_group',
+					__( 'Decoration', 'seps' ),
+					array(
+						'choices'       => array(
+							'none'   => __( 'None', 'seps' ),
+							'halves' => __( 'Half circles (top right)', 'seps' ),
+						),
+						'default_value' => 'none',
+					)
+				),
+			)
+		),
+
+		'layout_seps_ps_facilities' => $layout(
+			'facilities',
+			__( 'Facilities (photo grid)', 'seps' ),
+			array(
+				field( 'ps_facilities', 'heading', 'text', __( 'Heading', 'seps' ) ),
+				field( 'ps_facilities', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
+				link_field( 'ps_facilities', 'button', __( 'Button', 'seps' ) ),
+				field(
+					'ps_facilities',
+					'items',
+					'repeater',
+					__( 'Facilities', 'seps' ),
+					array(
+						'layout'       => 'block',
+						'button_label' => __( 'Add facility', 'seps' ),
+						'collapsed'    => 'field_seps_ps_facilities_items_title',
+						'sub_fields'   => array(
+							image_field( 'ps_facilities_items', 'image', __( 'Photo', 'seps' ), array( 'wrapper' => array( 'width' => '30' ) ) ),
+							field( 'ps_facilities_items', 'title', 'text', __( 'Title', 'seps' ), array( 'required' => 1 ) ),
+							field( 'ps_facilities_items', 'tags', 'textarea', __( 'Tags (one per line)', 'seps' ), array( 'rows' => 3, 'new_lines' => '' ) ),
 						),
 					)
 				),

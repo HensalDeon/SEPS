@@ -26,7 +26,7 @@ The post types live in a plugin so that content survives a future theme change.
 
 ## Local setup (LocalWP)
 
-1. In LocalWP, create a site (e.g. **seps**, PHP 8.2, preferred setup).
+1. In LocalWP, create a site (e.g. **seps**, preferred setup) on the **same PHP version as WP Engine** (currently 8.3).
 2. Copy the theme and plugin into it:
 
    ```bash
@@ -57,6 +57,7 @@ The post types live in a plugin so that content survives a future theme change.
    - **Code changes only:** Files → *Select files* → tick `themes/seps` and `plugins/seps-core`. Leave **Database unticked** so content edited on staging isn't overwritten.
    - **First deploy, or a deliberate content reset:** All files + Database.
    - ⚠️ **Always untick every red "Will be deleted" row** before pushing. Those are WP Engine's own files that don't exist in Local (`wp-content/advanced-cache.php`, favicons). Deleting `advanced-cache.php` disables WP Engine's cache integration.
+   - ⚠️ **Plugins (e.g. Contact Form 7, Flamingo, SCF):** keep them on the **same version in Local and on staging**, and push a plugin folder with **"all files"**, never "only newer files". A partial push mixes two versions of the plugin and crashes the site (it happened with CF7: Local 6.1.4 on PHP 8.2 vs staging 6.2.6 on PHP 8.3). If a plugin crashes staging, deactivate it in the WP Engine portal (**Plugins and themes**), then re-push the whole folder. Don't *delete* Contact Form 7 in wp-admin: its uninstall removes the saved forms.
 3. In the WP Engine portal: **Cache → Clear all caches**.
 
 The sync script excludes development files (`node_modules`, SCSS/JS sources, build configs), so only what the site needs goes to the server.
@@ -75,7 +76,7 @@ Everything on the home page is editable. Nothing is hard-coded in templates.
 | Footer columns | Appearance → Menus → *Footer: Column 1/2/3*. **The menu name is the column heading.** |
 | Privacy / Terms links | Appearance → Menus → *Footer: Legal links* |
 | Home page sections | Pages → Home. One tab per section, each with a *Show this section* toggle. |
-| Inner pages (About, Academics and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Highlights & Focus Areas, Badge Accordion, Timetable, Documents, Requirements, Info Cards, Text + Image, Notice + Checklist, FAQs, Cards (carousel or grid), Latest posts, Enquiry form, Map, Photo + stacked cards, Text. The Page Hero heading can have a line break; the hero also has an optional note line, decoration (and its height), "Keep in view" (photo crop focus), a second (white) button and a *Wide text, narrow photo* layout. Text + Image photos can sit left or right, or be a circle, with an optional rounded corner. Every section has an optional **Section ID** so links can jump to it (e.g. `/academics/#mandatory-disclosure`). |
+| Inner pages (About, Academics and future pages) | Pages → *page* → **Sections**. Add, remove and drag to reorder: Page Hero, Image + Text Blocks, Values & Guidelines, Message, Team, Highlights & Focus Areas, Badge Accordion, Timetable, Documents, Requirements, Info Cards, Text + Image, Notice + Checklist, FAQs, Cards (carousel or grid), Latest posts, Enquiry form, Map, Photo + stacked cards, Photo + accordion panel, Facilities (photo grid), Text. The Page Hero heading can have a line break; the hero also has an optional note line, decoration (and its height), "Keep in view" (photo crop focus), a second (white) button and a *Wide text, narrow photo* layout. Text + Image photos can sit left or right, fill the text height, be a circle (three sizes) or a document preview (with a full-screen link), with an optional rounded corner and decorations. Every section has an optional **Section ID** so links can jump to it (e.g. `/academics/#mandatory-disclosure`). |
 | Staff (Principals, Leadership Team) | **Staff** (sidebar). Photo = Featured image, *Position* field, *Team*, and *Order* to sort. Shown by the Team section. |
 | Testimonials | **Testimonials** (sidebar). The home page shows the latest 6 unless specific ones are picked. |
 | FAQs | **FAQs** (sidebar). Ordered by *Order*; can be hand-picked per page. |

@@ -1,6 +1,7 @@
 <?php
 /**
- * Section: Text + Image (e.g. "Transport", "Registrations").
+ * Section: Text + Image (e.g. "Transport", "Registrations", "SEPS Chronicle",
+ * "Parent Handbook").
  *
  * @package SEPS
  *
@@ -10,9 +11,12 @@
  *     @type string $content    Text (HTML).
  *     @type array  $buttons    Repeater: link, style ('accent'|'primary').
  *     @type int    $image      Attachment ID.
- *     @type string $image_size     'narrow' (fills the text height) | 'wide' (landscape) | 'large' (half width) | 'circle'.
+ *     @type string $image_size     'narrow' / 'fill' (fill the text height; 384 / 592px) | 'wide' (landscape)
+ *                                  | 'large' (half width) | 'circle' / 'circle_small' / 'circle_large' (338 / 278 / 506px)
+ *                                  | 'document' (framed page preview; its full-screen icon opens the first button's link).
  *     @type string $image_position 'right' (default) | 'left'.
- *     @type string $decor      'none' | 'flower' | 'halves' | 'flower_photo' (yellow, on the photo).
+ *     @type string $decor      'none' | 'flower' | 'halves' | 'flower_photo' (yellow, on the photo)
+ *                              | 'sun_photo' (beside the photo) | 'halves_brand' (blue, right edge).
  *     @type bool   $corner     Rounded bottom-right corner.
  * }
  */
@@ -27,24 +31,34 @@ if ( '' === $seps_heading && '' === $seps_content ) {
 }
 
 $seps_background = in_array( $args['background'] ?? '', array( 'white', 'lilac', 'navy' ), true ) ? $args['background'] : 'white';
-$seps_size       = in_array( $args['image_size'] ?? '', array( 'narrow', 'wide', 'large', 'circle' ), true ) ? $args['image_size'] : 'narrow';
+$seps_sizes      = array(
+	'narrow'       => '(min-width: 1024px) 384px, 100vw',
+	'fill'         => '(min-width: 1024px) 592px, 100vw',
+	'wide'         => '(min-width: 1024px) 593px, 100vw',
+	'large'        => '(min-width: 1024px) 50vw, 100vw',
+	'circle'       => '(min-width: 1024px) 338px, 280px',
+	'circle_small' => '(min-width: 1024px) 278px, 240px',
+	'circle_large' => '(min-width: 1024px) 506px, 320px',
+	'document'     => '(min-width: 1024px) 379px, 80vw',
+);
+$seps_size       = isset( $seps_sizes[ $args['image_size'] ?? '' ] ) ? $args['image_size'] : 'narrow';
+$seps_decor_key  = (string) ( $args['decor'] ?? 'none' );
 $seps_decor      = array(
-	'flower' => 'flower-brand',
-	'halves' => 'halves-lilac',
-)[ $args['decor'] ?? 'none' ] ?? '';
-$seps_photo_dec  = 'flower_photo' === ( $args['decor'] ?? 'none' );
+	'flower'       => 'flower-brand',
+	'halves'       => 'halves-lilac',
+	'halves_brand' => 'halves-brand',
+)[ $seps_decor_key ] ?? '';
+$seps_photo_dec  = array(
+	'flower_photo' => 'flower-yellow',
+	'sun_photo'    => 'sun-yellow',
+)[ $seps_decor_key ] ?? '';
 $seps_id         = wp_unique_id( 'seps-text-image-' );
 $seps_image      = seps_image(
 	$args['image'] ?? 0,
 	'large',
 	array(
 		'class' => 'text-image__image',
-		'sizes' => array(
-			'narrow' => '(min-width: 1024px) 384px, 100vw',
-			'wide'   => '(min-width: 1024px) 593px, 100vw',
-			'large'  => '(min-width: 1024px) 50vw, 100vw',
-			'circle' => '(min-width: 1024px) 338px, 280px',
-		)[ $seps_size ],
+		'sizes' => $seps_sizes[ $seps_size ],
 	)
 );
 
@@ -53,7 +67,13 @@ if ( ! empty( $args['corner'] ) ) {
 	$seps_classes[] = 'text-image--corner';
 }
 if ( $seps_image ) {
-	$seps_classes[] = 'text-image--' . $seps_size;
+	$seps_classes[] = 'text-image--' . str_replace( '_', '-', $seps_size );
+
+	if ( in_array( $seps_size, array( 'narrow', 'fill' ), true ) ) {
+		$seps_classes[] = 'text-image--fills';
+	} elseif ( str_starts_with( $seps_size, 'circle' ) ) {
+		$seps_classes[] = 'text-image--round';
+	}
 
 	if ( 'left' === ( $args['image_position'] ?? 'right' ) ) {
 		$seps_classes[] = 'text-image--image-left';
@@ -64,6 +84,11 @@ if ( $seps_image ) {
 	<?php if ( $seps_decor ) : ?>
 		<?php echo seps_decor( $seps_decor, 'text-image__decor' ); ?>
 	<?php endif; ?>
+
+	<?php
+	// Document preview: the full-screen icon opens the first button's link.
+	$seps_doc_link = 'document' === $seps_size ? seps_link_data( $args['buttons'][0]['link'] ?? null ) : null;
+	?>
 
 	<div class="container text-image__inner">
 		<div class="text-image__content">
@@ -88,9 +113,24 @@ if ( $seps_image ) {
 
 		<?php if ( $seps_image ) : ?>
 			<div class="text-image__media">
-				<?php echo $seps_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?>
+				<?php if ( 'document' === $seps_size ) : ?>
+					<div class="text-image__page"><?php echo $seps_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?></div>
+					<?php if ( $seps_doc_link ) : ?>
+						<a class="text-image__zoom" <?php echo seps_link_attributes( $seps_doc_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped attributes. ?>>
+							<?php echo seps_icon( 'fullscreen', 45 ); ?>
+							<span class="screen-reader-text">
+								<?php
+								/* translators: %s: Section heading, e.g. "Parent Handbook". */
+								echo esc_html( sprintf( __( 'Open %s', 'seps' ), $seps_heading ? $seps_heading : $seps_doc_link['title'] ) );
+								?>
+							</span>
+						</a>
+					<?php endif; ?>
+				<?php else : ?>
+					<?php echo $seps_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?>
+				<?php endif; ?>
 				<?php if ( $seps_photo_dec ) : ?>
-					<?php echo seps_decor( 'flower-yellow', 'text-image__photo-decor' ); ?>
+					<?php echo seps_decor( $seps_photo_dec, 'text-image__photo-decor text-image__photo-decor--' . $seps_photo_dec ); ?>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>

@@ -1,6 +1,7 @@
 <?php
 /**
- * Section: Facilities ("Spaces That Inspire Learning").
+ * Section: Facilities ("Spaces That Inspire Learning"). Used by the front
+ * page and, as a page section, by Resources.
  *
  * @package SEPS
  *
@@ -22,14 +23,15 @@ if ( ! $seps_items ) {
 
 $seps_heading = trim( (string) ( $args['heading'] ?? '' ) );
 $seps_intro   = trim( (string) ( $args['intro'] ?? '' ) );
+$seps_id      = wp_unique_id( 'seps-facilities-' );
 ?>
-<section class="facilities"<?php echo $seps_heading ? ' aria-labelledby="facilities-title"' : ''; ?>>
+<section class="facilities"<?php echo $seps_heading ? ' aria-labelledby="' . esc_attr( $seps_id ) . '"' : ''; ?>>
 	<?php echo seps_decor( 'sun-lilac', 'facilities__decor' ); ?>
 
 	<div class="container">
 		<header class="facilities__header">
 			<?php if ( $seps_heading ) : ?>
-				<h2 id="facilities-title" class="section-title"><?php echo esc_html( $seps_heading ); ?></h2>
+				<h2 id="<?php echo esc_attr( $seps_id ); ?>" class="section-title"><?php echo esc_html( $seps_heading ); ?></h2>
 			<?php endif; ?>
 			<?php if ( $seps_intro ) : ?>
 				<p class="facilities__intro"><?php echo esc_html( $seps_intro ); ?></p>

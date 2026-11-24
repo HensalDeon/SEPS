@@ -29,4 +29,4 @@ wider than the 1920px design.
 - **CSS:** BEM, design tokens as custom properties, mobile-first `mq()` mixin. The nav breakpoint is 1440px; keep `$breakpoints.nav` and `navigation.js` in sync.
 - **Build and lint:** after SCSS/JS changes, run `npm run build` and `npm run lint` in `wp-content/themes/seps`.
 - **Local site:** sync with `bin/sync-local.sh seps`. Never symlink into Local: WP Engine push doesn't follow symlinks.
-- **Pushing from Local:** always untick the red "Will be deleted" rows (WP Engine's `advanced-cache.php`, favicons).
+- **Pushing from Local:** always untick the red "Will be deleted" rows (WP Engine's `advanced-cache.php`, favicons). Keep Local and WP Engine on the same PHP and plugin versions, and push plugin folders with "all files" (a partial push of CF7 crashed staging).
