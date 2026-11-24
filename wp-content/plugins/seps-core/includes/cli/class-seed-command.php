@@ -186,10 +186,15 @@ final class Seed_Command {
 			'terms'          => 'Terms & Conditions',
 		);
 
+		$this->adopt_privacy_page();
+
 		$order = 0;
 		foreach ( $pages as $key => $title ) {
 			$this->page( $key, $title, ++$order );
 		}
+
+		// WordPress' privacy tools (Settings → Privacy) use the seeded page.
+		update_option( 'wp_page_for_privacy_policy', $this->pages['privacy-policy'] );
 
 		// Retire pages from earlier seeds that are no longer in the sitemap.
 		$seeded = get_posts(
@@ -216,6 +221,40 @@ final class Seed_Command {
 			if ( $default && ! get_post_meta( $default->ID, self::SEED_META, true ) ) {
 				wp_trash_post( $default->ID );
 			}
+		}
+	}
+
+	/**
+	 * Use one Privacy Policy page.
+	 *
+	 * WordPress creates a draft "Privacy Policy" page on install that holds the
+	 * `privacy-policy` slug, so a second seeded page would end up at
+	 * /privacy-policy-2/. Adopt WordPress' page instead; on sites seeded before
+	 * this fix (both pages exist), trash WordPress' untouched draft so the
+	 * seeded page gets the clean slug (trashed posts release their slug).
+	 */
+	private function adopt_privacy_page(): void {
+		$core   = (int) get_option( 'wp_page_for_privacy_policy' );
+		$seeded = $this->find( 'page', 'privacy-policy' );
+
+		if ( ! $core || $core === $seeded || ! get_post( $core ) || 'trash' === get_post_status( $core ) ) {
+			return;
+		}
+
+		if ( ! $seeded ) {
+			update_post_meta( $core, self::SEED_META, 'privacy-policy' );
+			return;
+		}
+
+		if ( 'draft' === get_post_status( $core ) ) {
+			wp_trash_post( $core );
+			WP_CLI::log( '  Moved WordPress’ default Privacy Policy draft to Trash (it held the privacy-policy address).' );
+		} else {
+			// WordPress' page is published (possibly edited): keep it, retire the duplicate.
+			wp_trash_post( $seeded );
+			delete_post_meta( $seeded, self::SEED_META );
+			update_post_meta( $core, self::SEED_META, 'privacy-policy' );
+			WP_CLI::log( '  Using the existing published Privacy Policy page; moved the duplicate to Trash. Re-run the menus step: wp seps seed --only=menus' );
 		}
 	}
 
