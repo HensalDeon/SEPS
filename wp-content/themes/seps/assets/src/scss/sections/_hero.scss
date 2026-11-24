@@ -190,3 +190,17 @@
 		top: 13.57%;
 	}
 }
+
+// Text-only title band (no photo), e.g. Privacy Policy and Terms.
+.hero--text-only {
+	grid-template-columns: minmax(0, 1fr);
+	min-height: 0;
+
+	.hero__panel {
+		padding-block: clamp(3.5rem, 2.5rem + 4vw, 7.5rem); // → 120
+	}
+
+	@include mq(lg) {
+		min-height: 0;
+	}
+}

@@ -100,3 +100,12 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 48 | **Division / Department options** on the application form? | Kindergarten, Primary, Middle School, Secondary, Senior Secondary, Special Education, Administration, Accounts & Finance, Admissions & Front Office, IT, Transport, Facilities & Maintenance, Other | _Pending_ |
 | 49 | **CV storage:** CVs and cover letters are attached to the email only (Flamingo keeps the form answers, not the files). Is that acceptable, or should files be kept on the site? | Email only | _Pending_ |
 | 50 | **Radio defaults:** The design shows the first option selected (Gender, School Staff, Primary Contact, Job Type, Yes/No questions). We left them unselected so parents and applicants must choose. OK? | None pre-selected | _Pending_ |
+
+## Privacy Policy and Terms & Conditions
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 51 | **Legal review:** Both pages are a starting draft written for this website (UAE PDPL, ADEK, the site's forms). Please have the school's legal adviser or data protection lead review them before launch. | Draft, last updated 24 November 2026 | _Pending_ |
+| 52 | **Retention periods:** How long does the school keep enquiries, unsuccessful registrations and job applications (including CVs)? The policy currently says "only as long as needed". | General wording | _Pending_ |
+| 53 | **Privacy contact:** Is there a named data protection contact or a dedicated email (e.g. privacy@…) for privacy requests? | school@seps-auh.com | _Pending_ |
+| 54 | **Analytics:** Will the school add Google Analytics or similar? If so, the cookies section (and a consent banner) must be updated. | No analytics | _Pending_ |

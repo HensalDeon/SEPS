@@ -145,7 +145,12 @@ function page_section_layouts(): array {
 				field( 'ps_hero', 'note', 'text', __( 'Small note above the button', 'seps' ), array( 'placeholder' => 'Admissions 2026–2027' ) ),
 				link_field( 'ps_hero', 'button', __( 'Button', 'seps' ) ),
 				link_field( 'ps_hero', 'button_2', __( 'Second button (white, optional)', 'seps' ) ),
-				image_field( 'ps_hero', 'image', __( 'Image', 'seps' ), array( 'required' => 1 ) ),
+				image_field(
+					'ps_hero',
+					'image',
+					__( 'Image', 'seps' ),
+					array( 'instructions' => __( 'Leave empty for a text-only title band (e.g. Privacy Policy).', 'seps' ) )
+				),
 				field(
 					'ps_hero',
 					'image_focus',

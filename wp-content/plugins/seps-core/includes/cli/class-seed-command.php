@@ -67,6 +67,7 @@ final class Seed_Command {
 		'resources'    => 'Resources page',
 		'registration' => 'Register Now page (registration form)',
 		'careers-application' => 'Careers Application page (application form)',
+		'legal'        => 'Privacy Policy and Terms & Conditions pages',
 	);
 
 	/**
@@ -82,7 +83,7 @@ final class Seed_Command {
 	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
 	 * about, academics, admissions, student-life,
 	 * news-events (run after posts), contact, careers, resources, registration,
-	 * careers-application.
+	 * careers-application, legal.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -142,6 +143,7 @@ final class Seed_Command {
 			'resources'    => fn() => $this->seed_resources(),
 			'registration' => fn() => $this->seed_registration(),
 			'careers-application' => fn() => $this->seed_careers_application(),
+			'legal'        => fn() => $this->seed_legal(),
 		);
 
 		foreach ( self::STEPS as $key => $label ) {
@@ -1703,6 +1705,176 @@ final class Seed_Command {
 		);
 
 		update_field( 'field_seps_page_sections', $sections, $this->pages['careers-application'] );
+	}
+
+	/**
+	 * Privacy Policy and Terms & Conditions: a text-only title band and the
+	 * policy text.
+	 *
+	 * A starting draft written for this website (UAE / Abu Dhabi, the
+	 * site's forms and services). The school must have it reviewed before
+	 * launch; see OPEN-QUESTIONS.md.
+	 */
+	private function seed_legal(): void {
+		$updated = 'Last updated: 24 November 2026';
+		$policy  = esc_url( (string) get_permalink( $this->pages['privacy-policy'] ) );
+		$contact = '<p><strong>Sunrise English Private School</strong><br>P.O. Box 71356, Shabiya, ME-09, Near Safeer Mall, Mussafah, Abu Dhabi, United Arab Emirates<br>Email: <a href="mailto:school@seps-auh.com">school@seps-auh.com</a><br>Phone: <a href="tel:+97125529989">+971 2 552 9989</a></p>';
+		$hero    = static fn( string $title, string $text ) => array(
+			'acf_fc_layout'  => 'page_hero',
+			'title'          => $title,
+			'text'           => $text,
+			'note'           => $updated,
+			'button'         => null,
+			'button_2'       => null,
+			'image'          => 0,
+			'image_focus'    => 'upper',
+			'layout'         => 'standard',
+			'decor'          => 'none',
+			'decor_position' => 'auto',
+		);
+		$text    = static fn( string $html ) => array(
+			'acf_fc_layout' => 'text',
+			'heading'       => '',
+			'content'       => $html,
+		);
+
+		$privacy = <<<HTML
+<p>Sunrise English Private School (“SEPS”, “the school”, “we”, “us”) respects your privacy. This policy explains what personal information we collect through this website, how we use and protect it, and the rights you have. It applies to information collected through this website, including the contact, registration and job application forms.</p>
+<p>We handle personal information in line with the UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021) and the requirements of the Abu Dhabi Department of Education and Knowledge (ADEK).</p>
+
+<h2>1. Who we are</h2>
+<p>Sunrise English Private School is a private CBSE school in Abu Dhabi, United Arab Emirates. The school is responsible for the personal information collected through this website. You can contact us using the details in section 12.</p>
+
+<h2>2. Information we collect</h2>
+<h3>Information you give us</h3>
+<ul>
+<li><strong>Enquiry form (Contact page):</strong> your name, phone number, email address, the subject of your enquiry, your preferred contact time and your message.</li>
+<li><strong>Registration form (Register Now):</strong> details about the student, including name, gender, date and place of birth, nationality, religion, mother tongue, blood group, area of residence, eSIS number, previous school, passport, visa and Emirates ID details; details of any siblings at SEPS; and details of the parents or guardians, including names, nationality, occupation, qualification, organisation, Emirates ID details, email addresses and mobile numbers.</li>
+<li><strong>Job application form (Careers):</strong> the position you are applying for, your name, email address, mobile number and date of birth, details of your most recent role (including remuneration), your answers to our additional questions (including vaccination status and ADEK approval), and your CV and cover letter.</li>
+<li><strong>Emails and calls:</strong> anything you choose to tell us when you contact us directly.</li>
+</ul>
+<p>Some of this information is sensitive, such as a student’s religion and blood group, an applicant’s vaccination status, and passport and Emirates ID details. We ask for it only because it is needed for admission, for the student’s welfare, for recruitment, or because the school is required to collect it, and we restrict who can see it.</p>
+<h3>Information collected automatically</h3>
+<p>Like most websites, our web server records technical information when you visit, such as your IP address, browser type and the pages you request. We use it to keep the website secure and working properly.</p>
+
+<h2>3. How we use your information</h2>
+<ul>
+<li>To answer your enquiries and contact you at your preferred time.</li>
+<li>To process registrations and admissions, including assessing applications, communicating with parents and meeting ADEK and Ministry of Education requirements.</li>
+<li>To consider job applications and contact applicants.</li>
+<li>To keep the website and our systems secure, prevent spam and misuse, and fix problems.</li>
+<li>To meet our legal and regulatory obligations.</li>
+</ul>
+<p>We use personal information because it is necessary to respond to your request or to take steps you have asked us to take (such as a registration or application), because the law requires it, or with your consent. Where we rely on your consent, you can withdraw it at any time.</p>
+<p>We do not sell your personal information, and we do not use it for advertising.</p>
+
+<h2>4. Who we share it with</h2>
+<p>We share personal information only when we need to:</p>
+<ul>
+<li><strong>School staff</strong> who need it to handle your enquiry, registration or application.</li>
+<li><strong>Government and education authorities</strong>, such as ADEK and the Ministry of Education, where the law or our licence requires it.</li>
+<li><strong>Service providers</strong> who help us run the website and our communications, such as our website hosting provider and email services. They may only use the information to provide their services to us.</li>
+<li><strong>Others where the law requires it</strong>, for example to comply with a court order or to protect the safety of students and staff.</li>
+</ul>
+
+<h2>5. Cookies and third-party content</h2>
+<p>We do not use advertising or analytics cookies. Our website uses only the cookies it needs to work and to keep it secure.</p>
+<p>The Contact page shows an embedded Google Map. When it loads, Google may set its own cookies and collect information about your visit, as described in <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google’s Privacy Policy</a>. Links to other websites, such as our parent and student portals, are covered by those websites’ own privacy policies.</p>
+
+<h2>6. Where your information is stored</h2>
+<p>Our website and email services are provided by third parties, and some of their servers may be located outside the United Arab Emirates. Where personal information is transferred outside the UAE, we take steps to make sure it is protected to the standard required by UAE law.</p>
+
+<h2>7. How long we keep it</h2>
+<p>We keep personal information only for as long as we need it for the purpose it was collected for, or as long as the law requires. For example, records of enrolled students form part of the student record that the school must keep, while enquiries, and registrations and job applications that do not go ahead, are deleted once they are no longer needed.</p>
+
+<h2>8. How we protect it</h2>
+<p>Our website uses an encrypted (HTTPS) connection, access to submitted information is limited to authorised staff, and we use technical and organisational measures to protect personal information against loss, misuse and unauthorised access. No method of transmission over the internet is completely secure, but we work to protect the information you share with us.</p>
+
+<h2>9. Children’s information</h2>
+<p>Information about students is provided by their parents or legal guardians. Our forms are intended to be completed by adults, and we do not knowingly collect personal information directly from children through this website.</p>
+
+<h2>10. Your rights</h2>
+<p>Subject to UAE law, you have the right to:</p>
+<ul>
+<li>ask what personal information we hold about you and receive a copy of it;</li>
+<li>ask us to correct information that is inaccurate or incomplete;</li>
+<li>ask us to delete your information, or to restrict how we use it;</li>
+<li>object to our use of your information;</li>
+<li>withdraw your consent where we rely on it.</li>
+</ul>
+<p>To make a request, contact us using the details below. We may need to confirm your identity before we respond. Some requests may be limited where we are required by law to keep information, for example as part of a student’s school record. If you are not satisfied with our response, you may complain to the UAE Data Office.</p>
+
+<h2>11. Changes to this policy</h2>
+<p>We may update this policy from time to time. The date at the top of this page shows when it was last updated.</p>
+
+<h2>12. Contact us</h2>
+<p>For any question about this policy or your personal information, please contact:</p>
+{$contact}
+HTML;
+
+		$terms = <<<HTML
+<p>These terms apply to your use of the Sunrise English Private School (“SEPS”, “the school”, “we”, “us”) website. By using the website, you agree to them. If you do not agree, please do not use the website.</p>
+
+<h2>1. About the website</h2>
+<p>This website provides information about the school, its curriculum, admissions, school life and news, and lets you contact us, register your child and apply for jobs online. The school may change, suspend or withdraw any part of the website at any time.</p>
+
+<h2>2. Accuracy of information</h2>
+<p>We work to keep the information on this website accurate and up to date, but it is provided for general information only. Details such as fees, dates, timings, transport, policies and admission requirements may change and are confirmed only by the school directly. If anything is unclear, please contact us before relying on it.</p>
+
+<h2>3. Registrations, enquiries and applications</h2>
+<ul>
+<li>When you submit a form, you confirm that the information you provide is accurate and complete and that you are entitled to provide it, including information about your child or other family members.</li>
+<li>Submitting a registration does not guarantee a place at the school. Admission is subject to the school’s admission process, seat availability and ADEK requirements.</li>
+<li>Submitting a job application does not guarantee an interview or employment.</li>
+<li>Our <a href="{$policy}">Privacy Policy</a> explains how we handle the information you submit.</li>
+</ul>
+
+<h2>4. Intellectual property</h2>
+<p>The content of this website, including text, photographs, graphics, the school name, logo and crest, belongs to the school or is used with permission. You may view and print pages for your personal, non-commercial use. You may not copy, reproduce, modify or publish any content for any other purpose without the school’s written permission.</p>
+
+<h2>5. Acceptable use</h2>
+<p>You must not use the website in any way that is unlawful or that could damage it or interfere with others’ use of it. In particular, you must not:</p>
+<ul>
+<li>submit false, misleading or someone else’s information;</li>
+<li>send spam or upload files that contain viruses or other harmful code;</li>
+<li>try to gain unauthorised access to the website, its servers or the information it holds;</li>
+<li>use automated tools to collect information from the website.</li>
+</ul>
+
+<h2>6. Links to other websites</h2>
+<p>The website links to other websites and services, such as our parent and student portals, fee payment, Google Maps and social media. We are not responsible for the content, availability or privacy practices of those websites, which have their own terms.</p>
+
+<h2>7. Availability and liability</h2>
+<p>We aim to keep the website available and secure, but we do not guarantee that it will always be available or free from errors or viruses. To the extent permitted by law, the school is not liable for any loss or damage arising from your use of the website or your reliance on its content. Nothing in these terms limits any liability that cannot be limited under UAE law.</p>
+
+<h2>8. Governing law</h2>
+<p>These terms are governed by the laws of the United Arab Emirates as applied in the Emirate of Abu Dhabi. Any dispute relating to them is subject to the jurisdiction of the courts of Abu Dhabi.</p>
+
+<h2>9. Changes to these terms</h2>
+<p>We may update these terms from time to time. The date at the top of this page shows when they were last updated. Continuing to use the website after a change means you accept the updated terms.</p>
+
+<h2>10. Contact us</h2>
+<p>For any question about these terms, please contact:</p>
+{$contact}
+HTML;
+
+		update_field(
+			'field_seps_page_sections',
+			array(
+				$hero( 'Privacy Policy', 'How Sunrise English Private School collects, uses and protects personal information shared through this website.' ),
+				$text( $privacy ),
+			),
+			$this->pages['privacy-policy']
+		);
+
+		update_field(
+			'field_seps_page_sections',
+			array(
+				$hero( 'Terms & Conditions', 'The terms that apply when you use the Sunrise English Private School website.' ),
+				$text( $terms ),
+			),
+			$this->pages['terms']
+		);
 	}
 
 	/**

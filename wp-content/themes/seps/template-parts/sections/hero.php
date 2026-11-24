@@ -13,7 +13,8 @@
  *     @type string $note    Small note above the button (page variant).
  *     @type array  $button  SCF link.
  *     @type array  $button_2 Second (white) button, page variant.
- *     @type int    $image   Attachment ID.
+ *     @type int    $image   Attachment ID (optional on inner pages: without it the
+ *                            hero is a text-only title band).
  *     @type string $variant 'home' (default) or 'page'.
  *     @type string $decor   Page variant only: 'none' (default), 'sun' or 'flower'.
  *     @type string $image_focus Part of the photo kept in view: 'top', 'upper' (default) or 'center'.
@@ -50,8 +51,26 @@ $seps_image   = seps_image(
 		'decoding'      => 'async',
 	)
 );
+
+$seps_classes = array( 'hero' );
+if ( $seps_is_page ) {
+	$seps_classes[] = 'hero--page';
+
+	if ( 'wide' === ( $args['layout'] ?? '' ) ) {
+		$seps_classes[] = 'hero--wide';
+	}
+	if ( 'top' === ( $args['decor_position'] ?? '' ) ) {
+		$seps_classes[] = 'hero--decor-top';
+	}
+}
+if ( $seps_focus ) {
+	$seps_classes[] = 'hero--focus-' . $seps_focus;
+}
+if ( ! $seps_image ) {
+	$seps_classes[] = 'hero--text-only'; // Title band, e.g. Privacy Policy.
+}
 ?>
-<section class="hero<?php echo $seps_is_page ? ' hero--page' : ''; ?><?php echo $seps_is_page && 'wide' === ( $args['layout'] ?? '' ) ? ' hero--wide' : ''; ?><?php echo $seps_focus ? ' hero--focus-' . esc_attr( $seps_focus ) : ''; ?><?php echo $seps_is_page && 'top' === ( $args['decor_position'] ?? '' ) ? ' hero--decor-top' : ''; ?>" aria-labelledby="<?php echo esc_attr( $seps_id ); ?>">
+<section class="<?php echo esc_attr( implode( ' ', $seps_classes ) ); ?>" aria-labelledby="<?php echo esc_attr( $seps_id ); ?>">
 	<div class="hero__panel">
 		<div class="hero__content">
 			<h1 id="<?php echo esc_attr( $seps_id ); ?>" class="hero__title"><?php echo seps_multiline( $seps_title ); ?></h1>
