@@ -1,7 +1,9 @@
 @use "../abstracts/mixins" as *;
 
-// Enquiry form ("We'd Love to Hear From You", Contact): form on the left, a
-// tall photo on the right that fills the form's height.
+// Forms. Compact: "We'd Love to Hear From You" (Contact) — form on the left,
+// a tall photo on the right that fills the form's height. Full width:
+// "Registration Form" and the careers "Application Form" — numbered steps
+// of three-column field rows.
 //
 // The form is Contact Form 7. Its template (seeded) uses the classes below;
 // CF7 adds its own wrappers, validation tips and response box, styled here.
@@ -32,6 +34,14 @@
 
 	&__intro {
 		font-weight: var(--fw-light);
+
+		// e.g. "Already have an account? Sign In".
+		a {
+			color: var(--color-brand);
+			font-weight: var(--fw-semibold);
+			text-decoration: underline;
+			text-underline-offset: 0.15em;
+		}
 	}
 
 	&__form {
@@ -155,6 +165,315 @@
 		cursor: pointer;
 	}
 
+	// ---- Full-width forms in numbered steps --------------------------------
+
+	&--full &__header {
+		gap: 0.75rem;
+		margin-bottom: clamp(2rem, 2.92vw, 3.5rem); // → 56
+	}
+
+	&__form--full {
+		display: block;
+	}
+
+	&__step + &__step {
+		margin-top: clamp(2rem, 2.92vw, 3.5rem); // → 56
+		padding-top: clamp(2rem, 2.92vw, 3.5rem);
+		border-top: 1px solid rgb(40 48 146 / 25%);
+	}
+
+	&__step-title {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem 1rem;
+		margin-bottom: 1.5rem;
+		color: var(--color-brand);
+		font-size: clamp(1.375rem, 1.24rem + 0.58vw, 1.75rem); // → 28
+		font-weight: var(--fw-semibold);
+		line-height: var(--lh-heading);
+	}
+
+	&__step-number {
+		display: inline-flex;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem; // 44
+		height: 2.75rem;
+		border-radius: 50%;
+		background: var(--color-brand);
+		color: var(--color-accent);
+		font-size: var(--fs-base);
+	}
+
+	&__step-note {
+		color: var(--color-text);
+		font-size: var(--fs-base);
+		font-weight: var(--fw-light);
+	}
+
+	&__grid {
+		display: grid;
+		gap: 1.5rem;
+
+		@include mq(md) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		@include mq(lg) {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		// Two equal columns on wide screens too (e.g. the document uploads).
+		&--2 {
+			@include mq(lg) {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+	}
+
+	&__field--wide {
+		grid-column: 1 / -1;
+
+		@include mq(lg) {
+			grid-column: span 2;
+		}
+	}
+
+	// Starts a new row (e.g. after the two-column Job Type).
+	&__field--first {
+		@include mq(lg) {
+			grid-column-start: 1;
+		}
+	}
+
+	// e.g. "Father's Details" inside the parent step.
+	&__subhead {
+		grid-column: 1 / -1;
+		margin-top: 0.5rem;
+		color: var(--color-navy);
+		font-size: var(--fs-lg);
+		font-weight: var(--fw-semibold);
+	}
+
+	&__req {
+		color: var(--color-required);
+	}
+
+	// "Academic roles" marker on fields that apply to teaching positions.
+	&__tag {
+		display: inline-block;
+		margin-left: 0.5rem;
+		padding: 0.1875rem 0.625rem;
+		border-radius: var(--radius-pill);
+		background: var(--color-accent);
+		color: var(--color-navy);
+		font-size: 0.75rem;
+		font-weight: var(--fw-medium);
+		line-height: 1.25;
+		vertical-align: 0.125em;
+	}
+
+	// Radio groups: a fieldset whose legend is the field label.
+	&__field--choice {
+		min-inline-size: 0;
+		margin: 0;
+		padding: 0;
+		border: 0;
+
+		> .enquiry__label {
+			margin-bottom: 0.5rem;
+			padding: 0;
+		}
+	}
+
+	.wpcf7-radio {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 2rem;
+		min-height: 3.75rem; // Lines up with the controls beside it.
+	}
+
+	.wpcf7-list-item {
+		margin: 0;
+	}
+
+	.wpcf7-list-item label {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.625rem;
+		color: var(--color-brand);
+		cursor: pointer;
+	}
+
+	input[type="radio"] {
+		display: grid;
+		flex-shrink: 0;
+		place-content: center;
+		width: 1.375rem; // 22
+		height: 1.375rem;
+		margin: 0;
+		border: 2px solid var(--color-brand);
+		border-radius: 50%;
+		background: var(--color-white);
+		cursor: pointer;
+		appearance: none;
+
+		&::before {
+			content: "";
+			width: 0.625rem;
+			height: 0.625rem;
+			border-radius: 50%;
+			background: var(--color-brand);
+			transform: scale(0);
+			transition: transform var(--duration) var(--ease-out);
+		}
+
+		&:checked::before {
+			transform: scale(1);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--color-brand);
+			outline-offset: 2px;
+		}
+	}
+
+	// Choice cards, e.g. Job Type: Academic / Non-Academic.
+	.wpcf7-radio.enquiry__cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); // Stack on narrow phones.
+		gap: 1rem 1.5rem;
+
+		.wpcf7-list-item label {
+			width: 100%;
+			min-height: 3.75rem;
+			padding: 0.75rem 1.5rem;
+			border: 1.5px solid transparent;
+			border-radius: var(--radius);
+			background: var(--color-white);
+			font-weight: var(--fw-medium);
+			gap: 0.75rem;
+			transition: border-color var(--duration) var(--ease-out);
+
+			&:hover,
+			&:has(input:checked) {
+				border-color: var(--color-brand);
+			}
+		}
+	}
+
+	// Dates: the design's calendar icon on the native picker button.
+	input[type="date"].enquiry__control {
+		&::-webkit-calendar-picker-indicator {
+			width: 1.25rem;
+			height: 1.25rem;
+			background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23283092' stroke-width='1.67' stroke-linecap='round'%3E%3Crect x='2.5' y='4.17' width='15' height='13.33' rx='1.67'/%3E%3Cpath d='M2.5 8.33h15M6.67 2.5v3.33M13.33 2.5v3.33'/%3E%3C/svg%3E") center / contain no-repeat;
+			cursor: pointer;
+		}
+	}
+
+	&__textarea--short {
+		min-height: 8.75rem; // 140
+	}
+
+	// File upload: the (transparent) file input covers the box, so clicking
+	// and dropping a file both work natively.
+	&__drop {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 2rem 1.5rem;
+		border: 1.5px dashed var(--color-brand);
+		border-radius: var(--radius);
+		background: var(--color-white);
+		color: var(--color-brand);
+		text-align: center;
+		cursor: pointer;
+		transition: background-color var(--duration) var(--ease-out);
+
+		&:hover,
+		&.is-dragover {
+			background: rgb(212 214 233 / 40%);
+		}
+
+		&:focus-within {
+			outline: 2px solid var(--color-brand);
+			outline-offset: 2px;
+		}
+
+		.wpcf7-form-control-wrap {
+			position: static;
+		}
+
+		input[type="file"] {
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			cursor: pointer;
+		}
+
+		u {
+			font-weight: var(--fw-semibold);
+		}
+	}
+
+	&__drop-icon {
+		width: 2rem;
+		height: 2rem;
+		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23283092' stroke-width='2.67' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 20V5.33M22.67 12 16 5.33 9.33 12M5.33 20v4A2.67 2.67 0 0 0 8 26.67h16A2.67 2.67 0 0 0 26.67 24v-4'/%3E%3C/svg%3E") center / contain no-repeat;
+	}
+
+	&__drop-hint {
+		color: var(--color-text);
+		font-size: var(--fs-sm);
+		font-weight: var(--fw-light);
+
+		&.is-file {
+			color: var(--color-brand);
+			font-weight: var(--fw-semibold);
+			overflow-wrap: anywhere;
+		}
+	}
+
+	// Repeatable groups (siblings): shown groups join the step's grid.
+	&__repeat {
+		display: contents;
+	}
+
+	&__add {
+		grid-column: 1 / -1;
+		justify-self: start;
+		padding: 0.75rem 1.5rem;
+		border: 1.5px solid var(--color-brand);
+		border-radius: var(--radius-pill);
+		background: transparent;
+		color: var(--color-brand);
+		font: inherit;
+		font-weight: var(--fw-semibold);
+		cursor: pointer;
+		transition:
+			background-color var(--duration) var(--ease-out),
+			color var(--duration) var(--ease-out);
+
+		&:hover {
+			background: var(--color-brand);
+			color: var(--color-white);
+		}
+	}
+
+	&__consent {
+		margin-top: clamp(2rem, 2.92vw, 3.5rem);
+		margin-bottom: 1rem;
+		font-weight: var(--fw-light);
+	}
+
 	&__notice {
 		padding: 1rem 1.5rem;
 		border-radius: var(--radius);
@@ -186,6 +505,10 @@
 	.wpcf7 form.sent[data-status] .wpcf7-response-output {
 		border-left-color: var(--color-success);
 		color: var(--color-success);
+	}
+
+	.wpcf7 form.enquiry__form--full[data-status] .wpcf7-response-output {
+		margin-top: 1rem;
 	}
 
 	// Photo: fills the form's height on wide screens (out of flow).

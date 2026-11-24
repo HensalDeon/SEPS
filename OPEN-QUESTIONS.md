@@ -88,3 +88,15 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 41 | **Policies:** Which policies should be listed, and can we get each one as a PDF? The Figma shows four with carousel dots, which implies more. | Attendance, Curriculum, Assessment, Student Protection (not linked yet) | _Pending_ |
 | 42 | **School rules:** The Figma only spells out *General Rules*. Can we get the content for *Attendance & Leave*, *Special Care / Special Needs* and *Disciplinary Behaviour & Classroom Conduct*? | Short summaries from existing site content, pointing to the Parent Handbook | _Pending_ |
 | 43 | **Parent Handbook preview:** The Figma shows the *School Diary* cover. Is that the handbook, or do you have a handbook cover to use? | School Diary cover from the Figma | _Pending_ |
+
+## Registration and Careers Application pages
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 44 | **"Already have an account? Sign In":** Where should *Sign In* go (the parent portal)? | `#` | _Pending_ |
+| 45 | **Registration dropdowns:** Please confirm the options for Academic Year, Grade (KG 1 – Grade 12), Religion, Blood Group, Area of Residence (Abu Dhabi areas) and the sibling *School* list. | Sensible defaults (editable in Contact → Contact Forms) | _Pending_ |
+| 46 | **Siblings:** Is three the right maximum for "+ Add Another Sibling"? | Up to 3 | _Pending_ |
+| 47 | **Application email:** Which mailbox should receive job applications (an HR address)? | The *Email* in Site Settings | _Pending_ |
+| 48 | **Division / Department options** on the application form? | Kindergarten, Primary, Middle School, Secondary, Senior Secondary, Special Education, Administration, Accounts & Finance, Admissions & Front Office, IT, Transport, Facilities & Maintenance, Other | _Pending_ |
+| 49 | **CV storage:** CVs and cover letters are attached to the email only (Flamingo keeps the form answers, not the files). Is that acceptable, or should files be kept on the site? | Email only | _Pending_ |
+| 50 | **Radio defaults:** The design shows the first option selected (Gender, School Staff, Primary Contact, Job Type, Yes/No questions). We left them unselected so parents and applicants must choose. OK? | None pre-selected | _Pending_ |

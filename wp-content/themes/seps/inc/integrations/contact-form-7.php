@@ -42,3 +42,39 @@ function enqueue(): void {
 		wpcf7_enqueue_styles();
 	}
 }
+
+/**
+ * Conditionally required fields.
+ *
+ * A form-tag option `required-if:<field>:<value>` makes a field required
+ * when another field was submitted with that value, e.g. on the careers
+ * application: [text subject required-if:job-type:Academic].
+ *
+ * @param \WPCF7_Validation $result Validation result.
+ * @param \WPCF7_FormTag    $tag    Field being validated.
+ */
+function required_if( $result, $tag ) {
+	$rule = (string) $tag->get_option( 'required-if', '[-0-9a-zA-Z_]+:[-0-9a-zA-Z_]+', true );
+
+	if ( '' === $rule ) {
+		return $result;
+	}
+
+	[ $field, $value ] = explode( ':', $rule, 2 );
+
+	// phpcs:disable WordPress.Security.NonceVerification.Missing -- Contact Form 7 verifies the submission.
+	$trigger = isset( $_POST[ $field ] ) ? sanitize_text_field( wp_unslash( (string) $_POST[ $field ] ) ) : '';
+	$own     = isset( $_POST[ $tag->name ] ) ? trim( sanitize_textarea_field( wp_unslash( (string) $_POST[ $tag->name ] ) ) ) : '';
+	// phpcs:enable
+
+	if ( $value === $trigger && '' === $own ) {
+		$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
+	}
+
+	return $result;
+}
+
+foreach ( array( 'text', 'textarea' ) as $seps_cf7_type ) {
+	add_filter( "wpcf7_validate_{$seps_cf7_type}", __NAMESPACE__ . '\\required_if', 20, 2 );
+}
+unset( $seps_cf7_type );

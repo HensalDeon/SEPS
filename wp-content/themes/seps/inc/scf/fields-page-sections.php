@@ -1026,8 +1026,21 @@ function page_section_layouts(): array {
 					__( 'About this form', 'seps' ),
 					array( 'message' => __( 'The form itself (fields, email recipients, email text and messages) is edited in Contact → Contact Forms. Submissions are kept under Flamingo → Inbound Messages when the Flamingo plugin is active.', 'seps' ) )
 				),
+				field(
+					'ps_form',
+					'layout',
+					'button_group',
+					__( 'Layout', 'seps' ),
+					array(
+						'choices'       => array(
+							'compact' => __( 'Compact (with photo)', 'seps' ),
+							'full'    => __( 'Full width (long forms in steps)', 'seps' ),
+						),
+						'default_value' => 'compact',
+					)
+				),
 				field( 'ps_form', 'heading', 'text', __( 'Heading', 'seps' ) ),
-				field( 'ps_form', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
+				$rich( 'ps_form', 'intro', __( 'Intro', 'seps' ) ),
 				field(
 					'ps_form',
 					'form',
@@ -1041,7 +1054,22 @@ function page_section_layouts(): array {
 						'ui'            => 1,
 					)
 				),
-				image_field( 'ps_form', 'image', __( 'Photo (right)', 'seps' ) ),
+				image_field(
+					'ps_form',
+					'image',
+					__( 'Photo (right)', 'seps' ),
+					array(
+						'conditional_logic' => array(
+							array(
+								array(
+									'field'    => 'field_seps_ps_form_layout',
+									'operator' => '==',
+									'value'    => 'compact',
+								),
+							),
+						),
+					)
+				),
 			)
 		),
 
@@ -1073,6 +1101,7 @@ function page_section_layouts(): array {
 				field( 'ps_stack', 'heading', 'text', __( 'Heading', 'seps' ) ),
 				field( 'ps_stack', 'intro', 'textarea', __( 'Intro', 'seps' ), $text ),
 				image_field( 'ps_stack', 'image', __( 'Photo (left, fills the height of the cards)', 'seps' ) ),
+				link_field( 'ps_stack', 'button', __( 'Button under the cards (optional)', 'seps' ) ),
 				field(
 					'ps_stack',
 					'cards',

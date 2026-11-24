@@ -50,8 +50,18 @@
 		@include cover-image;
 	}
 
+	&__main {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2rem;
+		min-width: 0;
+	}
+
 	&__list {
 		@include bare-list;
+
+		width: 100%;
 
 		display: flex;
 		flex-direction: column;

@@ -12,6 +12,7 @@
  *     @type string $intro      Intro text.
  *     @type int    $image      Tall photo (left).
  *     @type array  $cards      Repeater: image, title, text, link.
+ *     @type array  $button     SCF link shown under the cards.
  * }
  */
 
@@ -54,32 +55,39 @@ $seps_image      = seps_image(
 				<div class="stacked__media"><?php echo $seps_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?></div>
 			<?php endif; ?>
 
-			<?php if ( $seps_cards ) : ?>
-				<ul class="stacked__list" role="list">
-					<?php foreach ( $seps_cards as $seps_card ) : ?>
-						<?php
-						$seps_thumb = seps_image(
-							$seps_card['image'] ?? 0,
-							'medium_large',
-							array(
-								'class' => 'stacked__thumb',
-								'sizes' => '(min-width: 768px) 204px, 100vw',
-							)
-						);
-						?>
-						<li class="stacked__card">
-							<?php echo $seps_thumb; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?>
-							<div class="stacked__content">
-								<h3 class="stacked__title"><?php echo esc_html( $seps_card['title'] ); ?></h3>
-								<?php if ( ! empty( $seps_card['text'] ) ) : ?>
-									<p class="stacked__text"><?php echo esc_html( $seps_card['text'] ); ?></p>
-								<?php endif; ?>
-								<?php echo seps_button( $seps_card['link'] ?? null, 'primary' ); ?>
-							</div>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			<?php endif; ?>
+			<?php $seps_button = seps_button( $args['button'] ?? null, 'primary' ); ?>
+			<div class="stacked__main">
+				<?php if ( $seps_cards ) : ?>
+					<ul class="stacked__list" role="list">
+						<?php foreach ( $seps_cards as $seps_card ) : ?>
+							<?php
+							$seps_thumb = seps_image(
+								$seps_card['image'] ?? 0,
+								'medium_large',
+								array(
+									'class' => 'stacked__thumb',
+									'sizes' => '(min-width: 768px) 204px, 100vw',
+								)
+							);
+							?>
+							<li class="stacked__card">
+								<?php echo $seps_thumb; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?>
+								<div class="stacked__content">
+									<h3 class="stacked__title"><?php echo esc_html( $seps_card['title'] ); ?></h3>
+									<?php if ( ! empty( $seps_card['text'] ) ) : ?>
+										<p class="stacked__text"><?php echo esc_html( $seps_card['text'] ); ?></p>
+									<?php endif; ?>
+									<?php echo seps_button( $seps_card['link'] ?? null, 'primary' ); ?>
+								</div>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+
+				<?php if ( $seps_button ) : ?>
+					<div class="stacked__actions"><?php echo $seps_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from seps_button(). ?></div>
+				<?php endif; ?>
+			</div>
 		</div>
 	</div>
 </section>

@@ -80,8 +80,8 @@ Everything on the home page is editable. Nothing is hard-coded in templates.
 | Staff (Principals, Leadership Team) | **Staff** (sidebar). Photo = Featured image, *Position* field, *Team*, and *Order* to sort. Shown by the Team section. |
 | Testimonials | **Testimonials** (sidebar). The home page shows the latest 6 unless specific ones are picked. |
 | FAQs | **FAQs** (sidebar). Ordered by *Order*; can be hand-picked per page. |
-| Contact page form | **Contact → Contact Forms → Contact page enquiry** (Contact Form 7). *Form* tab: fields and dropdown options (keep the theme's markup and classes). *Mail* tab: who receives enquiries (To, Cc, Bcc via *Additional headers*), the email subject and text; *Mail (2)* can send parents an automatic reply. *Messages* tab: the texts shown after sending. The form shown on the page is picked in the Enquiry form section. |
-| Form submissions | **Flamingo → Inbound Messages** keeps a copy of every enquiry (requires the Flamingo plugin). |
+| Forms (Contact, Register Now, Careers Application) | **Contact → Contact Forms** → *Contact page enquiry*, *Registration form*, *Careers application* (Contact Form 7). *Form* tab: fields and dropdown options (keep the theme's markup and classes). *Mail* tab: who receives enquiries (To, Cc, Bcc via *Additional headers*), the email subject and text; *Mail (2)* can send parents an automatic reply. *Messages* tab: the texts shown after sending. The form shown on a page is picked in its Form section (*Compact* with a photo, or *Full width* for long forms in steps). |
+| Form submissions | **Flamingo → Inbound Messages** keeps a copy of every submission (requires the Flamingo plugin). Uploaded CVs and cover letters are attached to the email only; Flamingo does not keep files. |
 | News | Posts. On the home page the newest is featured and the next three are listed; News & Events lists them all ("All News") below its sections. |
 
 ## Front-end build
@@ -157,16 +157,25 @@ See [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) (logo, social and portal URLs, testim
 
 Each sitemap entry is a **single page**: its sub-items (e.g. About → Vision & Mission, Leadership) are sections on that page, not separate pages. Pages not yet designed exist as empty placeholders, ready for the next phases.
 
-## Contact form (Contact Form 7)
+## Forms (Contact Form 7)
 
-The Contact page form is a Contact Form 7 form styled by the theme
-(`template-parts/sections/contact-form.php`, `_enquiry.scss`). The seeder
-creates it with the design's fields and sends enquiries to the *Email* in
-Site Settings; after that, edit it in **Contact → Contact Forms**.
+The site's three forms are Contact Form 7 forms styled by the theme
+(`template-parts/sections/contact-form.php`, `_enquiry.scss`): the Contact
+page enquiry, the **Registration form** (Register Now) and the **Careers
+application** (Careers Application, with CV and cover letter uploads). The
+seeder creates them with the design's fields and sends them to the *Email* in
+Site Settings; after that, edit them in **Contact → Contact Forms**.
 
 - **Keep the markup** when editing the *Form* tab: each field sits in
   `<div class="enquiry__field">` with `class:enquiry__control` on the tag, so
-  it matches the design. Add new fields by copying an existing block.
+  it matches the design. Add new fields by copying an existing block. Long
+  forms group fields in numbered steps (`enquiry__step`, `enquiry__grid`);
+  radio groups are `<fieldset class="enquiry__field enquiry__field--choice">`.
+- **Conditionally required fields:** the option `required-if:<field>:<value>`
+  makes a field required only when another field has that value, e.g.
+  `[text subject required-if:job-type:Academic]` (the theme validates it).
+- **Siblings:** the registration form holds up to three sibling groups; the
+  second and third appear on *+ Add Another Sibling*.
 - **CF7 loads only where a form is shown** (the theme turns off its
   site-wide script and stylesheet and its automatic `<p>` tags).
 - **Spam:** connect Cloudflare Turnstile or reCAPTCHA in Contact → Integration.

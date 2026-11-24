@@ -65,6 +65,8 @@ final class Seed_Command {
 		'contact'      => 'Contact page',
 		'careers'      => 'Careers page',
 		'resources'    => 'Resources page',
+		'registration' => 'Register Now page (registration form)',
+		'careers-application' => 'Careers Application page (application form)',
 	);
 
 	/**
@@ -79,7 +81,8 @@ final class Seed_Command {
 	 * : Comma-separated steps to run (default: all). Available: identity,
 	 * pages, reading, menus, settings, testimonials, faqs, posts, home, staff,
 	 * about, academics, admissions, student-life,
-	 * news-events (run after posts), contact, careers, resources.
+	 * news-events (run after posts), contact, careers, resources, registration,
+	 * careers-application.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -137,6 +140,8 @@ final class Seed_Command {
 			'contact'      => fn() => $this->seed_contact(),
 			'careers'      => fn() => $this->seed_careers(),
 			'resources'    => fn() => $this->seed_resources(),
+			'registration' => fn() => $this->seed_registration(),
+			'careers-application' => fn() => $this->seed_careers_application(),
 		);
 
 		foreach ( self::STEPS as $key => $label ) {
@@ -182,6 +187,7 @@ final class Seed_Command {
 			'register-now'   => 'Register Now',
 			'resources'      => 'Resources',
 			'careers'        => 'Careers',
+			'careers-application' => 'Careers Application',
 			'privacy-policy' => 'Privacy Policy',
 			'terms'          => 'Terms & Conditions',
 		);
@@ -1619,15 +1625,16 @@ final class Seed_Command {
 						'image' => $this->image( 'careers-academic.jpg', 'Teacher at the board with students raising hands' ),
 						'title' => 'Academic Careers',
 						'text'  => 'Bring your subject expertise and passion for education to the SEPS teaching community.',
-						'link'  => $link( 'View Academic Application Form' ),
+						'link'  => null,
 					),
 					array(
 						'image' => $this->image( 'careers-non-academic.jpg', 'Staff member helping a student with her work' ),
 						'title' => 'Non-Academic Careers',
 						'text'  => 'Explore roles that support the school’s wider operations and help our community thrive.',
-						'link'  => $link( 'View Non-Academic Application Form' ),
+						'link'  => null,
 					),
 				),
+				'button'        => $this->link( 'careers-application', 'View Application Form' ),
 				'anchor'        => 'roles',
 			),
 		);
@@ -1636,104 +1643,666 @@ final class Seed_Command {
 	}
 
 	/**
+	 * Register Now page: hero and the registration form (Contact Form 7).
+	 */
+	private function seed_registration(): void {
+		$sections = array(
+			array(
+				'acf_fc_layout'  => 'page_hero',
+				'title'          => 'Register Your Child at SEPS',
+				'text'           => 'Begin your child’s journey with Sunrise English Private School. Complete the registration form below and our admissions team will contact you with the next steps.',
+				'note'           => '',
+				'button'         => null,
+				'button_2'       => null,
+				'image'          => $this->image( 'contact-hero.jpg', 'Child writing in a workbook at a wooden desk' ),
+				'image_focus'    => 'center',
+				'layout'         => 'wide',
+				'decor'          => 'flower',
+				'decor_position' => 'auto',
+			),
+			array(
+				'acf_fc_layout' => 'contact_form',
+				'layout'        => 'full',
+				'heading'       => 'Registration Form',
+				'intro'         => '<p>Fields marked <span class="enquiry__req">*</span> are required. Already have an account? <a href="#"><strong>Sign In</strong></a></p>',
+				'form'          => $this->registration_form(),
+				'image'         => 0,
+			),
+		);
+
+		update_field( 'field_seps_page_sections', $sections, $this->pages['register-now'] );
+	}
+
+	/**
+	 * Careers Application page: hero and the job application form (Contact
+	 * Form 7, with CV and cover letter uploads).
+	 */
+	private function seed_careers_application(): void {
+		$sections = array(
+			array(
+				'acf_fc_layout'  => 'page_hero',
+				'title'          => "Apply to Join\nOur Team",
+				'text'           => 'Whether you teach or support our school’s operations, we’d love to hear from you. Complete the application below and our HR team will be in touch if your profile matches a current opening.',
+				'note'           => '',
+				'button'         => null,
+				'button_2'       => null,
+				'image'          => $this->image( 'careers-hero.jpg', 'Graduates in caps and gowns on campus' ),
+				'image_focus'    => 'center',
+				'layout'         => 'standard',
+				'decor'          => 'sun',
+				'decor_position' => 'top',
+			),
+			array(
+				'acf_fc_layout' => 'contact_form',
+				'layout'        => 'full',
+				'heading'       => 'Application Form',
+				'intro'         => '<p>Fields marked <span class="enquiry__req">*</span> are required. Fields tagged <strong>Academic roles</strong> only apply to teaching positions.</p>',
+				'form'          => $this->application_form(),
+				'image'         => 0,
+			),
+		);
+
+		update_field( 'field_seps_page_sections', $sections, $this->pages['careers-application'] );
+	}
+
+	/**
 	 * Create or update the Contact page enquiry form (Contact Form 7).
-	 *
-	 * The form template uses the theme's markup (see the Enquiry form section
-	 * and _enquiry.scss). Emails go to the school email from Site Settings;
-	 * change recipients and wording in Contact → Contact Forms.
 	 *
 	 * @return int Form ID, or 0 when Contact Form 7 is not active.
 	 */
 	private function enquiry_form(): int {
-		if ( ! class_exists( 'WPCF7_ContactForm' ) ) {
-			WP_CLI::warning( 'Contact Form 7 is not active: the Contact page form was skipped. Install and activate it (wp plugin install contact-form-7 flamingo --activate), then run: wp seps seed --only=contact' );
-			return 0;
-		}
-
-		$field = static fn( string $id, string $label, string $tag, string $class = '' ): string => sprintf(
-			"<div class=\"enquiry__field%s\">\n\t<label class=\"enquiry__label\" for=\"%s\">%s</label>\n\t%s\n</div>",
-			$class ? ' ' . $class : '',
-			$id,
-			$label,
-			$tag
-		);
-
 		$subjects = array( 'Admissions', 'Academics', 'Fees & Payments', 'Transport', 'Student Life & Activities', 'General Enquiry' );
 		$times    = array( 'Morning', 'Afternoon', 'Evening' );
-		$quote    = static fn( array $items ): string => '"' . implode( '" "', $items ) . '"';
 
 		$template = implode(
 			"\n\n",
 			array(
-				$field( 'enquiry-name', 'Parent’s Name', '[text* your-name id:enquiry-name class:enquiry__control autocomplete:name maxlength:100 placeholder "Enter full name here"]' ),
-				$field( 'enquiry-phone', 'Phone Number', "<div class=\"enquiry__phone\">[text phone-code class:enquiry__control class:enquiry__code maxlength:5 autocomplete:tel-country-code \"+971\"][tel* your-phone id:enquiry-phone class:enquiry__control maxlength:20 autocomplete:tel-national placeholder \"Enter phone number here\"]</div>" ),
-				$field( 'enquiry-email', 'Email Address', '[email* your-email id:enquiry-email class:enquiry__control autocomplete:email placeholder "Enter email address here"]', 'enquiry__field--full' ),
-				$field( 'enquiry-subject', 'Subject', '[select* your-subject id:enquiry-subject class:enquiry__control class:enquiry__select first_as_label "What is this regarding" ' . $quote( $subjects ) . ']' ),
-				$field( 'enquiry-time', 'Preferred Contact Time', '[select contact-time id:enquiry-time class:enquiry__control class:enquiry__select ' . $quote( $times ) . ']' ),
-				$field( 'enquiry-message', 'Message', '[textarea* your-message id:enquiry-message class:enquiry__control class:enquiry__textarea maxlength:5000 placeholder "Tell us a bit about your enquiry..."]', 'enquiry__field--full' ),
-				"<div class=\"enquiry__actions\">[submit class:btn class:btn--primary class:enquiry__submit \"Send Enquiry\"]</div>",
+				$this->form_field( 'Parent’s Name', '[text* your-name id:enquiry-name class:enquiry__control autocomplete:name maxlength:100 placeholder "Enter full name here"]', 'enquiry-name' ),
+				$this->form_field( 'Phone Number', $this->form_phone( 'phone-code', 'your-phone', 'enquiry-phone', true, 'Enter phone number here' ), 'enquiry-phone' ),
+				$this->form_field( 'Email Address', '[email* your-email id:enquiry-email class:enquiry__control autocomplete:email placeholder "Enter email address here"]', 'enquiry-email', 'enquiry__field--full' ),
+				$this->form_field( 'Subject', '[select* your-subject id:enquiry-subject class:enquiry__control class:enquiry__select first_as_label "What is this regarding" ' . $this->form_options( $subjects ) . ']', 'enquiry-subject' ),
+				$this->form_field( 'Preferred Contact Time', '[select contact-time id:enquiry-time class:enquiry__control class:enquiry__select ' . $this->form_options( $times ) . ']', 'enquiry-time' ),
+				$this->form_field( 'Message', '[textarea* your-message id:enquiry-message class:enquiry__control class:enquiry__textarea maxlength:5000 placeholder "Tell us a bit about your enquiry..."]', 'enquiry-message', 'enquiry__field--full' ),
+				'<div class="enquiry__actions">[submit class:btn class:btn--primary class:enquiry__submit "Send Enquiry"]</div>',
 			)
 		);
+
+		return $this->cf7_form(
+			'contact-enquiry',
+			'Contact page enquiry',
+			'contact',
+			$template,
+			array(
+				'subject'            => 'New enquiry: [your-subject] ([your-name])',
+				'additional_headers' => 'Reply-To: [your-name] <[your-email]>',
+				'body'               => $this->mail_body(
+					array(
+						'Parent’s name'          => '[your-name]',
+						'Phone'                  => '[phone-code] [your-phone]',
+						'Email'                  => '[your-email]',
+						'Subject'                => '[your-subject]',
+						'Preferred contact time' => '[contact-time]',
+						'Message'                => "\n[your-message]",
+					),
+					'the Contact page'
+				),
+			),
+			array(
+				'mail_sent_ok' => 'Thank you! Your enquiry has been sent. Our team will get back to you as soon as possible.',
+				'mail_sent_ng' => 'Sorry, something went wrong and your enquiry was not sent. Please try again, or email us directly.',
+				'spam'         => 'Sorry, something went wrong and your enquiry was not sent. Please try again, or email us directly.',
+			)
+		);
+	}
+
+	/**
+	 * Create or update the registration form (Register Now page).
+	 *
+	 * @return int Form ID, or 0 when Contact Form 7 is not active.
+	 */
+	private function registration_form(): int {
+		$req    = '<span class="enquiry__req" aria-hidden="true">*</span>';
+		$text   = static fn( string $name, string $placeholder, bool $required = false, string $type = 'text', string $extra = '' ): string => sprintf(
+			'[%1$s%2$s %3$s id:reg-%3$s class:enquiry__control%4$s placeholder "%5$s"]',
+			$type,
+			$required ? '*' : '',
+			$name,
+			$extra ? ' ' . $extra : '',
+			$placeholder
+		);
+		$date   = static fn( string $name, bool $required = false ): string => sprintf( '[date%1$s %2$s id:reg-%2$s class:enquiry__control]', $required ? '*' : '', $name );
+		$select = fn( string $name, string $placeholder, array $options, bool $required = false ): string => sprintf(
+			'[select%1$s %2$s id:reg-%2$s class:enquiry__control class:enquiry__select first_as_label "%3$s" %4$s]',
+			$required ? '*' : '',
+			$name,
+			$placeholder,
+			$this->form_options( $options )
+		);
+		$radio  = fn( string $name, array $options ): string => sprintf( '[radio %1$s use_label_element %2$s]', $name, $this->form_options( $options ) );
+		$f      = fn( string $label, string $tag, string $name, bool $required = false, string $class = '' ): string => $this->form_field( $label . ( $required ? ' ' . $req : '' ), $tag, 'reg-' . $name, $class );
+		$choice = fn( string $label, string $tag ): string => $this->form_choice( $label . ' ' . $req, $tag );
+
+		$grades   = array_merge( array( 'KG 1', 'KG 2' ), array_map( static fn( int $n ): string => 'Grade ' . $n, range( 1, 12 ) ) );
+		$genders  = array( 'Male', 'Female' );
+		$yes_no   = array( 'Yes', 'No' );
+		$religion = array( 'Islam', 'Christianity', 'Hinduism', 'Buddhism', 'Sikhism', 'Jainism', 'Judaism', 'Other' );
+		$blood    = array( 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-' );
+		$areas    = array( 'Mussafah', 'Shabiya', 'Mohammed Bin Zayed City', 'Khalifa City', 'Baniyas', 'Al Shamkha', 'Al Reef', 'Al Reem Island', 'Abu Dhabi Island', 'Al Ain', 'Other' );
+
+		// Up to three siblings; the second and third appear on "+ Add Another Sibling".
+		$siblings = '';
+		foreach ( range( 1, 3 ) as $n ) {
+			$fields = implode(
+				"\n",
+				array(
+					$f( 'Sibling Name', $text( "sibling-{$n}-name", 'Enter sibling’s name' ), "sibling-{$n}-name" ),
+					$f( 'Grade', $select( "sibling-{$n}-grade", 'Select grade', $grades ), "sibling-{$n}-grade" ),
+					$f( 'Gender', $select( "sibling-{$n}-gender", 'Select gender', $genders ), "sibling-{$n}-gender" ),
+					$f( 'Enrolment Number', $text( "sibling-{$n}-enrolment", 'Enter enrolment number' ), "sibling-{$n}-enrolment" ),
+					$f( 'School', $select( "sibling-{$n}-school", 'Select school', array( 'Sunrise English Private School, Abu Dhabi' ) ), "sibling-{$n}-school" ),
+				)
+			);
+			$siblings .= 1 === $n
+				? $fields . "\n"
+				: sprintf( "<div class=\"enquiry__repeat\" data-repeat=\"siblings\" hidden>\n<h4 class=\"enquiry__subhead\">Sibling %d</h4>\n%s\n</div>\n", $n, $fields );
+		}
+		$siblings .= '<button type="button" class="enquiry__add" data-repeat-add="siblings" hidden>+ Add Another Sibling</button>';
+
+		$parent = function ( string $who, string $title, bool $main ) use ( $f, $text, $date, $select, $choice, $radio, $yes_no ): string {
+			return implode(
+				"\n",
+				array(
+					"<h4 class=\"enquiry__subhead\">{$title}</h4>",
+					$f( 'First Name', $text( "{$who}-first-name", 'Enter first name', true, 'text', 'autocomplete:given-name' ), "{$who}-first-name", true ),
+					$f( 'Middle Name', $text( "{$who}-middle-name", 'Enter middle name', false, 'text', 'autocomplete:additional-name' ), "{$who}-middle-name" ),
+					$f( 'Last Name', $text( "{$who}-last-name", 'Enter last name', true, 'text', 'autocomplete:family-name' ), "{$who}-last-name", true ),
+					$choice( 'School Staff', $radio( "{$who}-staff", $yes_no ) ),
+					$f( 'Occupation', $text( "{$who}-occupation", 'Enter occupation', $main ), "{$who}-occupation", $main ),
+					$f( 'Qualification', $text( "{$who}-qualification", 'Enter qualification' ), "{$who}-qualification" ),
+					$f( 'Nationality', $select( "{$who}-nationality", 'Select nationality', $this->countries(), true ), "{$who}-nationality", true ),
+					$f( 'Organisation', $text( "{$who}-organisation", 'Enter organisation', $main ), "{$who}-organisation", $main ),
+					$f( 'Emirates ID Number', $text( "{$who}-emirates-id", '784-XXXX-XXXXXXX-X', false, 'text', 'maxlength:18' ), "{$who}-emirates-id" ),
+					$f( 'Emirates ID Expiry Date', $date( "{$who}-emirates-id-expiry" ), "{$who}-emirates-id-expiry" ),
+					$f( 'Email Address', $text( "{$who}-email", 'Enter email address', true, 'email', 'autocomplete:email' ), "{$who}-email", true ),
+					$f( 'Mobile Number', $this->form_phone( "{$who}-mobile-code", "{$who}-mobile", "reg-{$who}-mobile", true, 'Enter mobile number' ), "{$who}-mobile", true ),
+				)
+			);
+		};
+
+		$template = implode(
+			"\n\n",
+			array(
+				$this->form_step(
+					'01',
+					'Academic Details',
+					implode(
+						"\n",
+						array(
+							$f( 'Academic Year', $select( 'academic-year', 'Select academic year', array( '2026–2027', '2027–2028' ), true ), 'academic-year', true ),
+							$f( 'Grade', $select( 'grade', 'Select grade', $grades, true ), 'grade', true ),
+						)
+					)
+				),
+				$this->form_step(
+					'02',
+					'Student Details',
+					implode(
+						"\n",
+						array(
+							$f( 'First Name', $text( 'student-first-name', 'Enter first name', true ), 'student-first-name', true ),
+							$f( 'Middle Name', $text( 'student-middle-name', 'Enter middle name' ), 'student-middle-name' ),
+							$f( 'Last Name', $text( 'student-last-name', 'Enter last name', true ), 'student-last-name', true ),
+							$choice( 'Gender', $radio( 'student-gender', $genders ) ),
+							$f( 'Date of Birth', $date( 'student-dob', true ), 'student-dob', true ),
+							$f( 'Place of Birth', $text( 'student-birthplace', 'Enter place of birth', true ), 'student-birthplace', true ),
+							$f( 'Religion', $select( 'student-religion', 'Select religion', $religion, true ), 'student-religion', true ),
+							$f( 'Mother Tongue', $text( 'student-mother-tongue', 'Enter mother tongue', true ), 'student-mother-tongue', true ),
+							$f( 'Blood Group', $select( 'student-blood-group', 'Select blood group', $blood, true ), 'student-blood-group', true ),
+							$f( 'Nationality', $select( 'student-nationality', 'Select nationality', $this->countries(), true ), 'student-nationality', true ),
+							$f( 'Area of Residence (UAE)', $select( 'residence-area', 'Select area', $areas ), 'residence-area' ),
+							$f( 'eSIS Number', $text( 'esis-number', 'Enter eSIS number' ), 'esis-number' ),
+							$f( 'Previous School Name', $text( 'previous-school', 'Enter school name', true ), 'previous-school', true ),
+							$f( 'Previous School Country', $text( 'previous-school-country', 'Enter country', true ), 'previous-school-country', true ),
+							$f( 'Previous School Grade', $text( 'previous-school-grade', 'Enter grade' ), 'previous-school-grade' ),
+						)
+					)
+				),
+				$this->form_step(
+					'03',
+					'Passport &amp; Visa Details',
+					implode(
+						"\n",
+						array(
+							$f( 'Passport Number', $text( 'passport-number', 'Enter passport number', true ), 'passport-number', true ),
+							$f( 'Passport Issue Date', $date( 'passport-issue-date', true ), 'passport-issue-date', true ),
+							$f( 'Passport Expiry Date', $date( 'passport-expiry-date', true ), 'passport-expiry-date', true ),
+							$f( 'Passport Place of Issue', $text( 'passport-place', 'Enter place of issue' ), 'passport-place' ),
+							$f( 'Visa Number', $text( 'visa-number', 'Enter visa number' ), 'visa-number' ),
+							$f( 'Visa Valid Until', $date( 'visa-valid-until' ), 'visa-valid-until' ),
+							$f( 'Emirates ID Number', $text( 'student-emirates-id', '784-XXXX-XXXXXXX-X', false, 'text', 'maxlength:18' ), 'student-emirates-id' ),
+						)
+					)
+				),
+				$this->form_step( '04', 'Sibling Information', $siblings, '(if any sibling studies at SEPS)' ),
+				$this->form_step(
+					'05',
+					'Parent Details',
+					implode(
+						"\n",
+						array(
+							$choice( 'Primary Contact', $radio( 'primary-contact', array( 'Father', 'Mother' ) ) ),
+							$parent( 'father', 'Father’s Details', true ),
+							$parent( 'mother', 'Mother’s Details', false ),
+						)
+					)
+				),
+				'<p class="enquiry__consent">By submitting this form, you confirm that the information provided is accurate and complete.</p>',
+				'<div class="enquiry__actions">[submit class:btn class:btn--primary class:enquiry__submit "Submit Registration"]</div>',
+			)
+		);
+
+		// One field per line: with "exclude blank" on, empty fields drop out.
+		$sibling_lines = array();
+		foreach ( range( 1, 3 ) as $n ) {
+			$sibling_lines += array(
+				"\nSibling {$n}"                => '',
+				"Sibling {$n} name"             => "[sibling-{$n}-name]",
+				"Sibling {$n} grade"            => "[sibling-{$n}-grade]",
+				"Sibling {$n} gender"           => "[sibling-{$n}-gender]",
+				"Sibling {$n} enrolment number" => "[sibling-{$n}-enrolment]",
+				"Sibling {$n} school"           => "[sibling-{$n}-school]",
+			);
+		}
+		$parent_lines = static function ( string $who, string $title ): array {
+			return array(
+				"\n{$title}"                      => '',
+				"{$title}’s first name"           => "[{$who}-first-name]",
+				"{$title}’s middle name"          => "[{$who}-middle-name]",
+				"{$title}’s last name"            => "[{$who}-last-name]",
+				"{$title} is school staff"        => "[{$who}-staff]",
+				"{$title}’s occupation"           => "[{$who}-occupation]",
+				"{$title}’s qualification"        => "[{$who}-qualification]",
+				"{$title}’s nationality"          => "[{$who}-nationality]",
+				"{$title}’s organisation"         => "[{$who}-organisation]",
+				"{$title}’s Emirates ID"          => "[{$who}-emirates-id]",
+				"{$title}’s Emirates ID expiry"   => "[{$who}-emirates-id-expiry]",
+				"{$title}’s email"                => "[{$who}-email]",
+				"{$title}’s mobile"               => "[{$who}-mobile-code] [{$who}-mobile]",
+			);
+		};
+		$student_lines = array(
+			'Academic year'            => '[academic-year]',
+			'Grade'                    => '[grade]',
+			"\nStudent"                => '',
+			'First name'               => '[student-first-name]',
+			'Middle name'              => '[student-middle-name]',
+			'Last name'                => '[student-last-name]',
+			'Gender'                   => '[student-gender]',
+			'Date of birth'            => '[student-dob]',
+			'Place of birth'           => '[student-birthplace]',
+			'Religion'                 => '[student-religion]',
+			'Mother tongue'            => '[student-mother-tongue]',
+			'Blood group'              => '[student-blood-group]',
+			'Nationality'              => '[student-nationality]',
+			'Area of residence'        => '[residence-area]',
+			'eSIS number'              => '[esis-number]',
+			'Previous school'          => '[previous-school]',
+			'Previous school country'  => '[previous-school-country]',
+			'Previous school grade'    => '[previous-school-grade]',
+			"\nPassport & visa"        => '',
+			'Passport number'          => '[passport-number]',
+			'Passport issue date'      => '[passport-issue-date]',
+			'Passport expiry date'     => '[passport-expiry-date]',
+			'Passport place of issue'  => '[passport-place]',
+			'Visa number'              => '[visa-number]',
+			'Visa valid until'         => '[visa-valid-until]',
+			'Student’s Emirates ID'    => '[student-emirates-id]',
+		);
+
+		return $this->cf7_form(
+			'registration',
+			'Registration form',
+			'registration',
+			$template,
+			array(
+				'subject'            => 'New registration: [student-first-name] [student-last-name] – [grade], [academic-year]',
+				'additional_headers' => 'Reply-To: [father-email], [mother-email]',
+				'body'               => $this->mail_body(
+					array_merge(
+						$student_lines,
+						$sibling_lines,
+						array( "\nPrimary contact" => '[primary-contact]' ),
+						$parent_lines( 'father', 'Father' ),
+						$parent_lines( 'mother', 'Mother' )
+					),
+					'the Register Now page'
+				),
+			),
+			array(
+				'mail_sent_ok' => 'Thank you! Your registration has been received. Our admissions team will contact you with the next steps.',
+				'mail_sent_ng' => 'Sorry, something went wrong and your registration was not sent. Please try again, or contact the school.',
+				'spam'         => 'Sorry, something went wrong and your registration was not sent. Please try again, or contact the school.',
+			)
+		);
+	}
+
+	/**
+	 * Create or update the job application form (Careers Application page).
+	 *
+	 * Subject, Classes Taught and Subjects Taught are only required for
+	 * academic roles (`required-if:job-type:Academic`, see the theme's CF7
+	 * integration).
+	 *
+	 * @return int Form ID, or 0 when Contact Form 7 is not active.
+	 */
+	private function application_form(): int {
+		$req     = '<span class="enquiry__req" aria-hidden="true">*</span>';
+		$tag     = '<span class="enquiry__tag">Academic roles</span>';
+		$text    = static fn( string $name, string $placeholder, string $flags = '', string $extra = '' ): string => sprintf(
+			'[text%1$s %2$s id:job-%2$s class:enquiry__control%3$s placeholder "%4$s"]',
+			$flags,
+			$name,
+			$extra ? ' ' . $extra : '',
+			$placeholder
+		);
+		$f       = fn( string $label, string $control, string $name, string $class = '' ): string => $this->form_field( $label, $control, 'job-' . $name, $class );
+		$choice  = fn( string $label, string $control ): string => $this->form_choice( $label . ' ' . $req, $control );
+		$upload  = static fn( string $name, string $label, bool $required ): string => sprintf(
+			"<div class=\"enquiry__field\">\n<span class=\"enquiry__label\">%1\$s</span>\n<label class=\"enquiry__drop\">\n<span class=\"enquiry__drop-icon\" aria-hidden=\"true\"></span>\n<span>Drag &amp; drop your file here or <u>Browse</u></span>\n<span class=\"enquiry__drop-hint\" data-file-hint>PDF, DOC or DOCX · Max 5 MB</span>\n[file%2\$s %3\$s limit:5mb filetypes:pdf|doc|docx]\n</label>\n</div>",
+			$label,
+			$required ? '*' : '',
+			$name
+		);
+		$academic = 'required-if:job-type:Academic';
+		$depts    = array( 'Kindergarten', 'Primary', 'Middle School', 'Secondary', 'Senior Secondary', 'Special Education', 'Administration', 'Accounts & Finance', 'Admissions & Front Office', 'IT', 'Transport', 'Facilities & Maintenance', 'Other' );
+
+		$template = implode(
+			"\n\n",
+			array(
+				$this->form_step(
+					'01',
+					'Position',
+					implode(
+						"\n",
+						array(
+							$this->form_choice( 'Job Type ' . $req, '[radio job-type class:enquiry__cards use_label_element "Academic" "Non-Academic"]', 'enquiry__field--wide' ),
+							$f( 'Position Applied For ' . $req, $text( 'position', 'e.g. Grade 5 Science Teacher, Accountant', '*' ), 'position', 'enquiry__field--first' ),
+							$f( 'Division / Department ' . $req, '[select* department id:job-department class:enquiry__control class:enquiry__select first_as_label "Select division or department" ' . $this->form_options( $depts ) . ']', 'department' ),
+							$f( "Subject {$req} {$tag}", $text( 'subject', 'Enter subject', '', $academic ), 'subject' ),
+						)
+					)
+				),
+				$this->form_step(
+					'02',
+					'Personal Information',
+					implode(
+						"\n",
+						array(
+							$f( 'Full Name ' . $req, $text( 'full-name', 'Enter your full name', '*', 'autocomplete:name' ), 'full-name' ),
+							$f( 'Email Address ' . $req, '[email* email id:job-email class:enquiry__control autocomplete:email placeholder "Enter your email address"]', 'email' ),
+							$f( 'Mobile Number', $this->form_phone( 'mobile-code', 'mobile', 'job-mobile', false, 'Enter mobile number' ), 'mobile' ),
+							$f( 'Date of Birth ' . $req, '[date* date-of-birth id:job-date-of-birth class:enquiry__control]', 'date-of-birth' ),
+						)
+					)
+				),
+				$this->form_step(
+					'03',
+					'Most Recent Experience',
+					implode(
+						"\n",
+						array(
+							$f( 'Name of Institution ' . $req, $text( 'institution', 'Enter institution name', '*' ), 'institution' ),
+							$f( 'Duration of Work ' . $req, $text( 'duration', 'e.g. Aug 2021 – Jun 2024', '*' ), 'duration' ),
+							$f( 'Remuneration ' . $req, $text( 'remuneration', 'Enter monthly salary (AED)', '*' ), 'remuneration' ),
+							$f( "Classes Taught {$req} {$tag}", $text( 'classes-taught', 'e.g. Grades 6–8', '', $academic ), 'classes-taught' ),
+							$f( "Subjects Taught {$req} {$tag}", $text( 'subjects-taught', 'e.g. Mathematics, Physics', '', $academic ), 'subjects-taught' ),
+							$f( 'Reason for Leaving', $text( 'leaving-reason', 'Enter reason' ), 'leaving-reason' ),
+							$f( 'Remarks', '[textarea remarks id:job-remarks class:enquiry__control class:enquiry__textarea class:enquiry__textarea--short maxlength:3000 placeholder "Anything else you’d like us to know"]', 'remarks', 'enquiry__field--full' ),
+						)
+					)
+				),
+				$this->form_step(
+					'04',
+					'Additional Information',
+					implode(
+						"\n",
+						array(
+							$choice( 'Are you fully vaccinated?', '[radio vaccinated use_label_element "Yes" "No"]' ),
+							$choice( 'Have you ever received ADEK approval?', '[radio adek-approval use_label_element "Yes" "No"]' ),
+						)
+					)
+				),
+				$this->form_step(
+					'05',
+					'Documents',
+					$upload( 'cv', 'CV / Resume ' . $req, true ) . "\n" . $upload( 'cover-letter', 'Cover Letter', false ),
+					'',
+					'enquiry__grid--2'
+				),
+				'<p class="enquiry__consent">By submitting this application, you confirm that the information provided is accurate and complete.</p>',
+				'<div class="enquiry__actions">[submit class:btn class:btn--primary class:enquiry__submit "Submit Application"]</div>',
+			)
+		);
+
+		return $this->cf7_form(
+			'careers-application',
+			'Careers application',
+			'careers-application',
+			$template,
+			array(
+				'subject'            => 'Job application: [position] ([job-type]) – [full-name]',
+				'additional_headers' => 'Reply-To: [full-name] <[email]>',
+				'attachments'        => "[cv]\n[cover-letter]",
+				'body'               => $this->mail_body(
+					array(
+						'Job type'             => '[job-type]',
+						'Position'             => '[position]',
+						'Division/department'  => '[department]',
+						'Subject'              => '[subject]',
+						"\nApplicant"          => '',
+						'Name'                 => '[full-name]',
+						'Email'                => '[email]',
+						'Mobile'               => '[mobile-code] [mobile]',
+						'Date of birth'        => '[date-of-birth]',
+						"\nMost recent role"   => '',
+						'Institution'          => '[institution]',
+						'Duration'             => '[duration]',
+						'Remuneration'         => '[remuneration]',
+						'Classes taught'       => '[classes-taught]',
+						'Subjects taught'      => '[subjects-taught]',
+						'Reason for leaving'   => '[leaving-reason]',
+						'Remarks'              => '[remarks]',
+						"\nAdditional"         => '',
+						'Fully vaccinated'     => '[vaccinated]',
+						'ADEK approval'        => '[adek-approval]',
+						"\nThe CV and cover letter are attached." => '',
+					),
+					'the Careers Application page'
+				),
+			),
+			array(
+				'mail_sent_ok' => 'Thank you for applying! Our HR team will be in touch if your profile matches a current opening.',
+				'mail_sent_ng' => 'Sorry, something went wrong and your application was not sent. Please try again, or email us directly.',
+				'spam'         => 'Sorry, something went wrong and your application was not sent. Please try again, or email us directly.',
+			)
+		);
+	}
+
+	/**
+	 * Create or update a seeded Contact Form 7 form.
+	 *
+	 * Mail goes to the school email from Site Settings, from an address on the
+	 * site's own domain (CF7 rejects mail-tags inside the address; update it
+	 * per environment, see README "Email delivery"). Recipients, wording and
+	 * messages are then edited in Contact → Contact Forms.
+	 *
+	 * @param string               $key      Seed key.
+	 * @param string               $title    Form title in the admin.
+	 * @param string               $step     Seeder step (for the "not active" warning).
+	 * @param string               $template Form template (theme markup + form-tags).
+	 * @param array<string,mixed>  $mail     Mail properties (subject, body, headers…).
+	 * @param array<string,string> $messages Messages to override.
+	 * @return int Form ID, or 0 when Contact Form 7 is not active.
+	 */
+	private function cf7_form( string $key, string $title, string $step, string $template, array $mail, array $messages ): int {
+		if ( ! class_exists( 'WPCF7_ContactForm' ) ) {
+			WP_CLI::warning( "Contact Form 7 is not active: the \"{$title}\" form was skipped. Install and activate it (wp plugin install contact-form-7 flamingo --activate), then run: wp seps seed --only={$step}" );
+			return 0;
+		}
 
 		$school = sanitize_email( (string) get_field( 'email', 'option' ) );
 		$domain = (string) preg_replace( '/^www\./', '', (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
 
-		$properties = array(
-			'form'     => $template,
-			'mail'     => array(
-				'active'             => true,
-				'recipient'          => is_email( $school ) ? $school : '[_site_admin_email]',
-				// A real address on this site's domain (CF7 rejects mail-tags inside
-				// the address). Update it per environment: see README "Email delivery".
-				'sender'             => '[_site_title] <wordpress@' . $domain . '>',
-				'subject'            => 'New enquiry: [your-subject] ([your-name])',
-				'additional_headers' => 'Reply-To: [your-name] <[your-email]>',
-				'body'               => implode(
-					"\n",
-					array(
-						'Parent’s name: [your-name]',
-						'Phone: [phone-code] [your-phone]',
-						'Email: [your-email]',
-						'Subject: [your-subject]',
-						'Preferred contact time: [contact-time]',
-						'',
-						'Message:',
-						'[your-message]',
-						'',
-						'-- ',
-						'Sent from the Contact page of [_site_title] ([_site_url]).',
-					)
-				),
-				'attachments'        => '',
-				'use_html'           => false,
-				'exclude_blank'      => false,
-			),
-			'messages' => array(
-				'mail_sent_ok'     => 'Thank you! Your enquiry has been sent. Our team will get back to you as soon as possible.',
-				'mail_sent_ng'     => 'Sorry, something went wrong and your enquiry was not sent. Please try again, or email us directly.',
-				'validation_error' => 'Please check the highlighted fields and try again.',
-				'spam'             => 'Sorry, something went wrong and your enquiry was not sent. Please try again, or email us directly.',
-			),
-		);
-
-		$id   = $this->find( 'wpcf7_contact_form', 'contact-enquiry' );
+		$id   = $this->find( 'wpcf7_contact_form', $key );
 		$form = $id ? \WPCF7_ContactForm::get_instance( $id ) : null;
 
 		if ( ! $form ) {
-			$form = \WPCF7_ContactForm::get_template( array( 'title' => 'Contact page enquiry' ) );
+			$form = \WPCF7_ContactForm::get_template( array( 'title' => $title ) );
 		}
 
-		$form->set_title( 'Contact page enquiry' );
-		$form->set_properties( array_merge( $form->get_properties(), $properties, array( 'messages' => array_merge( $form->prop( 'messages' ), $properties['messages'] ) ) ) );
+		$form->set_title( $title );
+		$form->set_properties(
+			array(
+				'form'     => $template,
+				'mail'     => array_merge(
+					array(
+						'active'             => true,
+						'recipient'          => is_email( $school ) ? $school : '[_site_admin_email]',
+						'sender'             => '[_site_title] <wordpress@' . $domain . '>',
+						'additional_headers' => '',
+						'attachments'        => '',
+						'use_html'           => false,
+						'exclude_blank'      => true,
+					),
+					$mail
+				),
+				'messages' => array_merge(
+					(array) $form->prop( 'messages' ),
+					array( 'validation_error' => 'Please check the highlighted fields and try again.' ),
+					$messages
+				),
+			)
+		);
 		$id = (int) $form->save();
 
-		update_post_meta( $id, self::SEED_META, 'contact-enquiry' );
+		update_post_meta( $id, self::SEED_META, $key );
 
 		if ( ! class_exists( 'Flamingo_Inbound_Message' ) ) {
-			WP_CLI::log( '  Tip: activate the Flamingo plugin to keep a copy of every enquiry in the admin.' );
+			WP_CLI::log( '  Tip: activate the Flamingo plugin to keep a copy of every submission in the admin.' );
 		}
 
 		return $id;
+	}
+
+	/**
+	 * Plain-text mail body: "Label: value" lines; a label starting with a
+	 * line break and an empty value is a heading.
+	 *
+	 * @param array<string,string> $lines Label => mail-tag text.
+	 * @param string               $where Where the form is, e.g. "the Contact page".
+	 */
+	private function mail_body( array $lines, string $where ): string {
+		$body = array();
+		foreach ( $lines as $label => $value ) {
+			$body[] = '' === $value ? $label : "{$label}: {$value}";
+		}
+		$body[] = "\n-- \nSent from {$where} of [_site_title] ([_site_url]).";
+
+		return implode( "\n", $body );
+	}
+
+	/**
+	 * Form field: label + control (theme markup used by the form templates).
+	 *
+	 * @param string $label Label (may contain the required marker / tags).
+	 * @param string $tag   Control (form-tag or HTML).
+	 * @param string $for   ID of the control the label points to.
+	 * @param string $class Extra field class.
+	 */
+	private function form_field( string $label, string $tag, string $for, string $class = '' ): string {
+		return sprintf(
+			"<div class=\"enquiry__field%s\">\n\t<label class=\"enquiry__label\" for=\"%s\">%s</label>\n\t%s\n</div>",
+			$class ? ' ' . $class : '',
+			$for,
+			$label,
+			$tag
+		);
+	}
+
+	/**
+	 * Radio group: a fieldset whose legend is the label.
+	 *
+	 * @param string $label Legend.
+	 * @param string $tag   Radio form-tag.
+	 * @param string $class Extra field class.
+	 */
+	private function form_choice( string $label, string $tag, string $class = '' ): string {
+		return sprintf(
+			"<fieldset class=\"enquiry__field enquiry__field--choice%s\">\n\t<legend class=\"enquiry__label\">%s</legend>\n\t%s\n</fieldset>",
+			$class ? ' ' . $class : '',
+			$label,
+			$tag
+		);
+	}
+
+	/**
+	 * Country code + phone number pair.
+	 *
+	 * @param string $code_name   Country code field name.
+	 * @param string $name        Number field name.
+	 * @param string $id          Number field ID.
+	 * @param bool   $required    Number required.
+	 * @param string $placeholder Number placeholder.
+	 */
+	private function form_phone( string $code_name, string $name, string $id, bool $required, string $placeholder ): string {
+		return sprintf(
+			'<div class="enquiry__phone">[text %1$s class:enquiry__control class:enquiry__code maxlength:5 autocomplete:tel-country-code "+971"][tel%2$s %3$s id:%4$s class:enquiry__control maxlength:20 autocomplete:tel-national placeholder "%5$s"]</div>',
+			$code_name,
+			$required ? '*' : '',
+			$name,
+			$id,
+			$placeholder
+		);
+	}
+
+	/**
+	 * Numbered step: "01 Title" and a grid of fields.
+	 *
+	 * @param string $number Step number, e.g. "01".
+	 * @param string $title  Step title.
+	 * @param string $fields Fields markup.
+	 * @param string $note   Optional note after the title.
+	 * @param string $grid   Extra grid class.
+	 */
+	private function form_step( string $number, string $title, string $fields, string $note = '', string $grid = '' ): string {
+		return sprintf(
+			"<div class=\"enquiry__step\">\n<h3 class=\"enquiry__step-title\"><span class=\"enquiry__step-number\">%1\$s</span> %2\$s%3\$s</h3>\n<div class=\"enquiry__grid%4\$s\">\n%5\$s\n</div>\n</div>",
+			$number,
+			$title,
+			$note ? " <span class=\"enquiry__step-note\">{$note}</span>" : '',
+			$grid ? ' ' . $grid : '',
+			$fields
+		);
+	}
+
+	/**
+	 * Quoted option list for a form-tag.
+	 *
+	 * @param string[] $options Options.
+	 */
+	private function form_options( array $options ): string {
+		return '"' . implode( '" "', $options ) . '"';
+	}
+
+	/**
+	 * Countries for the nationality dropdowns (UAE first).
+	 *
+	 * @return string[]
+	 */
+	private function countries(): array {
+		$others = array( 'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cabo Verde', 'Cambodia', 'Cameroon', 'Canada', 'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros', 'Congo', 'Costa Rica', 'Côte d’Ivoire', 'Croatia', 'Cuba', 'Cyprus', 'Czechia', 'Democratic Republic of the Congo', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Eswatini', 'Ethiopia', 'Fiji', 'Finland', 'France', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Grenada', 'Guatemala', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Honduras', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Italy', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Mauritania', 'Mauritius', 'Mexico', 'Micronesia', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Morocco', 'Mozambique', 'Myanmar', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'North Korea', 'North Macedonia', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Rwanda', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'São Tomé and Príncipe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Korea', 'South Sudan', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Sweden', 'Switzerland', 'Syria', 'Tajikistan', 'Tanzania', 'Thailand', 'Timor-Leste', 'Togo', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Türkiye', 'Turkmenistan', 'Tuvalu', 'Uganda', 'Ukraine', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe' );
+
+		return array_merge( array( 'United Arab Emirates' ), $others );
 	}
 
 	/**
