@@ -23,7 +23,7 @@ final class Seed_Command {
 	private const SEED_META = '_seps_seed_key';
 
 	/**
-	 * Attachment IDs keyed by demo file name.
+	 * Attachment IDs keyed by seed key ("image:file.jpg", "document:file.pdf").
 	 *
 	 * @var array<string,int>
 	 */
@@ -953,27 +953,53 @@ final class Seed_Command {
 				'anchor'        => 'mandatory-disclosure',
 				'heading'       => 'CBSE Mandatory Public Disclosure',
 				'intro'         => 'Access official school documents and information published in accordance with CBSE mandatory disclosure requirements.',
-				'items'         => array(
-					array(
-						'title' => 'Fee Structure',
-						'image' => $this->image( 'program-kindergarten.jpg', 'Kindergarten children playing with building blocks' ),
-						'file'  => '',
-					),
-					array(
-						'title' => 'Bus License',
-						'image' => $this->image( 'doc-bus-license.jpg', 'Yellow school bus on the road' ),
-						'file'  => '',
-					),
-					array(
-						'title' => 'Water Test Report',
-						'image' => $this->image( 'doc-water-test.jpg', 'Hands under running tap water' ),
-						'file'  => '',
-					),
-				),
+				'items'         => $this->disclosure_items(),
 			),
 		);
 
 		update_field( 'field_seps_page_sections', $sections, $this->pages['academics'] );
+	}
+
+	/**
+	 * CBSE Mandatory Public Disclosure documents (Academics), as published on
+	 * the school's current website. PDFs are in demo/documents; the photos are
+	 * placeholders (demo/CREDITS.md).
+	 *
+	 * @return array<int,array{title:string,image:int,file:int}>
+	 */
+	private function disclosure_items(): array {
+		$docs = array(
+			// Title, PDF, photo, photo alt text.
+			array( 'Mandatory Public Disclosure', 'mandatory-public-disclosure.pdf', 'doc-disclosure.jpg', 'Documents on a clipboard on a desk' ),
+			array( 'Fee Structure', 'fee-structure-2026-27.pdf', 'program-kindergarten.jpg', 'Kindergarten children playing with building blocks' ),
+			array( 'Annual Academic Calendar', 'annual-academic-calendar.pdf', 'doc-calendar.jpg', 'Open planner with handwritten notes' ),
+			array( 'Affidavit', 'affidavit.pdf', 'doc-affidavit.jpg', 'Hand signing a document with a fountain pen' ),
+			array( 'Parent Council Members (PTA)', 'parent-council-members.pdf', 'doc-parent-council.jpg', 'Two people talking at a meeting table' ),
+			array( 'Teachers Details 2026', 'teachers-details-2026.pdf', 'doc-teachers.jpg', 'Teacher with students in a classroom' ),
+			array( 'Drinking Water Certificate', 'drinking-water-certificate.pdf', 'doc-drinking-water.jpg', 'Water poured into a glass' ),
+			array( 'Water Test Report', 'water-test-report.pdf', 'doc-water-test.jpg', 'Hands under running tap water' ),
+			array( 'Affiliation', 'affiliation-approval.pdf', 'doc-affiliation.jpg', 'Signing paperwork at a desk' ),
+			array( 'Bus License', 'bus-license.pdf', 'doc-bus-license.jpg', 'Yellow school bus on the road' ),
+			array( 'Result and Academics', 'result-and-academics.pdf', 'doc-results.jpg', 'Exam hall with rows of desks' ),
+			array( 'Civil Defence Certificate 2026–27', 'civil-defence-certificate-2026-27.pdf', 'doc-civil-defence.jpg', 'Fire extinguisher on a wall' ),
+			array( 'Commercial License', 'commercial-license.pdf', 'doc-commercial-license.jpg', 'Glass office building against the sky' ),
+			array( 'Clinic License 2026–27', 'clinic-license-2026-27.pdf', 'doc-clinic.jpg', 'Stethoscope on a white desk' ),
+			array( 'School Managing Committee', 'school-management-committee.pdf', 'doc-smc.jpg', 'Empty boardroom with a long table' ),
+			array( 'NOC', 'noc.pdf', 'doc-noc.jpg', 'Writing a checklist in a notebook' ),
+			array( 'Self Certification', 'self-certification.pdf', 'doc-self-certification.jpg', 'Clipboard on a wooden desk' ),
+			array( 'ADEK License', 'adek-license.pdf', 'doc-adek.jpg', 'Sheikh Zayed Grand Mosque, Abu Dhabi' ),
+			// The current website links the commercial license PDF here too (open question #59).
+			array( 'School Trade License', 'commercial-license.pdf', 'doc-trade-license.jpg', 'Abu Dhabi skyline seen from the water' ),
+		);
+
+		return array_map(
+			fn( array $doc ): array => array(
+				'title' => $doc[0],
+				'file'  => $this->document( $doc[1], $doc[0] ),
+				'image' => $this->image( $doc[2], $doc[3] ),
+			),
+			$docs
+		);
 	}
 
 	/**
@@ -1073,7 +1099,11 @@ final class Seed_Command {
 				'corner'        => 1,
 				'heading'       => 'Fee Structure',
 				'intro'         => '<p>We keep our fee information clear and accessible for families. Find details on fee terms, payment timings, accepted payment methods and bank transfer information below.</p>',
-				'button'        => $link( 'View Fee Structure 2026–27', get_permalink( $this->pages['academics'] ) . '#mandatory-disclosure' ),
+				'button'        => array(
+					'url'    => (string) wp_get_attachment_url( $this->document( 'fee-structure-2026-27.pdf', 'Fee Structure' ) ),
+					'title'  => 'View Fee Structure 2026–27',
+					'target' => '_blank',
+				),
 				'icon_style'    => 'above',
 				'cards'         => array(
 					array(
@@ -2829,18 +2859,46 @@ HTML;
 	 * @param string $alt  Alternative text.
 	 */
 	private function image( string $file, string $alt ): int {
-		if ( isset( $this->attachments[ $file ] ) ) {
-			return $this->attachments[ $file ];
+		$id = $this->attachment( 'images', $file, $alt );
+
+		update_post_meta( $id, '_wp_attachment_image_alt', $alt );
+
+		return $id;
+	}
+
+	/**
+	 * Import a demo document (PDF) once and return its attachment ID.
+	 *
+	 * @param string $file  File name in demo/documents.
+	 * @param string $title Media Library title.
+	 */
+	private function document( string $file, string $title ): int {
+		return $this->attachment( 'documents', $file, $title );
+	}
+
+	/**
+	 * Import a file from the plugin's demo folder into the Media Library once
+	 * (found again by its seed key on later runs).
+	 *
+	 * @param string $folder Folder in demo/: 'images' or 'documents'.
+	 * @param string $file   File name.
+	 * @param string $title  Attachment title.
+	 */
+	private function attachment( string $folder, string $file, string $title ): int {
+		$key = ( 'images' === $folder ? 'image' : 'document' ) . ":{$file}";
+
+		if ( isset( $this->attachments[ $key ] ) ) {
+			return $this->attachments[ $key ];
 		}
 
-		$id = $this->find( 'attachment', "image:{$file}" );
+		$id = $this->find( 'attachment', $key );
 
 		if ( ! $id ) {
-			$source = SEPS_CORE_DIR . 'demo/images/' . $file;
+			$source = SEPS_CORE_DIR . "demo/{$folder}/{$file}";
 			$tmp    = wp_tempnam( $file );
 
 			if ( ! is_readable( $source ) || ! copy( $source, $tmp ) ) {
-				WP_CLI::error( "Cannot read demo image {$file}." );
+				WP_CLI::error( "Cannot read demo file {$folder}/{$file}." );
 			}
 
 			$id = media_handle_sideload(
@@ -2849,7 +2907,7 @@ HTML;
 					'tmp_name' => $tmp,
 				),
 				0,
-				$alt
+				$title
 			);
 
 			if ( is_wp_error( $id ) ) {
@@ -2857,12 +2915,10 @@ HTML;
 				WP_CLI::error( $id );
 			}
 
-			update_post_meta( $id, self::SEED_META, "image:{$file}" );
+			update_post_meta( $id, self::SEED_META, $key );
 		}
 
-		update_post_meta( $id, '_wp_attachment_image_alt', $alt );
-
-		$this->attachments[ $file ] = (int) $id;
+		$this->attachments[ $key ] = (int) $id;
 
 		return (int) $id;
 	}

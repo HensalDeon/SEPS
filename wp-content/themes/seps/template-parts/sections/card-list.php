@@ -170,6 +170,7 @@ $seps_items = (string) ob_get_clean();
 							role="group"
 							aria-label="<?php esc_attr_e( 'Choose slide', 'seps' ); ?>"
 							data-dot-label="<?php /* translators: %d: Slide number (used by the carousel script). */ esc_attr_e( 'Go to slide %d', 'seps' ); ?>"
+							data-count-label="<?php /* translators: 1: Cards in view, e.g. "4–6", 2: Number of cards (used by the carousel script). */ esc_attr_e( '%1$s of %2$s', 'seps' ); ?>"
 							data-carousel-dots
 							hidden
 						></div>

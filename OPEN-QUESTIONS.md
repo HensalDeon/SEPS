@@ -120,3 +120,12 @@ Links taken from the current website (seps-auh.com): its "Parent Login" and "Sta
 | 56 | **Student Portal:** Do students sign in on the same portal as parents and staff? | Same portal sign-in for Parent, Student and Staff | _Pending_ |
 | 57 | **Register Now:** The current website sends "Register Now" to the ETH Digital Campus registration portal (https://seps.ethdigitalcampus.com/RegistrationPortal?dbConnVar=SEPS). The new design has its own Registration Form page, which emails the school. Should the new site keep its own form, or link to the ETH portal so registrations go straight into the school system? | The new Registration Form page | _Pending_ |
 | 58 | **YouTube:** The current website links a YouTube channel (https://www.youtube.com/channel/UCfLTdr7uO4GoMqRRN5mSoww). The design's social icons are Facebook, X and Instagram only. Add YouTube? | Not shown | _Pending_ |
+
+## Academics: CBSE Mandatory Public Disclosure
+
+The 19 documents and their PDFs come from the current website (https://seps-auh.com/cbse/). The card photos are placeholders.
+
+| # | Question | Current placeholder | Answer |
+|---|---|---|---|
+| 59 | **Trade License:** On the current website, "Commercial License" and "School Trade License" open the same PDF. Is there a separate trade license document, or should the two cards be merged? | Both cards open the commercial license PDF | _Pending_ |
+| 60 | **Card photos:** The disclosure cards use stock photos. Does the school have its own photos (e.g. their buses, clinic, building), or should the cards show a preview of each document instead? | Public-domain stock photos | _Pending_ |

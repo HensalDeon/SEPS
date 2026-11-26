@@ -540,9 +540,11 @@ function page_section_layouts(): array {
 								'file',
 								__( 'Document (PDF or image)', 'seps' ),
 								array(
+									'required'      => 1,
 									'return_format' => 'url',
 									'library'       => 'all',
-									'instructions'  => __( 'Opens in a new tab. If empty, the preview image opens instead.', 'seps' ),
+									'mime_types'    => 'pdf, jpg, jpeg, png, webp',
+									'instructions'  => __( 'Opens in a new tab when the card is clicked. Upload a new file here to replace the document.', 'seps' ),
 								)
 							),
 						),
