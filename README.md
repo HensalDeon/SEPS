@@ -44,6 +44,8 @@ The post types live in a plugin so that content survives a future theme change.
 
 `wp seps seed` fills a fresh site with the Figma content: the main pages from the sitemap, all six menus, Site Settings, the home page sections, four news posts, testimonials, FAQs, staff, and the About page, plus the images (with alt text). Seeded items are updated in place, never duplicated.
 
+Buttons and cards link to the school's real documents. The CBSE disclosure PDFs ship with the plugin (`seps-core/demo/documents`). The other documents (policies, achievements, handbook, reports, forms, about 170 MB) are **downloaded from seps-auh.com** into the Media Library the first time the `admissions`, `student-life`, `news-events` and `resources` steps run. These steps need an internet connection and take a few minutes the first time. If a download fails, the seeder warns and links to the file on seps-auh.com instead.
+
 > **Re-running overwrites edits** to seeded items (Home sections, menus, Site Settings…). On an existing site, run only the steps you need, e.g. `wp seps seed --only=staff,about`. Run `wp help seps seed` for the list of steps.
 
 **Day to day:** edit files in this repo, then re-run `bin/sync-local.sh seps` to update the Local site. (Use `npm run build` first if you changed SCSS or JS.)

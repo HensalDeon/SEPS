@@ -346,7 +346,7 @@ final class Seed_Command {
 					$link( 'Student Portal', $portal ),
 					$link( 'Staff Portal', $portal ),
 					$link( 'Fee Payment', $portal ), // Paid after signing in (to confirm: open question #55).
-					$link( 'School Calendar', get_permalink( $this->pages['news-events'] ) ),
+					$link( 'School Calendar', get_permalink( $this->pages['news-events'] ) . '#school-calendar' ),
 				),
 			),
 			'legal'          => array(
@@ -1003,6 +1003,124 @@ final class Seed_Command {
 	}
 
 	/**
+	 * Media coverage reports for 2022–23 to 2024–25 (seps-auh.com/media-coverage),
+	 * shown as the "Media Gallery" year cards on Student Life and News & Events.
+	 * The school publishes them as Word documents.
+	 *
+	 * @return array<int,array{0:string,1:array}> Card text and "View" link, oldest first.
+	 */
+	private function media_coverage(): array {
+		return array(
+			array( 'Memorable moments from the 2022–23 academic year.', $this->school_link( 'View', '2024/11/media-coverage-NW-22-23.docx', 'media-coverage-2022-23.docx', 'Media Coverage 2022–23' ) ),
+			array( 'A glimpse into school life and memorable moments from 2023–24.', $this->school_link( 'View', '2024/11/media-coverageNW-23-24.docx', 'media-coverage-2023-24.docx', 'Media Coverage 2023–24' ) ),
+			array( 'Explore moments from classrooms, activities, events and celebrations from 2024–25.', $this->school_link( 'View', '2024/11/media-coverage-NW-24-25.docx', 'media-coverage-2024-25.docx', 'Media Coverage 2024–25' ) ),
+		);
+	}
+
+	/**
+	 * Resources "Policies": every policy published on seps-auh.com/policies,
+	 * the four in the design first. Each card opens its PDF. Photos are
+	 * placeholders: the designed four, then themed or rotating demo photos.
+	 *
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function policy_cards(): array {
+		$photos = array(
+			'policy-1'    => array( 'resources-policy-1.jpg', 'Teacher presenting to a class' ),
+			'policy-2'    => array( 'resources-policy-2.jpg', 'Two staff members meeting at a desk' ),
+			'policy-3'    => array( 'resources-policy-3.jpg', 'Teacher with young students in a classroom' ),
+			'policy-4'    => array( 'resources-policy-4.jpg', 'Student writing in a notebook' ),
+			'bus'         => array( 'admissions-transport.jpg', 'Yellow school bus on the road' ),
+			'fees'        => array( 'admissions-fee.jpg', 'Students studying together in the library' ),
+			'building'    => array( 'doc-commercial-license.jpg', 'Glass office building against the sky' ),
+			'safety'      => array( 'doc-civil-defence.jpg', 'Fire extinguisher on a wall' ),
+			'health'      => array( 'doc-clinic.jpg', 'Stethoscope on a white desk' ),
+			'food'        => array( 'doc-drinking-water.jpg', 'Water poured into a glass' ),
+			'sport'       => array( 'facility-3.jpg', 'Indoor sports hall' ),
+			'calendar'    => array( 'doc-calendar.jpg', 'Open planner with handwritten notes' ),
+			'parents'     => array( 'doc-parent-council.jpg', 'Two people talking at a meeting table' ),
+			'digital'     => array( 'facility-2.jpg', 'Robotic arm in the computer science lab' ),
+			'farm'        => array( 'facility-6.jpg', 'Student gardening in the organic farm' ),
+			'kindergarten' => array( 'about-hero.jpg', 'Young students drawing at their desks' ),
+		);
+		// For the rest, in turn.
+		$rotation = array(
+			array( 'doc-teachers.jpg', 'Teacher with students in a classroom' ),
+			array( 'doc-smc.jpg', 'Empty boardroom with a long table' ),
+			array( 'academics-courses.jpg', 'Students studying at desks in a bright classroom' ),
+			array( 'doc-self-certification.jpg', 'Clipboard on a wooden desk' ),
+			array( 'about-vision.jpg', 'Students walking together along a school corridor' ),
+			array( 'doc-affidavit.jpg', 'Hand signing a document with a fountain pen' ),
+			array( 'about-primary.jpg', 'Smiling student holding books with classmates' ),
+			array( 'doc-disclosure.jpg', 'Documents on a clipboard on a desk' ),
+		);
+
+		// Title, path under wp-content/uploads on seps-auh.com, photo key ('' = rotation).
+		$policies = array(
+			array( 'Attendance Policy', '2025/11/ATTENDANCE-POLICY.pdf', 'policy-1' ),
+			array( 'Curriculum Policy', '2025/11/CURRICULUM-POLICY.pdf', 'policy-2' ),
+			array( 'Assessment Policy', '2025/12/Assessment-Policy.pdf', 'policy-3' ),
+			array( 'Student Protection Policy', '2025/11/Student-Protection-Policy-SEPS-.pdf', 'policy-4' ),
+			array( 'Student Administrative Affairs Policy', '2025/11/STUDENT-ADMINISTRATIVE-AFFAIRS-POLICY.pdf', '' ),
+			array( 'School Building and Facilities Policy', '2026/01/School-Building-and-Facilities-Policy.pdf', 'building' ),
+			array( 'Financial Auditing and Reporting Policy', '2026/01/School-Policy-on-Financial-Auditing-and-Report-1.pdf', '' ),
+			array( 'Student Performance Report Policy', '2026/01/Policy-on-Student-Performance-Report.pdf', '' ),
+			array( 'Fees Policy', '2026/01/School-Policy-on-Fees.pdf', 'fees' ),
+			array( 'Governance Policy', '2026/01/School-Policy-on-Governance.pdf', '' ),
+			array( 'Coeducation Policy', '2026/01/School-Policy-on-Coeducation.pdf', '' ),
+			array( 'Licensing Policy', '2026/01/School-Policy-on-Licensing.pdf', '' ),
+			array( 'Employment Policy', '2026/01/EMPLOYMENT-POLICY.pdf', '' ),
+			array( 'Staff Eligibility Policy', '2026/01/STAFF-ELIGIBILITY-POLICY.pdf', '' ),
+			array( 'School Record Policy', '2025/11/SCHOOL-RECORD-POLICY.pdf', '' ),
+			array( 'Values and Ethics Policy', '2025/11/POLICY-ON-VALUES-AND-ETHICS.pdf', '' ),
+			array( 'Extracurricular and Activity Policy', '2025/11/EXTRA-CURRICULAR-AND-ACTIVITY-POLICY.pdf', 'sport' ),
+			array( 'Staff Wellbeing Policy', '2025/11/STAFF-WELLBEING-POLICY.pdf', 'health' ),
+			array( 'School Calendar & Public Holiday Policy', '2025/11/SCHOOL-CALENDER-PUBLIC-HOLIDAY-POLICY.pdf', 'calendar' ),
+			array( 'Professional Code of Ethics Policy', '2025/11/SCHOOL-POLICY-ON-PROFESSIONAL-CODE-OF-ETHICS.pdf', '' ),
+			array( 'Reporting Policy', '2025/11/SCHOOL-POLICY-ON-REPORTING.pdf', '' ),
+			array( 'PE Policy', '2025/11/PE-POLICY-1.pdf', 'sport' ),
+			array( 'Wellbeing Policy', '2025/11/Well-Being-Policy-2.pdf', 'health' ),
+			array( 'Compliance Policy', '2025/11/Compliance-Policy.pdf', '' ),
+			array( 'Sustainability Policy', '2025/11/School-Policy-on-Sustainability.pdf', 'farm' ),
+			array( 'Career and University Guidance Policy', '2025/11/CU-Guidance-Policy-1.pdf', '' ),
+			array( 'Inclusion Policy', '2025/11/INCLUSION-POLICY.pdf', '' ),
+			array( 'Gifted and Talented Education Policy', '2025/11/GIFTED-AND-TALENTED-EDUCATION-POLICY.pdf', '' ),
+			array( 'Transportation Policy', '2026/10/School-Transportation-Policy.pdf', 'bus' ),
+			array( 'Safeguarding Policy', '2025/11/School-Safeguarding-policy-.pdf', '' ),
+			array( 'Parent Engagement Policy', '2025/12/Parent-Engagement-Policy.pdf', 'parents' ),
+			array( 'Educational Risk Policy', '2026/01/Educational-Risk-PolicyUpdated.pdf', '' ),
+			array( 'Student Behaviour Policy', '2025/11/Student-Behavior-Policy-SEPS-.pdf', '' ),
+			array( 'Student Mental Health Policy', '2025/11/Student-Mental-Health-Policy-.pdf', 'health' ),
+			array( 'Digital Policy', '2025/12/DIGITAL-POLICY-1.pdf', 'digital' ),
+			array( 'Cultural Consideration Policy', '2025/11/CULTURAL-CONSIDERATION-POLICY-.pdf', '' ),
+			array( 'In-School Specialist Service Policy', '2025/11/IN-SCHOOL-SPECIALIST-SERVICE-POLICY.pdf', '' ),
+			array( 'Food and Nutrition Policy', '2026/02/Food-and-Nutrition-Policy-1.pdf', 'food' ),
+			array( 'Quality Assurance Policy', '2026/01/QUALITY-ASSURANCE-POLICY-SEALED.pdf', '' ),
+			array( 'Kindergarten MoE Subjects Policy (English)', '2026/02/KINDERGARTEN-MOE-SUBJECTS-POLICY-ENGLISH.pdf', 'kindergarten' ),
+			array( 'Kindergarten MoE Subjects Policy (Arabic)', '2026/02/KINDERGARTEN-MOE-SUBJECTS-POLICY-ARABIC.pdf', 'kindergarten' ),
+			array( 'Health & Safety Policy', '2025/11/Health-Safety-policy-updated.pdf', 'safety' ),
+			array( 'Occupational Safety & Health (OSH) Policy', '2025/05/SEPS.OSH_.POL_.01.pdf', 'safety' ),
+		);
+
+		$cards = array();
+		$turn  = 0;
+
+		foreach ( $policies as [ $title, $path, $photo ] ) {
+			[ $file, $alt ] = '' !== $photo ? $photos[ $photo ] : $rotation[ $turn++ % count( $rotation ) ];
+
+			$cards[] = array(
+				'image' => $this->image( $file, $alt ),
+				'title' => $title,
+				'text'  => '',
+				// No link text: the whole card opens the PDF.
+				'link'  => $this->school_link( '', $path, sanitize_file_name( strtolower( $title ) ) . '.pdf', $title ),
+			);
+		}
+
+		return $cards;
+	}
+
+	/**
 	 * Admissions page: process, fees, transport, uniform, registrations,
 	 * withdrawals and admissions FAQs (FAQ posts in the "Admissions" topic).
 	 */
@@ -1162,11 +1280,11 @@ final class Seed_Command {
 				'content'       => '<p>Sunrise English Private School provides safe and reliable transportation through <strong>Fast Rent a Car,</strong> our authorized transport provider. Students should arrive at their pick-up point at least 5 minutes before the scheduled bus time.</p><p>For <strong>KG1 to Grade 6</strong>, an authorized adult with a Guardian Card must be present at drop-off. Alternative drop-off and later return requests require prior written approval and are subject to route and seat availability.</p>',
 				'buttons'       => array(
 					array(
-						'link'  => $link( 'View Transport Fee' ),
+						'link'  => $this->school_link( 'View Transport Fee', '2024/03/BUS-FEE-2023-2024-1-1.pdf', 'transport-fee.pdf', 'Transport Fee' ),
 						'style' => 'accent',
 					),
 					array(
-						'link'  => $link( 'View Transport Fee Policy' ),
+						'link'  => $this->school_link( 'View Transport Fee Policy', '2024/03/SEPS-TRANSPORT-FEE-POLICY-2.pdf', 'transport-fee-policy.pdf', 'Transport Fee Policy' ),
 						'style' => 'primary',
 					),
 				),
@@ -1253,7 +1371,7 @@ final class Seed_Command {
 						'For <strong>Grades X &amp; XII</strong>, TCs are issued after results are declared and ADEK approval is received.',
 					)
 				),
-				'button'        => $link( 'Download TC Application Form' ),
+				'button'        => $this->school_link( 'Download TC Application Form', '2026/11/SEPS-TC-FORM.pdf', 'tc-application-form.pdf', 'TC Application Form' ),
 				'image'         => $this->image( 'admissions-withdrawal.jpg', 'Student listening to a teacher in class' ),
 			),
 			array(
@@ -1285,30 +1403,30 @@ final class Seed_Command {
 			'link'  => $url,
 		);
 
+		// Whole-card link (no button text) to a report PDF on seps-auh.com.
+		$report = fn( string $path, string $name, string $title ): array => $this->school_link( '', $path, $name, $title );
+
 		$years = array(
 			array( 'student-life-year-1.jpg', 'Curved library bookshelves', '2023–24' ),
 			array( 'student-life-year-2.jpg', 'Students working in a classroom', '2024–25' ),
 			array( 'student-life-year-3.jpg', 'Graduates throwing their caps in the air', '2025–26' ),
 		);
 
+		// Each year opens the school's achievements report (from seps-auh.com/achievements).
 		$achievements = array(
-			'Celebrating the achievements and milestones of our students from the 2023–24 academic year.',
-			'Discover the academic, creative, sporting and extracurricular achievements from 2024–25.',
-			'Explore the latest achievements, milestones and accomplishments from the 2025–26 academic year.',
+			array( 'Celebrating the achievements and milestones of our students from the 2023–24 academic year.', $this->school_link( 'View', '2024/11/School-Achievements-23-24.pdf', 'school-achievements-2023-24.pdf', 'School Achievements 2023–24' ) ),
+			array( 'Discover the academic, creative, sporting and extracurricular achievements from 2024–25.', $this->school_link( 'View', '2024/11/School-Achievements-24-25.pdf', 'school-achievements-2024-25.pdf', 'School Achievements 2024–25' ) ),
+			array( 'Explore the latest achievements, milestones and accomplishments from the 2025–26 academic year.', $this->school_link( 'View', '2026/06/School-Achievements-2025-2026.pdf', 'school-achievements-2025-26.pdf', 'School Achievements 2025–26' ) ),
 		);
 
 		// As in the design (the year labels and descriptions do not match; see OPEN-QUESTIONS.md).
-		$gallery = array(
-			'Memorable moments from the 2022–23 academic year.',
-			'A glimpse into school life and memorable moments from 2023–24.',
-			'Explore moments from classrooms, activities, events and celebrations from 2024–25.',
-		);
+		$gallery = $this->media_coverage();
 
 		// Achievements and gallery: one card per school year, each with a "View" button.
-		$year_cards = static fn( array $texts ): array => array_map(
-			static fn( array $year, string $text ): array => $card( $year[0], $year[1], $year[2], $text, $link( 'View' ) ),
+		$year_cards = static fn( array $rows ): array => array_map(
+			static fn( array $year, array $row ): array => $card( $year[0], $year[1], $year[2], $row[0], $row[1] ),
 			$years,
-			$texts
+			$rows
 		);
 
 		$sections = array(
@@ -1356,11 +1474,16 @@ final class Seed_Command {
 				'image_height'  => 'small',
 				'panel'         => 1,
 				'panel_title'   => '',
+				// Activity reports from seps-auh.com/reports: the four in the design, then the
+				// other three (with photos reused from elsewhere on the site). Each opens its PDF.
 				'cards'         => array(
-					$card( 'student-life-activity-1.jpg', 'Students pointing at a world map with flags', 'GCC Exhibition Report 2024' ),
-					$card( 'student-life-activity-2.jpg', 'Students visiting an art exhibition', 'National Day Report 2023' ),
-					$card( 'student-life-activity-3.jpg', 'Flag flying against the sky', 'Flag Day Assembly 2023' ),
-					$card( 'student-life-activity-4.jpg', 'Children working together on a flags project', 'Emirates Red Crescent' ),
+					$card( 'student-life-activity-1.jpg', 'Students pointing at a world map with flags', 'GCC Exhibition Report 2024', '', $report( '2024/11/Report-on-GCC-exhibition-2024.pdf', 'gcc-exhibition-report-2024.pdf', 'GCC Exhibition Report 2024' ) ),
+					$card( 'student-life-activity-2.jpg', 'Students visiting an art exhibition', 'National Day Report 2023', '', $report( '2024/11/National-Day-Report-2023.pdf', 'national-day-report-2023.pdf', 'National Day Report 2023' ) ),
+					$card( 'student-life-activity-3.jpg', 'Flag flying against the sky', 'Flag Day Assembly 2023', '', $report( '2024/11/2-Flag-Day-Assembly-2023-Report.pdf', 'flag-day-assembly-2023-report.pdf', 'Flag Day Assembly 2023' ) ),
+					$card( 'student-life-activity-4.jpg', 'Children working together on a flags project', 'Emirates Red Crescent', '', $report( '2024/11/3.1.5-Report-Emirates-Red-Crescent-1.pdf', 'emirates-red-crescent-report.pdf', 'Emirates Red Crescent Report' ) ),
+					$card( 'about-vision.jpg', 'Students walking together along a school corridor', 'Commemoration Day Report', '', $report( '2024/11/Report-of-commemoration-day-.pdf', 'commemoration-day-report.pdf', 'Commemoration Day Report' ) ),
+					$card( 'about-primary.jpg', 'Smiling student holding books with classmates', 'Grade 7 Visual Arts Exhibition Trip', '', $report( '2024/11/Educational-trip-grade-7-for-visual-Arts-exhibition.pdf', 'grade-7-visual-arts-exhibition-trip.pdf', 'Grade 7 Visual Arts Exhibition Trip' ) ),
+					$card( 'admissions-transport.jpg', 'Yellow school bus on the road', 'Future Riders Program Field Trip', '', $report( '2024/11/9.-Field-Trip-Future-Riders-Program-.pdf', 'future-riders-field-trip.pdf', 'Future Riders Program Field Trip' ) ),
 				),
 				'image'         => $this->image( 'student-life-activities.jpg', 'Young student drawing with a pencil' ),
 				'decor'         => 'none',
@@ -1371,7 +1494,7 @@ final class Seed_Command {
 				'heading'       => "Celebrating Our Achievements\nThrough the Years",
 				'intro'         => '<p>Every achievement tells a story of effort, talent and determination. Explore the milestones and accomplishments that have shaped the Sunrise English Private School community through the years.</p>',
 				'signature'     => '',
-				'button'        => $link( 'View Teachers’ Achievements 2025–26' ),
+				'button'        => $this->school_link( 'View Teachers’ Achievements 2025–26', '2026/06/Teachers-achievement-2025-2026.pdf', 'teachers-achievements-2025-26.pdf', 'Teachers’ Achievements 2025–26' ),
 				'display'       => 'carousel',
 				'columns'       => '3',
 				'image_height'  => 'large',
@@ -1446,10 +1569,11 @@ final class Seed_Command {
 
 		$news     = term_exists( 'News', 'category' );
 		$news_url = is_array( $news ) ? get_category_link( (int) $news['term_id'] ) : '#';
+		$coverage = $this->media_coverage();
 		$gallery  = array(
-			array( 'news-events-gallery-1.jpg', 'Empty classroom with desks and a chalkboard', '2022–23', 'Memorable moments from the 2022–23 academic year.' ),
-			array( 'news-events-gallery-2.jpg', 'Students raising their hands in class', '2023–24', 'A glimpse into school life and memorable moments from 2023–24.' ),
-			array( 'news-events-gallery-3.jpg', 'Students listening in a lecture hall', '2024–25', 'Explore moments from classrooms, activities, events and celebrations from 2024–25.' ),
+			array( 'news-events-gallery-1.jpg', 'Empty classroom with desks and a chalkboard', '2022–23', $coverage[0] ),
+			array( 'news-events-gallery-2.jpg', 'Students raising their hands in class', '2023–24', $coverage[1] ),
+			array( 'news-events-gallery-3.jpg', 'Students listening in a lecture hall', '2024–25', $coverage[2] ),
 		);
 
 		$sections = array(
@@ -1471,7 +1595,7 @@ final class Seed_Command {
 				'content'        => '<p>A collection of the moments, milestones and stories that make life at SEPS memorable.</p><p>Explore student achievements, school events, activities and celebrations that showcase the many ways our community learns, participates and grows together.</p>',
 				'buttons'        => array(
 					array(
-						'link'  => $link( 'View SEPS Chronicle' ),
+						'link'  => $this->school_link( 'View SEPS Chronicle', '2026/01/The-sunrise-Chronicle.pdf', 'sunrise-chronicle.pdf', 'The Sunrise Chronicle' ),
 						'style' => 'primary',
 					),
 				),
@@ -1484,11 +1608,12 @@ final class Seed_Command {
 			array(
 				'acf_fc_layout'  => 'text_image',
 				'background'     => 'white',
+				'anchor'         => 'school-calendar', // Footer "School Calendar".
 				'heading'        => 'ADEK School Calendar',
 				'content'        => '<p>Stay up to date with important dates across the school year, including academic terms, holidays and key school milestones.</p><p>Keep the calendar handy to plan ahead and stay informed throughout the year.</p>',
 				'buttons'        => array(
 					array(
-						'link'  => $link( 'View Calendar' ),
+						'link'  => $this->school_link( 'View Calendar', '2026/10/ADEK-School-Calendar-Indian-SUNRISE-ENGLISH-PRIVATE-SCHOOL-L.L.C-O.P.C-9120-2026-2027-.pdf', 'adek-school-calendar-2026-27.pdf', 'ADEK School Calendar 2026–27' ),
 						'style' => 'primary',
 					),
 				),
@@ -1514,8 +1639,8 @@ final class Seed_Command {
 					fn( array $row ): array => array(
 						'image' => $this->image( $row[0], $row[1] ),
 						'title' => $row[2],
-						'text'  => $row[3],
-						'link'  => $link( 'View' ),
+						'text'  => $row[3][0],
+						'link'  => $row[3][1],
 					),
 					$gallery
 				),
@@ -1699,7 +1824,7 @@ final class Seed_Command {
 				'acf_fc_layout' => 'contact_form',
 				'layout'        => 'full',
 				'heading'       => 'Registration Form',
-				'intro'         => '<p>Fields marked <span class="enquiry__req">*</span> are required. Already have an account? <a href="#"><strong>Sign In</strong></a></p>',
+				'intro'         => '<p>Fields marked <span class="enquiry__req">*</span> are required. Already have an account? <a href="https://seps.ethdigitalcampus.com/RegistrationPortal/forms/Utility/Login.jsp?dbConnVar=SEPS" target="_blank" rel="noopener noreferrer"><strong>Sign In</strong></a></p>',
 				'form'          => $this->registration_form(),
 				'image'         => 0,
 			),
@@ -2520,17 +2645,11 @@ HTML;
 			'title'  => $title,
 			'target' => '',
 		);
-		$button = static fn( string $title ): array => array(
+		$button = static fn( array $link ): array => array(
 			array(
-				'link'  => $link( $title ),
+				'link'  => $link,
 				'style' => 'primary',
 			),
-		);
-		$policy = fn( string $image, string $alt, string $title ): array => array(
-			'image' => $this->image( $image, $alt ),
-			'title' => $title,
-			'text'  => '',
-			'link'  => null,
 		);
 		$list   = static fn( array $items ): string => '<ul><li>' . implode( '</li><li>', $items ) . '</li></ul>';
 
@@ -2594,7 +2713,7 @@ HTML;
 				'background'     => 'white',
 				'heading'        => 'Progress & Achievements',
 				'content'        => '<p>Go behind the highlights of the year and discover the achievements, activities, academic progress and milestones that shaped life at SEPS in 2024–25.</p>',
-				'buttons'        => $button( 'View Annual Report 2024–25' ),
+				'buttons'        => $button( $this->school_link( 'View Annual Report 2024–25', '2026/02/Annual-Report-24-25-FINAL.pdf', 'annual-report-2024-25.pdf', 'Annual Report 2024–25' ) ),
 				'image'          => $this->image( 'resources-progress.jpg', 'Young children raising their hands in class' ),
 				'image_size'     => 'circle_small',
 				'image_position' => 'left',
@@ -2607,7 +2726,7 @@ HTML;
 				'background'     => 'lilac',
 				'heading'        => 'Explore Our Library',
 				'content'        => '<p>A space for reading, research and discovery, our library brings together books, reference materials and digital resources to support learning across grades and subjects.</p><p>From guided reading and book reviews to reading activities that encourage students to discover new books and ideas, the library helps make reading a part of everyday school life.</p>',
-				'buttons'        => $button( 'Explore Library' ),
+				'buttons'        => $button( $link( 'Explore Library', '#facilities' ) ), // No library page yet: the Libraries facility (open question #61).
 				'image'          => $this->image( 'resources-library.jpg', 'Children reading books in the library' ),
 				'image_size'     => 'fill',
 				'image_position' => 'right',
@@ -2626,12 +2745,7 @@ HTML;
 				'image_height'  => 'small',
 				'panel'         => 0,
 				'panel_title'   => '',
-				'cards'         => array(
-					$policy( 'resources-policy-1.jpg', 'Teacher presenting to a class', 'Attendance Policy' ),
-					$policy( 'resources-policy-2.jpg', 'Two staff members meeting at a desk', 'Curriculum Policy' ),
-					$policy( 'resources-policy-3.jpg', 'Teacher with young students in a classroom', 'Assessment Policy' ),
-					$policy( 'resources-policy-4.jpg', 'Student writing in a notebook', 'Student Protection Policy' ),
-				),
+				'cards'         => $this->policy_cards(),
 				'image'         => 0,
 				'decor'         => 'none',
 			),
@@ -2649,7 +2763,7 @@ HTML;
 				'background'     => 'white',
 				'heading'        => 'School Inspection Report',
 				'content'        => '<p>Take a closer look at SEPS through the 2024/25 ADEK Irtiqa’a School Inspection Report, covering teaching and learning, academic performance, student development and school leadership.</p><p>Discover the report’s findings, strengths and areas identified for continued improvement.</p>',
-				'buttons'        => $button( 'View Report' ),
+				'buttons'        => $button( $this->school_link( 'View Report', '2025/03/ADEK-Irtiqaa-School-Inspection-Report-2024-25.pdf', 'school-inspection-report-2024-25.pdf', 'ADEK Irtiqa’a School Inspection Report 2024–25' ) ),
 				'image'          => $this->image( 'resources-inspection.jpg', 'Student writing in class' ),
 				'image_size'     => 'circle_large',
 				'image_position' => 'right',
@@ -2661,7 +2775,7 @@ HTML;
 				'background'     => 'lilac',
 				'heading'        => 'Parent Handbook',
 				'content'        => '<p>Everything parents need to know about life at SEPS, from school routines and expectations to important guidelines and everyday information.</p><p>Keep the handbook handy for useful information throughout the school year.</p>',
-				'buttons'        => $button( 'View Handbook' ),
+				'buttons'        => $button( $this->school_link( 'View Handbook', '2025/01/Parent-Handbook.pdf', 'parent-handbook.pdf', 'Parent Handbook' ) ),
 				'image'          => $this->image( 'resources-handbook.jpg', 'Cover of the SEPS school diary' ),
 				'image_size'     => 'document',
 				'image_position' => 'left',
@@ -2670,6 +2784,7 @@ HTML;
 			),
 			array(
 				'acf_fc_layout' => 'facilities',
+				'anchor'        => 'facilities',
 				'heading'       => 'Spaces That Inspire Learning',
 				'intro'         => 'Our learning environment brings together dedicated academic facilities, creative spaces and opportunities for students to explore, experiment and stay active.',
 				'button'        => $this->link( 'student-life', 'View Gallery' ),
@@ -2874,6 +2989,76 @@ HTML;
 	 */
 	private function document( string $file, string $title ): int {
 		return $this->attachment( 'documents', $file, $title );
+	}
+
+	/**
+	 * URL of a document published on the school's current website
+	 * (seps-auh.com), imported into the Media Library once.
+	 *
+	 * These files (about 170 MB, some over 20 MB) are too large to keep in the
+	 * repository, so they are downloaded when seeding. If the download fails,
+	 * the link points to the file on the current website instead.
+	 *
+	 * @param string $path  Path after https://seps-auh.com/wp-content/uploads/.
+	 * @param string $title Media Library title.
+	 * @param string $name  File name in the Media Library.
+	 */
+	private function school_file( string $path, string $title, string $name ): string {
+		$source = 'https://seps-auh.com/wp-content/uploads/' . $path;
+		$key    = "school-file:{$name}";
+
+		if ( ! isset( $this->attachments[ $key ] ) ) {
+			$id = $this->find( 'attachment', $key );
+
+			if ( ! $id ) {
+				WP_CLI::log( "Downloading {$name} from seps-auh.com…" );
+				$tmp = download_url( $source, 300 );
+
+				if ( is_wp_error( $tmp ) ) {
+					WP_CLI::warning( "Could not download {$source} ({$tmp->get_error_message()}); linking to it instead." );
+					return $source;
+				}
+
+				$id = media_handle_sideload(
+					array(
+						'name'     => $name,
+						'tmp_name' => $tmp,
+					),
+					0,
+					$title
+				);
+
+				if ( is_wp_error( $id ) ) {
+					wp_delete_file( $tmp );
+					WP_CLI::warning( "Could not import {$name} ({$id->get_error_message()}); linking to it instead." );
+					return $source;
+				}
+
+				update_post_meta( $id, self::SEED_META, $key );
+			}
+
+			$this->attachments[ $key ] = (int) $id;
+		}
+
+		return (string) wp_get_attachment_url( $this->attachments[ $key ] );
+	}
+
+	/**
+	 * Link (SCF link array) to a document on the school's current website,
+	 * opening in a new tab. See school_file().
+	 *
+	 * @param string $title Link text ('' for a whole-card link).
+	 * @param string $path  Path after https://seps-auh.com/wp-content/uploads/.
+	 * @param string $name  File name in the Media Library.
+	 * @param string $label Media Library title (defaults to the link text).
+	 * @return array{url:string,title:string,target:string}
+	 */
+	private function school_link( string $title, string $path, string $name, string $label = '' ): array {
+		return array(
+			'url'    => $this->school_file( $path, '' !== $label ? $label : $title, $name ),
+			'title'  => $title,
+			'target' => '_blank',
+		);
 	}
 
 	/**
