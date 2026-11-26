@@ -1,6 +1,6 @@
 <?php
 /**
- * Site footer: identity, contact, subscribe CTA, menu columns, legal row.
+ * Site footer: identity, contact, subscribe form, menu columns, legal row.
  *
  * Column headings are the names of the menus assigned to each footer
  * location, so editors control both links and headings from Appearance → Menus.
@@ -16,7 +16,16 @@ $seps_address = (string) seps_option( 'address' );
 $seps_email   = sanitize_email( (string) seps_option( 'email' ) );
 $seps_phone   = (string) seps_option( 'phone' );
 $seps_prompt  = (string) seps_option( 'newsletter_text' );
-$seps_cta     = seps_button( seps_option( 'newsletter_button' ), 'light', 'newsletter__button' );
+$seps_form_id = absint( seps_option( 'newsletter_form' ) );
+$seps_form    = '';
+
+// Subscribe: a Contact Form 7 form (email + button); otherwise a link button.
+if ( $seps_form_id && SEPS\Theme\CF7\is_active() && wpcf7_contact_form( $seps_form_id ) ) {
+	SEPS\Theme\CF7\enqueue();
+	$seps_form = do_shortcode( sprintf( '[contact-form-7 id="%d" html_class="newsletter__form"]', $seps_form_id ) );
+}
+
+$seps_cta = '' === $seps_form ? seps_button( seps_option( 'newsletter_button' ), 'light', 'newsletter__button' ) : '';
 $seps_image   = seps_image(
 	seps_option( 'footer_image' ),
 	'seps-square',
@@ -70,12 +79,12 @@ $seps_legal = seps_menu( 'legal', 'site-footer__legal' );
 				</address>
 			</div>
 
-			<?php if ( $seps_prompt || $seps_cta ) : ?>
-				<div class="newsletter">
+			<?php if ( $seps_prompt || $seps_form || $seps_cta ) : ?>
+				<div class="newsletter<?php echo $seps_form ? ' newsletter--form' : ''; ?>">
 					<?php if ( $seps_prompt ) : ?>
 						<p class="newsletter__text"><?php echo esc_html( $seps_prompt ); ?></p>
 					<?php endif; ?>
-					<?php echo $seps_cta; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-escaped template tag output. ?>
+					<?php echo $seps_form ? $seps_form : $seps_cta; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Contact Form 7 output / pre-escaped template tag output. ?>
 				</div>
 			<?php endif; ?>
 		</div>

@@ -290,8 +290,8 @@ final class Seed_Command {
 			'title' => $title,
 			'url'   => $url,
 		);
-		// ETH Digital Campus (DC Netra): one sign-in for parents, students
-		// and staff. The current school website links its logins here too.
+		// ETH Digital Campus (DC Netra): one sign-in for parents and staff
+		// (fees are paid there too). No Student Portal for now (open question #56).
 		$portal = 'https://seps.ethdigitalcampus.com/SEPS/';
 
 		$locations = array(
@@ -343,9 +343,8 @@ final class Seed_Command {
 				'SEPS Portals',
 				array(
 					$link( 'Parent Portal', $portal ),
-					$link( 'Student Portal', $portal ),
 					$link( 'Staff Portal', $portal ),
-					$link( 'Fee Payment', $portal ), // Paid after signing in (to confirm: open question #55).
+					$link( 'Fee Payment', $portal ),
 					$link( 'School Calendar', get_permalink( $this->pages['news-events'] ) . '#school-calendar' ),
 				),
 			),
@@ -408,6 +407,47 @@ final class Seed_Command {
 		foreach ( $settings as $name => $value ) {
 			update_field( "field_seps_settings_{$name}", $value, 'option' );
 		}
+
+		// Footer subscribe form; mails the school email saved above.
+		update_field( 'field_seps_settings_newsletter_form', $this->newsletter_form(), 'option' );
+	}
+
+	/**
+	 * Create or update the footer subscribe form (Contact Form 7): an email
+	 * field and a "Subscribe Now" button. Each sign-up is emailed to the
+	 * school and kept in Flamingo.
+	 *
+	 * @return int Form ID, or 0 when Contact Form 7 is not active.
+	 */
+	private function newsletter_form(): int {
+		$template = '<label class="newsletter__field"><span class="screen-reader-text">Email address</span>[email* newsletter-email class:newsletter__input autocomplete:email placeholder "Enter your email address"]</label>' . "\n"
+			. '[submit class:btn class:btn--light class:newsletter__button "Subscribe Now"]';
+
+		return $this->cf7_form(
+			'newsletter',
+			'Footer subscribe (newsletter)',
+			'settings',
+			$template,
+			array(
+				'subject'            => 'New newsletter subscriber: [newsletter-email]',
+				'additional_headers' => 'Reply-To: [newsletter-email]',
+				'body'               => $this->mail_body(
+					array(
+						'Please add this address to the school’s mailing list for updates, news and announcements.' => '',
+						"\nEmail" => '[newsletter-email]',
+					),
+					'the footer subscribe form'
+				),
+			),
+			array(
+				'mail_sent_ok'     => 'Thank you for subscribing! You’ll receive our school updates by email.',
+				'mail_sent_ng'     => 'Sorry, something went wrong. Please try again later.',
+				'spam'             => 'Sorry, something went wrong. Please try again later.',
+				'validation_error' => 'Please enter a valid email address.',
+				'invalid_required' => 'Please enter your email address.',
+				'invalid_email'    => 'Please enter a valid email address.',
+			)
+		);
 	}
 
 	/**
@@ -988,7 +1028,7 @@ final class Seed_Command {
 			array( 'NOC', 'noc.pdf', 'doc-noc.jpg', 'Writing a checklist in a notebook' ),
 			array( 'Self Certification', 'self-certification.pdf', 'doc-self-certification.jpg', 'Clipboard on a wooden desk' ),
 			array( 'ADEK License', 'adek-license.pdf', 'doc-adek.jpg', 'Sheikh Zayed Grand Mosque, Abu Dhabi' ),
-			// The current website links the commercial license PDF here too (open question #59).
+			// The same PDF as the commercial license, as on the current website (confirmed, #59).
 			array( 'School Trade License', 'commercial-license.pdf', 'doc-trade-license.jpg', 'Abu Dhabi skyline seen from the water' ),
 		);
 
@@ -2727,7 +2767,7 @@ HTML;
 				'background'     => 'lilac',
 				'heading'        => 'Explore Our Library',
 				'content'        => '<p>A space for reading, research and discovery, our library brings together books, reference materials and digital resources to support learning across grades and subjects.</p><p>From guided reading and book reviews to reading activities that encourage students to discover new books and ideas, the library helps make reading a part of everyday school life.</p>',
-				'buttons'        => $button( $link( 'Explore Library', '#facilities' ) ), // No library page yet: the Libraries facility (open question #61).
+				'buttons'        => array(), // "Explore Library" is hidden until the library content is ready (open question #61).
 				'image'          => $this->image( 'resources-library.jpg', 'Children reading books in the library' ),
 				'image_size'     => 'fill',
 				'image_position' => 'right',

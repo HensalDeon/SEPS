@@ -10,7 +10,7 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 3 | **SEPS Portals:** What are the URLs for Parent Portal, Student Portal, Staff Portal and Fee Payment? Should they open in a new tab? | `#` | Answered from seps-auh.com: Parent, Student and Staff Portal → ETH Digital Campus sign-in. Fee Payment: see #55 |
 | 4 | **Testimonials:** Can we get real parent testimonials (quote, name, "Parent of …")? The Figma shows two; the carousel design implies at least four. | Testimonials 3–4 are sample copy | _Pending_ |
 | 5 | **FAQ answers:** Can we get the answers to questions 2–5? The Figma only shows the first. | Generic answers pointing to the relevant pages | _Pending_ |
-| 6 | **Subscribe Now:** Should this connect to a newsletter service (e.g. Mailchimp, Brevo), or link to a page? | Links to the Contact page | _Pending_ |
+| 6 | **Subscribe Now:** Should this connect to a newsletter service (e.g. Mailchimp, Brevo), or link to a page? | Links to the Contact page | Answered by TL (26 Nov): a Contact Form 7 form in the footer (email + Subscribe Now), emailed to the school and kept in Flamingo |
 | 7 | ~~**Header dropdowns**~~ | Resolved: no dropdowns. Every menu item is a single page. | Resolved 2026-11-23 |
 
 ## About page
@@ -116,8 +116,8 @@ Links taken from the current website (seps-auh.com): its "Parent Login" and "Sta
 
 | # | Question | Current placeholder | Answer |
 |---|---|---|---|
-| 55 | **Fee Payment:** Do parents pay fees online after signing in to the ETH Digital Campus portal, or is there a separate payment link? | Links to the portal sign-in | _Pending_ |
-| 56 | **Student Portal:** Do students sign in on the same portal as parents and staff? | Same portal sign-in for Parent, Student and Staff | _Pending_ |
+| 55 | **Fee Payment:** Do parents pay fees online after signing in to the ETH Digital Campus portal, or is there a separate payment link? | Links to the portal sign-in | Answered by TL (26 Nov): link to the SEPS portal |
+| 56 | **Student Portal:** Do students sign in on the same portal as parents and staff? | Same portal sign-in for Parent, Student and Staff | Answered by TL (26 Nov): hide it (removed from the footer menu) |
 | 57 | **Register Now:** The current website sends "Register Now" to the ETH Digital Campus registration portal (https://seps.ethdigitalcampus.com/RegistrationPortal?dbConnVar=SEPS). The new design has its own Registration Form page, which emails the school. Should the new site keep its own form, or link to the ETH portal so registrations go straight into the school system? | The new Registration Form page | _Pending_ |
 | 58 | **YouTube:** The current website links a YouTube channel (https://www.youtube.com/channel/UCfLTdr7uO4GoMqRRN5mSoww). The design's social icons are Facebook, X and Instagram only. Add YouTube? | Not shown | _Pending_ |
 
@@ -127,7 +127,7 @@ The 19 documents and their PDFs come from the current website (https://seps-auh.
 
 | # | Question | Current placeholder | Answer |
 |---|---|---|---|
-| 59 | **Trade License:** On the current website, "Commercial License" and "School Trade License" open the same PDF. Is there a separate trade license document, or should the two cards be merged? | Both cards open the commercial license PDF | _Pending_ |
+| 59 | **Trade License:** On the current website, "Commercial License" and "School Trade License" open the same PDF. Is there a separate trade license document, or should the two cards be merged? | Both cards open the commercial license PDF | Answered by TL (26 Nov): both cards use the same PDF |
 | 60 | **Card photos:** The disclosure cards use stock photos. Does the school have its own photos (e.g. their buses, clinic, building), or should the cards show a preview of each document instead? | Public-domain stock photos | _Pending_ |
 
 ## Links checked against the current website (26 November 2026)
@@ -136,7 +136,7 @@ Every button and card that had a `#` placeholder now links to the matching docum
 
 | # | Question | Current placeholder | Answer |
 |---|---|---|---|
-| 61 | **Explore Library** (Resources): The current website has no library page or e-library link. Is there one (e.g. an online catalogue), or should it link elsewhere? | Jumps to *Libraries* in "Spaces That Inspire Learning" on the same page | _Pending_ |
+| 61 | **Explore Library** (Resources): The current website has no library page or e-library link. Is there one (e.g. an online catalogue), or should it link elsewhere? | Jumps to *Libraries* in "Spaces That Inspire Learning" on the same page | Answered by TL (26 Nov): the library content will come later; the button is hidden for now |
 | 62 | **Transport fee:** The only transport fee document on the current website is for 2023–2024. Is there a 2026–27 version? | The 2023–24 PDF | _Pending_ |
 | 63 | **Older achievements:** The current website also has School Achievements for 2020–21, 2021–22 and 2022–23. Should they be added as cards (the design shows three years)? | The three years in the design | _Pending_ |
 | 64 | **Media Gallery:** The current website has no photo gallery, only *Media Coverage* Word documents for 2022–23 to 2024–25 (they download instead of opening). Do you have photo albums, or PDF versions of these files? | The Word documents | _Pending_ |

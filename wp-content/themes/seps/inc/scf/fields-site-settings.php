@@ -103,7 +103,26 @@ function register_site_settings_fields(): void {
 						'new_lines' => '',
 					)
 				),
-				link_field( $p, 'newsletter_button', __( 'Subscribe button', 'seps' ) ),
+				field(
+					$p,
+					'newsletter_form',
+					'post_object',
+					__( 'Subscribe form (Contact Form 7)', 'seps' ),
+					array(
+						'post_type'     => array( 'wpcf7_contact_form' ),
+						'return_format' => 'id',
+						'allow_null'    => 1,
+						'multiple'      => 0,
+						'ui'            => 1,
+						'instructions'  => __( 'Email field and Subscribe button in the footer. Recipients and messages are edited in Contact → Contact Forms; submissions are kept in Flamingo.', 'seps' ),
+					)
+				),
+				link_field(
+					$p,
+					'newsletter_button',
+					__( 'Subscribe button (without a form)', 'seps' ),
+					array( 'instructions' => __( 'Used only when no subscribe form is chosen or Contact Form 7 is inactive.', 'seps' ) )
+				),
 				image_field( $p, 'footer_image', __( 'Footer photo', 'seps' ), array( 'instructions' => __( 'Shown cropped to a circle. Square images work best.', 'seps' ) ) ),
 				field(
 					$p,

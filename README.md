@@ -162,10 +162,14 @@ Each sitemap entry is a **single page**: its sub-items (e.g. About → Vision & 
 
 ## Forms (Contact Form 7)
 
-The site's three forms are Contact Form 7 forms styled by the theme
+The site's forms are Contact Form 7 forms styled by the theme
 (`template-parts/sections/contact-form.php`, `_enquiry.scss`): the Contact
 page enquiry, the **Registration form** (Register Now) and the **Careers
 application** (Careers Application, with CV and cover letter uploads). The
+footer's **Subscribe** box is a fourth, small form (*Footer subscribe
+(newsletter)*: an email field and *Subscribe Now*; chosen in Site Settings →
+Footer, styled in `layout/_footer.scss`). Each sign-up is emailed to the
+school and kept in Flamingo; there is no mailing-list service. The
 seeder creates them with the design's fields and sends them to the *Email* in
 Site Settings; after that, edit them in **Contact → Contact Forms**.
 
@@ -180,7 +184,8 @@ Site Settings; after that, edit them in **Contact → Contact Forms**.
 - **Siblings:** the registration form holds up to three sibling groups; the
   second and third appear on *+ Add Another Sibling*.
 - **CF7 loads only where a form is shown** (the theme turns off its
-  site-wide script and stylesheet and its automatic `<p>` tags).
+  site-wide script and stylesheet and its automatic `<p>` tags). With the
+  footer subscribe form, that is every page.
 - **Spam:** connect Cloudflare Turnstile or reCAPTCHA in Contact → Integration.
 - **Saved copies:** with Flamingo active, every submission is listed under
   Flamingo → Inbound Messages, so nothing is lost if an email fails.
