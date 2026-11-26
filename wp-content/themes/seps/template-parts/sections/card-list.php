@@ -14,6 +14,7 @@
  *     @type string $signature    Sign-off; the first line is bold.
  *     @type array  $button       SCF link.
  *     @type string $display      'carousel' | 'grid'.
+ *     @type bool   $dots         Carousel dots (default on); off = arrows only from tablets up.
  *     @type string $columns      '3' | '4' (cards per row on wide screens).
  *     @type string $image_height 'small' | 'medium' | 'large'.
  *     @type bool   $panel        Show the cards on a navy panel.
@@ -37,6 +38,7 @@ $seps_background  = in_array( $args['background'] ?? '', array( 'white', 'lilac'
 $seps_columns     = '4' === (string) ( $args['columns'] ?? '3' ) ? 4 : 3;
 $seps_height      = in_array( $args['image_height'] ?? '', array( 'small', 'medium', 'large' ), true ) ? $args['image_height'] : 'large';
 $seps_carousel    = 'grid' !== ( $args['display'] ?? 'carousel' );
+$seps_dots        = null === ( $args['dots'] ?? null ) || ! empty( $args['dots'] ); // On unless turned off (older rows have no value).
 $seps_panel       = ! empty( $args['panel'] );
 $seps_panel_title = $seps_panel ? trim( (string) ( $args['panel_title'] ?? '' ) ) : '';
 $seps_intro       = trim( (string) ( $args['intro'] ?? '' ) );
@@ -140,7 +142,7 @@ $seps_items = (string) ob_get_clean();
 					$seps_arrow = $seps_on_dark ? 'chevron-circle-white' : 'chevron-circle-brand';
 					$seps_label = $seps_panel_title ? $seps_panel_title : $seps_heading;
 					?>
-					<div class="carousel carousel--cards carousel--max-<?php echo esc_attr( (string) $seps_columns ); ?><?php echo $seps_on_dark ? '' : ' carousel--on-light'; ?>" data-carousel>
+					<div class="carousel carousel--cards carousel--max-<?php echo esc_attr( (string) $seps_columns ); ?><?php echo $seps_on_dark ? '' : ' carousel--on-light'; ?><?php echo $seps_dots ? '' : ' carousel--arrows-only'; ?>" data-carousel>
 						<div class="carousel__stage">
 							<button type="button" class="carousel__arrow carousel__arrow--prev" data-carousel-prev hidden>
 								<?php echo seps_icon( $seps_arrow, 30 ); ?>

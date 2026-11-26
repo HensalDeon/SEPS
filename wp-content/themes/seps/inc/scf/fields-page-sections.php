@@ -882,6 +882,26 @@ function page_section_layouts(): array {
 				),
 				field(
 					'ps_cardlist',
+					'dots',
+					'true_false',
+					__( 'Show dots', 'seps' ),
+					array(
+						'default_value'     => 1,
+						'ui'                => 1,
+						'instructions'      => __( 'Turn off for arrows only on tablets and desktops (e.g. "Education, National Identity & Activities"). Phones have no arrows, so they always show dots.', 'seps' ),
+						'conditional_logic' => array(
+							array(
+								array(
+									'field'    => 'field_seps_ps_cardlist_display',
+									'operator' => '==',
+									'value'    => 'carousel',
+								),
+							),
+						),
+					)
+				),
+				field(
+					'ps_cardlist',
 					'columns',
 					'button_group',
 					__( 'Cards per row (wide screens)', 'seps' ),

@@ -1470,6 +1470,7 @@ final class Seed_Command {
 				'signature'     => '',
 				'button'        => $link( 'Read More', get_permalink( $this->pages['news-events'] ) ),
 				'display'       => 'carousel',
+				'dots'          => 0, // Arrows only, as in the design.
 				'columns'       => '4',
 				'image_height'  => 'small',
 				'panel'         => 1,

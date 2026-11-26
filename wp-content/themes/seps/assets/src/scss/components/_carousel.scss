@@ -148,6 +148,14 @@
 	}
 }
 
+// Arrows only (dots turned off in the section), e.g. "Education, National
+// Identity & Activities". Phones have no arrows, so they keep the dots.
+.carousel--arrows-only .carousel__dots {
+	@include mq(md) {
+		display: none;
+	}
+}
+
 // On white / lilac backgrounds: brand-coloured dots and counter.
 .carousel--on-light .carousel__count {
 	color: var(--color-brand);
