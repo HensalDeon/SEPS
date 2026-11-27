@@ -482,10 +482,10 @@ final class Seed_Command {
 	private function seed_faqs(): void {
 		$items = array(
 			array( 'What curriculum does SEPS follow?', 'Sunrise English Private School follows the CBSE curriculum from KG I to Grade XII, with Arabic-medium subjects following the UAE Ministry of Education curriculum. The curriculum balances knowledge, skills and attitudes with practical and cross-curricular learning.' ),
-			array( 'What is the admission process at SEPS?', 'Admission steps, eligibility criteria and required documents are explained on our Admissions page. Our admissions team is happy to guide you through each stage of the application.' ),
-			array( 'What are the school timings?', 'School timings vary by grade and are published on the School Timings page under Academics, along with any seasonal changes announced during the year.' ),
-			array( 'Does SEPS offer extracurricular activities?', 'Yes. Students can take part in sports, arts, music, clubs and student council initiatives that complement classroom learning and help them discover new interests.' ),
-			array( 'Is school transportation available?', 'Yes. School transport is available on selected routes. Please visit the Transport page under Admissions for route details and registration.' ),
+			array( 'What is the admission process at SEPS?', 'Admission begins with online registration, followed by the required assessment or interview and submission of documents, depending on the grade. Eligibility and admission requirements vary by grade.' ),
+			array( 'What are the school timings?', 'KG I and KG II generally run from 7:25 a.m. to 11:30 a.m. Grade I to XII runs from 7:25 a.m. to 2:10 p.m. from Monday to Thursday, with shorter hours on Friday.' ),
+			array( 'Does SEPS offer extracurricular activities?', 'Yes. SEPS offers extracurricular activities, including sports and performing arts. The school also provides opportunities through co-curricular activities, educational trips, arts and other enrichment experiences.' ),
+			array( 'Is school transportation available?', 'Yes. SEPS provides school transportation through its authorised transport operator, with bus services available to and from school in accordance with the school’s transport guidelines.' ),
 		);
 
 		$topic = term_exists( 'General', 'seps_faq_topic' ) ?: wp_insert_term( 'General', 'seps_faq_topic' );
@@ -821,17 +821,17 @@ final class Seed_Command {
 				array(
 					'title'    => 'Respect',
 					'subtitle' => 'Honouring beliefs, culture and dignity',
-					'points'   => "Respect the beliefs and cultures of others\nTreat classmates, staff and visitors with courtesy\nUse polite and considerate language",
+					'points'   => "Respect religious beliefs and UAE culture\nRespect differences in opinions and beliefs\nTreat staff and students with dignity\nBe courteous and well-mannered",
 				),
 				array(
 					'title'    => 'Perseverance',
 					'subtitle' => 'Working hard and striving for improvement',
-					'points'   => "Complete work carefully and on time\nLearn from mistakes and keep trying\nSet goals and work towards them",
+					'points'   => "Value hard work and diligence\nComplete assignments on time\nNever give up when facing challenges\nStrive for continuous improvement\nGive and receive help when needed",
 				),
 				array(
 					'title'    => 'Responsibility',
 					'subtitle' => 'Making responsible and informed choices',
-					'points'   => "Take ownership of your actions\nMake safe and informed decisions\nLook after your belongings and the environment",
+					'points'   => "Be a responsible member of the school\nCare for younger students and others\nKeep school corridors quiet\nFollow school rules and authority\nMake right and informed decisions",
 				),
 			),
 		);
@@ -942,26 +942,26 @@ final class Seed_Command {
 			array(
 				'acf_fc_layout' => 'badge_accordion',
 				'heading'       => 'Courses Offered',
-				'intro'         => 'Our academic program progresses from KG I through Grade XII, with students building their knowledge and skills across each stage before choosing specialized pathways in senior secondary.',
+				'intro'         => 'Our academic programme progresses from KG I through Grade XII, with students building their knowledge and skills across each stage before choosing specialised pathways in senior secondary.',
 				'image'         => $this->image( 'academics-courses.jpg', 'Students studying at desks in a bright classroom' ),
 				'groups'        => array(
 					array(
 						'heading' => '',
 						'items'   => array(
 							$item( 'KG I–II', 'Foundation Years', 'English, Mathematics, UTW, Art & Crafts, Music and Games.' ),
-							$item( 'GRADE I–V', 'Primary', 'Languages, Mathematics, Science, Computing, Social Studies, Arts, Physical Education and more.' ),
-							$item( 'GRADE VI–VIII', 'Middle School', 'Languages, Mathematics, Science, Social Science, Computer Science, Arts and Physical Education.' ),
-							$item( 'GRADE IX–X', 'Secondary', 'Languages, Mathematics, Science, Social Science, Computer Science and Physical Education.' ),
+							$item( 'GRADE I–V', 'Primary', 'English, Hindi, Arabic, Islamic, Malayalam, Special English, Mathematics, Computer Science, EVS, UAE Social Studies, Moral Education, PHE, Art & Craft, Music and Dance.' ),
+							$item( 'GRADE VI–VIII', 'Middle School', 'English, Hindi, Arabic, Mathematics, Science, Computer Science, UAE Social Studies, Social Science, Moral Education, PHE, Art & Craft, Moral Science / Islamic Studies.' ),
+							$item( 'GRADE IX–X', 'Secondary', 'English, II-Language (Hindi / CBSE Arabic / French), Mathematics, Science, Computer Science, UAE Social Studies (Grade IX only), Social Science, Art Education, PHE, Moral Education (Grade IX only), Arabic, Moral Science / Islamic Studies.' ),
 						),
 					),
 					array(
 						'heading' => 'Senior Secondary Streams (Grade XI & XII)',
 						'items'   => array(
 							$item( 'Group 1', 'Science Stream | Computer Science', 'English, Physics, Chemistry, Mathematics, Computer Science, Arabic, Islamic Studies / Moral Science, GST, Art, PHE.' ),
-							$item( 'Group 2', 'Science Stream | Biology & Mathematics', 'English, Physics, Chemistry, Biology, Mathematics.' ),
-							$item( 'Group 3', 'Science Stream | Biology & Psychology', 'English, Physics, Chemistry, Biology, Psychology.' ),
-							$item( 'Group 4', 'Commerce Stream | Marketing', 'English, Accountancy, Business Studies, Economics, Marketing.' ),
-							$item( 'Group 5', 'Commerce Stream | Informatics Practices', 'English, Accountancy, Business Studies, Economics, Informatics Practices.' ),
+							$item( 'Group 2', 'Science Stream | Biology & Mathematics', 'English, Physics, Chemistry, Biology, Mathematics, Arabic, Islamic Studies / Moral Science, GST, Art, PHE.' ),
+							$item( 'Group 3', 'Science Stream | Biology & Psychology', 'English, Physics, Chemistry, Biology, Psychology, Arabic, Islamic Studies / Moral Science, GST, Art, PHE.' ),
+							$item( 'Group 4', 'Commerce Stream | Marketing', 'English, Economics, Accountancy, Business Studies, Marketing, Arabic, Islamic Studies / Moral Science, GST, Art, PHE.' ),
+							$item( 'Group 5', 'Commerce Stream | Informatics Practices', 'English, Economics, Accountancy, Business Studies, Informatics Practices, Arabic, Islamic Studies / Moral Science, GST, Art, PHE.' ),
 						),
 					),
 				),

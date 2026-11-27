@@ -9,7 +9,7 @@ place so the site works meanwhile; answer inline and we'll update the build.
 | 2 | **Social profiles:** What are the Facebook, X and Instagram URLs? Are any other networks needed (e.g. YouTube, LinkedIn)? | Network home pages | Answered from seps-auh.com: facebook.com/sepsauh, x.com/PrivateSunrise, instagram.com/sepsauh. YouTube: see #58 |
 | 3 | **SEPS Portals:** What are the URLs for Parent Portal, Student Portal, Staff Portal and Fee Payment? Should they open in a new tab? | `#` | Answered from seps-auh.com: Parent, Student and Staff Portal → ETH Digital Campus sign-in. Fee Payment: see #55 |
 | 4 | **Testimonials:** Can we get real parent testimonials (quote, name, "Parent of …")? The Figma shows two; the carousel design implies at least four. | Testimonials 3–4 are sample copy | _Pending_ |
-| 5 | **FAQ answers:** Can we get the answers to questions 2–5? The Figma only shows the first. | Generic answers pointing to the relevant pages | _Pending_ |
+| 5 | **FAQ answers:** Can we get the answers to questions 2–5? The Figma only shows the first. | Generic answers pointing to the relevant pages | Answered (27 Nov): answers supplied by the team |
 | 6 | **Subscribe Now:** Should this connect to a newsletter service (e.g. Mailchimp, Brevo), or link to a page? | Links to the Contact page | Answered by TL (26 Nov): a Contact Form 7 form in the footer (email + Subscribe Now), emailed to the school and kept in Flamingo |
 | 7 | ~~**Header dropdowns**~~ | Resolved: no dropdowns. Every menu item is a single page. | Resolved 2026-11-23 |
 
@@ -19,7 +19,7 @@ place so the site works meanwhile; answer inline and we'll update the build.
 |---|---|---|---|
 | 8 | **Staff photos:** Can we get photos of Mrs. Nausheen Ikhlaq, Mrs. Shajila Saithoon Beevi Majeed and Mrs. Indu Suresh? The Figma reuses other teachers' photos for them. | Initials on a lilac tile | _Pending_ |
 | 9 | **Leadership Team list:** The Figma shows 12 cards with repeated names. Is the team these 6 people, or are more members missing? | 6 unique members | _Pending_ |
-| 10 | **Core values:** Can we get the points for *Respect*, *Perseverance* and *Responsibility*? The Figma only shows *Discipline* expanded. | Short sample points | _Pending_ |
+| 10 | **Core values:** Can we get the points for *Respect*, *Perseverance* and *Responsibility*? The Figma only shows *Discipline* expanded. | Short sample points | Answered (27 Nov): points supplied by the team |
 | 11 | **Vision & Mission photo:** Can we get a higher-resolution version? The Figma original is only 480×714px. | Figma image | _Pending_ |
 | 12 | **"Learn More" (Code of Conduct):** Where should it link? | Resources page | _Pending_ |
 
@@ -27,7 +27,7 @@ place so the site works meanwhile; answer inline and we'll update the build.
 
 | # | Question | Current placeholder | Answer |
 |---|---|---|---|
-| 13 | **Course subjects:** The Figma only shows subjects for *KG I–II* and *Group 1*. Can we get the subject lists for Primary, Middle School, Secondary and Groups 2–5? | Lists inferred from each stream's name (please verify) | _Pending_ |
+| 13 | **Course subjects:** The Figma only shows subjects for *KG I–II* and *Group 1*. Can we get the subject lists for Primary, Middle School, Secondary and Groups 2–5? | Lists inferred from each stream's name (please verify) | Answered (27 Nov): subject lists supplied by the team |
 | 14 | **Friday timetable:** Friday is a half day ending with Period 6 at 11:25 AM, but the Figma shows "Student Dispersal 2:10 PM". What is the correct Friday dispersal time? | 2:10 PM (as in the Figma) | _Pending_ |
 | 15 | **Mandatory disclosure documents:** Can we get the actual files (PDFs) for Fee Structure, Bus License and Water Test Report, plus any other required CBSE disclosures? | Cards open their preview photo | Answered from seps-auh.com/cbse: all 19 documents and PDFs added |
 
